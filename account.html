@@ -142,7 +142,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
     import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
-    import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, collection, getDocs, query, where, getDocs as getDocsQuery } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCIVGv1dkpCn6bKGstvbqDMHbPY9ce8tw8",
@@ -180,19 +180,43 @@
         window.location.href = "login.html";
         return;
       }
-      const uid = user.uid;
+      console.log("Logged in user UID:", user.uid);
+      let channelDoc = await getDoc(doc(db, "channels", user.uid));
+      let channelData;
 
-      const channelDoc = await getDoc(doc(db, "channels", uid));
       if (channelDoc.exists()) {
-        const data = channelDoc.data();
-        channelName.textContent = data.name || "Unnamed Channel";
-        followerCount.textContent = data.followersCount || 0;
+        channelData = channelDoc.data();
+      } else {
+        // Try to find the channel where owner == user.uid (your case)
+        const channelsRef = collection(db, "channels");
+        const q = query(channelsRef, where("owner", "==", user.uid));
+        const querySnapshot = await getDocsQuery(q);
+
+        if (!querySnapshot.empty) {
+          // Just take first match
+          channelData = querySnapshot.docs[0].data();
+          console.log("Found channel by owner field:", channelData);
+        } else {
+          channelData = null;
+        }
+      }
+
+      if (channelData) {
+        channelName.textContent = channelData.name || "Unnamed Channel";
+        followerCount.textContent = channelData.followersCount || 0;
       } else {
         channelName.textContent = "No Channel Yet";
         followerCount.textContent = 0;
       }
 
-      const videosCol = collection(db, "channels", uid, "videos");
+      // Load videos under the channel doc id if available, else skip
+      let channelId = user.uid;
+      if (!channelDoc.exists() && channelData) {
+        // If we found channelData by query, use that doc's ID
+        channelId = querySnapshot.docs[0].id;
+      }
+
+      const videosCol = collection(db, "channels", channelId, "videos");
       const videosSnap = await getDocs(videosCol);
 
       videoCount.textContent = videosSnap.size;
