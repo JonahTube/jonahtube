@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create Your JonahTube Channel</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
+
+    // Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCIVGv1dkpCn6bKGstvbqDMHbPY9ce8tw8",
+      authDomain: "jonahtube-bf9db.firebaseapp.com",
+      projectId: "jonahtube-bf9db",
+      storageBucket: "jonahtube-bf9db.firebasestorage.app",
+      messagingSenderId: "757825713276",
+      appId: "1:757825713276:web:d755230351acd1159d45f9",
+      measurementId: "G-NF5N10T4Q1"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentUser = null;
+
+    // Wait for user to be signed in
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUser = user;
+        document.getElementById("channelForm").style.display = "block";
+      } else {
+        alert("You need to be signed in to create a channel.");
+        window.location.href = "login.html";
+      }
+    });
+
+    // Submit channel form
+    window.submitChannel = async () => {
+      const name = document.getElementById("channelName").value;
+      const description = document.getElementById("channelDesc").value;
+
+      if (!name) {
+        alert("Channel name is required.");
+        return;
+      }
+
+      const userId = currentUser.uid;
+
+      await setDoc(doc(db, "channels", userId), {
+        owner: userId,
+        name: name,
+        description: description,
+        createdAt: new Date(),
+        photo: currentUser.photoURL || null,
+        email: currentUser.email
+      });
+
+      alert("Channel created!");
+      window.location.href = "index.html"; // or wherever your homepage is
+    };
+  </script>
+</head>
+<body style="text-align: center; padding: 30px; font-family: sans-serif;">
+  <h1>Create Your JonahTube Channel</h1>
+  <form id="channelForm" style="display: none;" onsubmit="event.preventDefault(); submitChannel();">
+    <input type="text" id="channelName" placeholder="Channel Name" required /><br><br>
+    <textarea id="channelDesc" placeholder="Channel Description" rows="4" cols="40"></textarea><br><br>
+    <button type="submit">Create Channel</button>
+  </form>
+</body>
+</html>
