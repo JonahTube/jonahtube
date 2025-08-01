@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Your Channel - JonahTube</title>
+  <style>
+    :root {
+      --main-color: #1e90ff;
+      --main-dark: #1565c0;
+      --bg-color: #f5f9ff;
+      --text-color: #333;
+      --card-bg: #fff;
+      --shadow-color: rgba(30, 144, 255, 0.2);
+    }
+    body {
+      margin: 0; padding: 20px; background: var(--bg-color);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    header {
+      width: 100%; max-width: 800px;
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 30px;
+    }
+    header h1 {
+      color: var(--main-dark);
+      font-size: 2.5rem;
+      margin: 0;
+    }
+    header button {
+      background: var(--main-color);
+      border: none;
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    header button:hover {
+      background: var(--main-dark);
+    }
+    .channel-info {
+      width: 100%; max-width: 800px;
+      background: var(--card-bg);
+      padding: 20px;
+      box-shadow: 0 6px 12px var(--shadow-color);
+      border-radius: 8px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .channel-info h2 {
+      margin: 0 0 10px;
+      font-size: 2rem;
+    }
+    .channel-stats {
+      font-size: 1.1rem;
+      color: #666;
+    }
+    .videos-list {
+      width: 100%; max-width: 800px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill,minmax(220px,1fr));
+      gap: 20px;
+    }
+    .video-card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      box-shadow: 0 4px 8px var(--shadow-color);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .video-card:hover {
+      transform: translateY(-5px);
+    }
+    .video-thumb {
+      background: #ddd;
+      border-radius: 6px;
+      height: 140px;
+      margin-bottom: 12px;
+      background-size: cover;
+      background-position: center;
+    }
+    .video-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin: 0 0 6px;
+      color: var(--main-dark);
+      user-select: none;
+    }
+    .no-videos {
+      text-align: center;
+      font-size: 1.3rem;
+      color: #888;
+      margin-top: 60px;
+    }
+    .no-videos button {
+      margin-top: 16px;
+      background: var(--main-color);
+      border: none;
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+      padding: 12px 30px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .no-videos button:hover {
+      background: var(--main-dark);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Your Channel</h1>
+    <button id="signOutBtn">Sign Out</button>
+  </header>
+
+  <section class="channel-info">
+    <h2 id="channelName">Loading...</h2>
+    <p class="channel-stats">
+      Followers: <span id="followerCount">0</span> | Videos: <span id="videoCount">0</span>
+    </p>
+  </section>
+
+  <section class="videos-list" id="videosList"></section>
+
+  <section class="no-videos" id="noVideos" style="display:none;">
+    <p>Oops! No Videos Yet! Click Below To Start Your Fame!</p>
+    <button id="addVideoBtn">Add Your First Video</button>
+  </section>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCIVGv1dkpCn6bKGstvbqDMHbPY9ce8tw8",
+      authDomain: "jonahtube-bf9db.firebaseapp.com",
+      projectId: "jonahtube-bf9db",
+      storageBucket: "jonahtube-bf9db.firebasestorage.app",
+      messagingSenderId: "757825713276",
+      appId: "1:757825713276:web:d755230351acd1159d45f9",
+      measurementId: "G-NF5N10T4Q1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const channelName = document.getElementById("channelName");
+    const followerCount = document.getElementById("followerCount");
+    const videoCount = document.getElementById("videoCount");
+    const videosList = document.getElementById("videosList");
+    const noVideos = document.getElementById("noVideos");
+    const addVideoBtn = document.getElementById("addVideoBtn");
+    const signOutBtn = document.getElementById("signOutBtn");
+
+    addVideoBtn.addEventListener("click", () => {
+      window.location.href = "add-video.html";
+    });
+
+    signOutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+      window.location.href = "login.html";
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+      const uid = user.uid;
+
+      const channelDoc = await getDoc(doc(db, "channels", uid));
+      if (channelDoc.exists()) {
+        const data = channelDoc.data();
+        channelName.textContent = data.name || "Unnamed Channel";
+        followerCount.textContent = data.followersCount || 0;
+      } else {
+        channelName.textContent = "No Channel Yet";
+        followerCount.textContent = 0;
+      }
+
+      const videosCol = collection(db, "channels", uid, "videos");
+      const videosSnap = await getDocs(videosCol);
+
+      videoCount.textContent = videosSnap.size;
+
+      if (videosSnap.size === 0) {
+        videosList.style.display = "none";
+        noVideos.style.display = "block";
+      } else {
+        noVideos.style.display = "none";
+        videosList.style.display = "grid";
+
+        videosList.innerHTML = "";
+
+        videosSnap.forEach(docSnap => {
+          const vid = docSnap.data();
+          const card = document.createElement("div");
+          card.className = "video-card";
+          card.tabIndex = 0;
+          card.innerHTML = `
+            <div class="video-thumb" style="background-image:url('${vid.thumbnailUrl || 'https://via.placeholder.com/320x180?text=No+Thumbnail'}');"></div>
+            <div class="video-title">${vid.title || 'Untitled Video'}</div>
+          `;
+          card.addEventListener("click", () => {
+            window.location.href = \`video.html?id=\${docSnap.id}\`;
+          });
+          videosList.appendChild(card);
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>
