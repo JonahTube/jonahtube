@@ -1,68 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>JonahTube - Home</title>
-<style>
-  body {
-    font-family: sans-serif;
-    padding: 20px;
-    margin: 0;
-  }
-  /* User account button styles */
-  #userMenuBtn {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    outline: none;
-    padding: 0;
-    z-index: 1001;
-    display: none;
-  }
-  #userPhotoSmall {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-  }
-  #userDropdown {
-    position: fixed;
-    top: 60px;
-    right: 10px;
-    background: white;
-    border: 1px solid #ccc;
-    padding: 15px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    display: none;
-    width: 220px;
-    font-family: sans-serif;
-    z-index: 1000;
-  }
-  #userDropdown button {
-    margin-top: 10px;
-    width: 100%;
-    padding: 8px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JonahTube - Your Channel Hub</title>
+  <style>
+    /* === MAIN THEME COLOR === */
+    :root {
+      --main-color: #1e90ff; /* Dodger Blue */
+      --main-dark: #1565c0;
+      --main-light: #63a4ff;
+      --bg-color: #f5f9ff;
+      --text-color: #333;
+      --card-bg: #ffffff;
+      --shadow-color: rgba(30, 144, 255, 0.2);
+    }
+
+    /* Reset & base */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background: var(--bg-color);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* NAV BAR */
+    nav {
+      background: var(--main-color);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 24px;
+      box-shadow: 0 2px 8px var(--shadow-color);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    nav .logo {
+      font-weight: 700;
+      font-size: 1.5rem;
+      user-select: none;
+      cursor: default;
+      letter-spacing: 2px;
+    }
+
+    /* User Account Button */
+    #userMenuBtn {
+      border: none;
+      background: none;
+      cursor: pointer;
+      padding: 0;
+      outline: none;
+      display: flex;
+      align-items: center;
+      border-radius: 50%;
+      transition: box-shadow 0.3s ease;
+      width: 44px;
+      height: 44px;
+      overflow: hidden;
+      box-shadow: 0 0 0 2px white;
+    }
+    #userMenuBtn:hover {
+      box-shadow: 0 0 10px 3px var(--main-light);
+    }
+    #userPhotoSmall {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+    }
+
+    /* DROPDOWN PANEL */
+    #userDropdown {
+      position: absolute;
+      top: 60px;
+      right: 24px;
+      background: var(--card-bg);
+      border-radius: 8px;
+      box-shadow: 0 6px 12px var(--shadow-color);
+      padding: 20px;
+      width: 260px;
+      font-size: 14px;
+      color: var(--text-color);
+      display: none;
+      user-select: none;
+      z-index: 20;
+    }
+    #userDropdown[aria-hidden="false"] {
+      display: block;
+    }
+
+    #userDropdown strong {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    #userDropdown div {
+      margin: 8px 0;
+    }
+
+    #userDropdown button {
+      margin-top: 12px;
+      width: 100%;
+      padding: 10px 0;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 15px;
+      color: white;
+      background: var(--main-color);
+      cursor: pointer;
+      transition: background-color 0.25s ease;
+    }
+    #userDropdown button:hover {
+      background: var(--main-dark);
+    }
+
+    /* MAIN CONTENT */
+    main {
+      flex: 1;
+      padding: 40px 24px;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    main h1 {
+      font-size: 3rem;
+      margin-bottom: 12px;
+      color: var(--main-dark);
+      text-shadow: 1px 1px 2px var(--main-light);
+    }
+    main p {
+      font-size: 1.25rem;
+      color: #555;
+      margin-bottom: 24px;
+      user-select: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      main h1 {
+        font-size: 2.2rem;
+      }
+      #userDropdown {
+        width: 90vw;
+        right: 5vw;
+      }
+    }
+  </style>
 </head>
 <body>
 
-  <h1>Welcome to JonahTube!</h1>
-  <p>Your place for channels, videos, and games.</p>
+  <nav>
+    <div class="logo">JonahTube</div>
+    <button id="userMenuBtn" aria-label="User Account" title="User Account">
+      <img id="userPhotoSmall" src="" alt="User Photo" />
+    </button>
+  </nav>
 
-  <!-- User Account Button -->
-  <button id="userMenuBtn" aria-label="User Account" title="User Account">
-    <img id="userPhotoSmall" src="" alt="User Photo" />
-  </button>
+  <main>
+    <h1>Welcome to JonahTube!</h1>
+    <p>Your place for channels, videos, and games.</p>
+  </main>
 
-  <!-- Dropdown Panel -->
   <div id="userDropdown" role="menu" aria-hidden="true">
-    <div><strong id="channelNameSmall"></strong></div>
+    <strong id="channelNameSmall">Loading...</strong>
     <div>Followers: <span id="followerCount">0</span></div>
     <div>Videos: <span id="videoCount">0</span></div>
     <button id="addVideoBtn">Add Video</button>
@@ -74,7 +187,6 @@
     import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
     import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
 
-    // Your Firebase config (double-check yours if needed)
     const firebaseConfig = {
       apiKey: "AIzaSyCIVGv1dkpCn6bKGstvbqDMHbPY9ce8tw8",
       authDomain: "jonahtube-bf9db.firebaseapp.com",
@@ -100,15 +212,9 @@
 
     let currentUserId = null;
 
-    // Show/hide dropdown
     userMenuBtn.addEventListener("click", () => {
-      if (userDropdown.style.display === "block") {
-        userDropdown.style.display = "none";
-        userDropdown.setAttribute("aria-hidden", "true");
-      } else {
-        userDropdown.style.display = "block";
-        userDropdown.setAttribute("aria-hidden", "false");
-      }
+      const isVisible = userDropdown.getAttribute("aria-hidden") === "false";
+      userDropdown.setAttribute("aria-hidden", isVisible ? "true" : "false");
     });
 
     signOutBtn.addEventListener("click", async () => {
@@ -123,9 +229,9 @@
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         currentUserId = user.uid;
-        userPhotoSmall.src = user.photoURL || "default-user.png";
+        userPhotoSmall.src = user.photoURL || "https://i.pravatar.cc/40";
         userPhotoSmall.alt = `${user.displayName || "User"} photo`;
-        userMenuBtn.style.display = "inline-block";
+        userMenuBtn.style.display = "inline-flex";
 
         const channelDoc = await getDoc(doc(db, "channels", currentUserId));
         if (channelDoc.exists()) {
@@ -143,10 +249,9 @@
         }
       } else {
         userMenuBtn.style.display = "none";
-        userDropdown.style.display = "none";
+        userDropdown.setAttribute("aria-hidden", "true");
       }
     });
   </script>
-
 </body>
 </html>
