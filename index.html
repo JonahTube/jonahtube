@@ -5,18 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>JonahTube - Your Channel Hub</title>
   <style>
-    /* === MAIN THEME COLOR === */
     :root {
-      --main-color: #1e90ff; /* Dodger Blue */
+      --main-color: #1e90ff;
       --main-dark: #1565c0;
-      --main-light: #63a4ff;
       --bg-color: #f5f9ff;
       --text-color: #333;
-      --card-bg: #ffffff;
+      --card-bg: #fff;
       --shadow-color: rgba(30, 144, 255, 0.2);
     }
-
-    /* Reset & base */
     * {
       box-sizing: border-box;
     }
@@ -29,8 +25,6 @@
       display: flex;
       flex-direction: column;
     }
-
-    /* NAV BAR */
     nav {
       background: var(--main-color);
       color: white;
@@ -43,7 +37,6 @@
       top: 0;
       z-index: 10;
     }
-
     nav .logo {
       font-weight: 700;
       font-size: 1.5rem;
@@ -51,82 +44,26 @@
       cursor: default;
       letter-spacing: 2px;
     }
-
-    /* User Account Button */
     #userMenuBtn {
       border: none;
       background: none;
       cursor: pointer;
       padding: 0;
       outline: none;
-      display: flex;
-      align-items: center;
-      border-radius: 50%;
-      transition: box-shadow 0.3s ease;
+      display: none;
       width: 44px;
       height: 44px;
       overflow: hidden;
+      border-radius: 50%;
       box-shadow: 0 0 0 2px white;
     }
-    #userMenuBtn:hover {
-      box-shadow: 0 0 10px 3px var(--main-light);
-    }
-    #userPhotoSmall {
+    #userMenuBtn img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       border-radius: 50%;
       display: block;
     }
-
-    /* DROPDOWN PANEL */
-    #userDropdown {
-      position: absolute;
-      top: 60px;
-      right: 24px;
-      background: var(--card-bg);
-      border-radius: 8px;
-      box-shadow: 0 6px 12px var(--shadow-color);
-      padding: 20px;
-      width: 260px;
-      font-size: 14px;
-      color: var(--text-color);
-      display: none;
-      user-select: none;
-      z-index: 20;
-    }
-    #userDropdown[aria-hidden="false"] {
-      display: block;
-    }
-
-    #userDropdown strong {
-      font-size: 1.2rem;
-      margin-bottom: 8px;
-      display: block;
-    }
-
-    #userDropdown div {
-      margin: 8px 0;
-    }
-
-    #userDropdown button {
-      margin-top: 12px;
-      width: 100%;
-      padding: 10px 0;
-      border: none;
-      border-radius: 6px;
-      font-weight: 600;
-      font-size: 15px;
-      color: white;
-      background: var(--main-color);
-      cursor: pointer;
-      transition: background-color 0.25s ease;
-    }
-    #userDropdown button:hover {
-      background: var(--main-dark);
-    }
-
-    /* MAIN CONTENT */
     main {
       flex: 1;
       padding: 40px 24px;
@@ -134,7 +71,6 @@
       margin: 0 auto;
       text-align: center;
     }
-
     main h1 {
       font-size: 3rem;
       margin-bottom: 12px;
@@ -147,15 +83,9 @@
       margin-bottom: 24px;
       user-select: none;
     }
-
-    /* Responsive */
     @media (max-width: 600px) {
       main h1 {
         font-size: 2.2rem;
-      }
-      #userDropdown {
-        width: 90vw;
-        right: 5vw;
       }
     }
   </style>
@@ -164,9 +94,9 @@
 
   <nav>
     <div class="logo">JonahTube</div>
-    <button id="userMenuBtn" aria-label="User Account" title="User Account">
+    <a href="account.html" id="userMenuBtn" title="Your Account" aria-label="Your Account">
       <img id="userPhotoSmall" src="" alt="User Photo" />
-    </button>
+    </a>
   </nav>
 
   <main>
@@ -174,18 +104,9 @@
     <p>Your place for channels, videos, and games.</p>
   </main>
 
-  <div id="userDropdown" role="menu" aria-hidden="true">
-    <strong id="channelNameSmall">Loading...</strong>
-    <div>Followers: <span id="followerCount">0</span></div>
-    <div>Videos: <span id="videoCount">0</span></div>
-    <button id="addVideoBtn">Add Video</button>
-    <button id="signOutBtn">Sign Out</button>
-  </div>
-
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
-    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
-    import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCIVGv1dkpCn6bKGstvbqDMHbPY9ce8tw8",
@@ -199,59 +120,20 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getFirestore(app);
 
     const userMenuBtn = document.getElementById("userMenuBtn");
-    const userDropdown = document.getElementById("userDropdown");
     const userPhotoSmall = document.getElementById("userPhotoSmall");
-    const channelNameSmall = document.getElementById("channelNameSmall");
-    const followerCount = document.getElementById("followerCount");
-    const videoCount = document.getElementById("videoCount");
-    const addVideoBtn = document.getElementById("addVideoBtn");
-    const signOutBtn = document.getElementById("signOutBtn");
 
-    let currentUserId = null;
-
-    userMenuBtn.addEventListener("click", () => {
-      const isVisible = userDropdown.getAttribute("aria-hidden") === "false";
-      userDropdown.setAttribute("aria-hidden", isVisible ? "true" : "false");
-    });
-
-    signOutBtn.addEventListener("click", async () => {
-      await signOut(auth);
-      window.location.href = "login.html";
-    });
-
-    addVideoBtn.addEventListener("click", () => {
-      window.location.href = "add-video.html";
-    });
-
-    onAuthStateChanged(auth, async (user) => {
+    onAuthStateChanged(auth, (user) => {
       if (user) {
-        currentUserId = user.uid;
-        userPhotoSmall.src = user.photoURL || "https://i.pravatar.cc/40";
+        userPhotoSmall.src = user.photoURL || "https://i.pravatar.cc/44";
         userPhotoSmall.alt = `${user.displayName || "User"} photo`;
-        userMenuBtn.style.display = "inline-flex";
-
-        const channelDoc = await getDoc(doc(db, "channels", currentUserId));
-        if (channelDoc.exists()) {
-          const data = channelDoc.data();
-          channelNameSmall.textContent = data.name || "Unnamed Channel";
-          followerCount.textContent = data.followersCount || 0;
-
-          const videosCol = collection(db, "channels", currentUserId, "videos");
-          const videosSnap = await getDocs(videosCol);
-          videoCount.textContent = videosSnap.size;
-        } else {
-          channelNameSmall.textContent = "No Channel Yet";
-          followerCount.textContent = 0;
-          videoCount.textContent = 0;
-        }
+        userMenuBtn.style.display = "inline-block";
       } else {
         userMenuBtn.style.display = "none";
-        userDropdown.setAttribute("aria-hidden", "true");
       }
     });
   </script>
+
 </body>
 </html>
