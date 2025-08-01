@@ -125,7 +125,6 @@
   </header>
 
   <section class="channel-info" id="channelInfo">
-    <!-- info will go here -->
     Loading channel info...
   </section>
 
@@ -139,7 +138,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
     import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
-    import { getFirestore, doc, getDoc, collection, getDocs, query, where, getDocs as getDocsQuery } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCIVGv1dkpCn6bKGstvbqDMHbPY9ce8tw8",
@@ -172,77 +171,80 @@
 
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
+        console.log("No user logged in, redirecting.");
         window.location.href = "login.html";
         return;
       }
       console.log("Logged in user UID:", user.uid);
-      let channelDoc = await getDoc(doc(db, "channels", user.uid));
-      let channelData;
-      let channelId = user.uid;
 
-      if (channelDoc.exists()) {
-        channelData = channelDoc.data();
-      } else {
-        // Try to find the channel where owner == user.uid
-        const channelsRef = collection(db, "channels");
-        const q = query(channelsRef, where("owner", "==", user.uid));
-        const querySnapshot = await getDocsQuery(q);
+      try {
+        let channelDoc = await getDoc(doc(db, "channels", user.uid));
+        let channelData;
+        let channelId = user.uid;
 
-        if (!querySnapshot.empty) {
-          channelData = querySnapshot.docs[0].data();
-          channelId = querySnapshot.docs[0].id;
-          console.log("Found channel by owner field:", channelData);
+        if (channelDoc.exists()) {
+          channelData = channelDoc.data();
+          console.log("Channel found by UID:", channelData);
         } else {
-          channelData = null;
+          console.log("No channel doc with UID, querying by owner field...");
+          const channelsRef = collection(db, "channels");
+          const q = query(channelsRef, where("owner", "==", user.uid));
+          const querySnapshot = await getDocs(q);
+
+          if (!querySnapshot.empty) {
+            channelData = querySnapshot.docs[0].data();
+            channelId = querySnapshot.docs[0].id;
+            console.log("Found channel by owner field:", channelData);
+          } else {
+            channelData = null;
+            console.log("No channel found for user.");
+          }
         }
-      }
 
-      if (channelData) {
-        channelInfo.innerHTML = `
-          <div><span class="label">Channel Name:</span> ${channelData.name || "Unnamed Channel"}</div>
-          <div><span class="label">Description:</span> ${channelData.description || "No description provided."}</div>
-          <div><span class="label">Followers:</span> ${channelData.followersCount || 0}</div>
-          <div><span class="label">Videos:</span> <span id="videoCount">Loading...</span></div>
-        `;
-      } else {
-        channelInfo.innerHTML = `
-          <div>No Channel Yet</div>
-        `;
-      }
+        if (channelData) {
+          channelInfo.innerHTML = `
+            <div><span class="label">Channel Name:</span> ${channelData.name || "Unnamed Channel"}</div>
+            <div><span class="label">Description:</span> ${channelData.description || "No description provided."}</div>
+            <div><span class="label">Followers:</span> ${channelData.followersCount || 0}</div>
+            <div><span class="label">Videos:</span> <span id="videoCount">Loading...</span></div>
+          `;
 
-      // Load videos count
-      if (channelData) {
-        const videosCol = collection(db, "channels", channelId, "videos");
-        const videosSnap = await getDocs(videosCol);
-        const videoCountSpan = document.getElementById("videoCount");
-        if(videoCountSpan) videoCountSpan.textContent = videosSnap.size;
+          const videosCol = collection(db, "channels", channelId, "videos");
+          const videosSnap = await getDocs(videosCol);
+          const videoCountSpan = document.getElementById("videoCount");
+          if (videoCountSpan) videoCountSpan.textContent = videosSnap.size;
 
-        if (videosSnap.size === 0) {
+          if (videosSnap.size === 0) {
+            videosList.style.display = "none";
+            noVideos.style.display = "block";
+          } else {
+            noVideos.style.display = "none";
+            videosList.style.display = "grid";
+            videosList.innerHTML = "";
+
+            videosSnap.forEach(docSnap => {
+              const vid = docSnap.data();
+              const card = document.createElement("div");
+              card.className = "video-card";
+              card.tabIndex = 0;
+              card.innerHTML = `
+                <div class="video-thumb" style="background-image:url('${vid.thumbnailUrl || 'https://via.placeholder.com/320x180?text=No+Thumbnail'}');"></div>
+                <div class="video-title">${vid.title || 'Untitled Video'}</div>
+              `;
+              card.addEventListener("click", () => {
+                window.location.href = \`video.html?id=\${docSnap.id}\`;
+              });
+              videosList.appendChild(card);
+            });
+          }
+        } else {
+          channelInfo.innerHTML = `<div>No Channel Yet</div>`;
           videosList.style.display = "none";
           noVideos.style.display = "block";
-        } else {
-          noVideos.style.display = "none";
-          videosList.style.display = "grid";
-          videosList.innerHTML = "";
-
-          videosSnap.forEach(docSnap => {
-            const vid = docSnap.data();
-            const card = document.createElement("div");
-            card.className = "video-card";
-            card.tabIndex = 0;
-            card.innerHTML = `
-              <div class="video-thumb" style="background-image:url('${vid.thumbnailUrl || 'https://via.placeholder.com/320x180?text=No+Thumbnail'}');"></div>
-              <div class="video-title">${vid.title || 'Untitled Video'}</div>
-            `;
-            card.addEventListener("click", () => {
-              window.location.href = \`video.html?id=\${docSnap.id}\`;
-            });
-            videosList.appendChild(card);
-          });
         }
-      } else {
-        videosList.style.display = "none";
-        noVideos.style.display = "block";
+      } catch (error) {
+        console.error("Error loading channel info:", error);
+        channelInfo.innerHTML = `<div>Error loading channel info.</div>`;
       }
     });
   </script>
