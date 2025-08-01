@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Video - JonahTube</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Add a New Video</h1>
+    <form id="videoForm">
+      <input type="text" id="title" placeholder="Video Title" required>
+      <textarea id="description" placeholder="Video Description" required></textarea>
+      <input type="url" id="youtubeUrl" placeholder="YouTube Video URL" required>
+      <button type="submit">Upload Video</button>
+    </form>
+    <div id="status"></div>
+    <a href="account.html" class="back-link">← Back to Channel</a>
+  </div>
+
+  <script type="module" src="add-video.js"></script>
+</body>
+</html>
