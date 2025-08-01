@@ -1,53 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>JonahTube - Home</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      padding: 20px;
-      margin: 0;
-    }
-    /* User menu styles */
-    #userMenuBtn {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      border: none;
-      background: none;
-      cursor: pointer;
-      outline: none;
-      padding: 0;
-      z-index: 1001;
-      display: none; /* hidden until logged in */
-    }
-    #userPhotoSmall {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-    }
-    #userDropdown {
-      position: fixed;
-      top: 60px;
-      right: 10px;
-      background: white;
-      border: 1px solid #ccc;
-      padding: 15px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-      display: none;
-      width: 220px;
-      font-family: sans-serif;
-      z-index: 1000;
-    }
-    #userDropdown button {
-      margin-top: 10px;
-      width: 100%;
-      padding: 8px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JonahTube - Home</title>
+<style>
+  body {
+    font-family: sans-serif;
+    padding: 20px;
+    margin: 0;
+  }
+  /* User account button styles */
+  #userMenuBtn {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    outline: none;
+    padding: 0;
+    z-index: 1001;
+    display: none;
+  }
+  #userPhotoSmall {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  #userDropdown {
+    position: fixed;
+    top: 60px;
+    right: 10px;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    display: none;
+    width: 220px;
+    font-family: sans-serif;
+    z-index: 1000;
+  }
+  #userDropdown button {
+    margin-top: 10px;
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+</style>
 </head>
 <body>
 
@@ -73,6 +74,7 @@
     import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
     import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
 
+    // Your Firebase config (double-check yours if needed)
     const firebaseConfig = {
       apiKey: "AIzaSyCIVGv1dkpCn6bKGstvbqDMHbPY9ce8tw8",
       authDomain: "jonahtube-bf9db.firebaseapp.com",
@@ -98,7 +100,7 @@
 
     let currentUserId = null;
 
-    // Toggle dropdown visibility
+    // Show/hide dropdown
     userMenuBtn.addEventListener("click", () => {
       if (userDropdown.style.display === "block") {
         userDropdown.style.display = "none";
@@ -109,13 +111,11 @@
       }
     });
 
-    // Sign out button
     signOutBtn.addEventListener("click", async () => {
       await signOut(auth);
       window.location.href = "login.html";
     });
 
-    // Add video button
     addVideoBtn.addEventListener("click", () => {
       window.location.href = "add-video.html";
     });
@@ -125,7 +125,6 @@
         currentUserId = user.uid;
         userPhotoSmall.src = user.photoURL || "default-user.png";
         userPhotoSmall.alt = `${user.displayName || "User"} photo`;
-
         userMenuBtn.style.display = "inline-block";
 
         const channelDoc = await getDoc(doc(db, "channels", currentUserId));
@@ -144,6 +143,7 @@
         }
       } else {
         userMenuBtn.style.display = "none";
+        userDropdown.style.display = "none";
       }
     });
   </script>
