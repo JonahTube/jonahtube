@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JonahTube – Login</title>
+  <meta charset="UTF-8" />
+  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>🎬 Welcome to JonahTube</h1>
+  <h2>Login or Sign Up</h2>
+
+  <!-- Google Sign-In Button -->
+  <button id="google-login">Sign in with Google</button>
+
+  <hr>
+
+  <!-- Email Login -->
+  <input type="email" id="email" placeholder="Email"><br>
+  <input type="password" id="password" placeholder="Password"><br>
+  <button id="email-login">Login with Email</button>
+  <button id="email-signup">Sign Up with Email</button>
+
+  <script>
+    // 🔥 Your Firebase Config (from Step 1 — paste yours here!)
+    const firebaseConfig = {
+      apiKey: "YOUR-API-KEY",
+      authDomain: "YOUR-PROJECT.firebaseapp.com",
+      projectId: "YOUR-PROJECT-ID",
+      appId: "YOUR-APP-ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // 👉 Google Login
+    document.getElementById("google-login").onclick = () => {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider)
+        .then(() => window.location.href = "index.html")
+        .catch(error => alert(error.message));
+    };
+
+    // 👉 Email Login
+    document.getElementById("email-login").onclick = () => {
+      const email = document.getElementById("email").value;
+      const pass = document.getElementById("password").value;
+      auth.signInWithEmailAndPassword(email, pass)
+        .then(() => window.location.href = "index.html")
+        .catch(error => alert(error.message));
+    };
+
+    // 👉 Email Signup
+    document.getElementById("email-signup").onclick = () => {
+      const email = document.getElementById("email").value;
+      const pass = document.getElementById("password").value;
+      auth.createUserWithEmailAndPassword(email, pass)
+        .then(() => window.location.href = "index.html")
+        .catch(error => alert(error.message));
+    };
+  </script>
+</body>
+</html>
