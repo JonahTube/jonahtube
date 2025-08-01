@@ -51,15 +51,14 @@
       box-shadow: 0 6px 12px var(--shadow-color);
       border-radius: 8px;
       margin-bottom: 30px;
-      text-align: center;
+      font-size: 1.2rem;
+      line-height: 1.8;
     }
-    .channel-info h2 {
-      margin: 0 0 10px;
-      font-size: 2rem;
-    }
-    .channel-stats {
-      font-size: 1.1rem;
-      color: #666;
+    .channel-info span.label {
+      font-weight: 700;
+      width: 120px;
+      display: inline-block;
+      color: var(--main-dark);
     }
     .videos-list {
       width: 100%; max-width: 800px;
@@ -125,11 +124,9 @@
     <button id="signOutBtn">Sign Out</button>
   </header>
 
-  <section class="channel-info">
-    <h2 id="channelName">Loading...</h2>
-    <p class="channel-stats">
-      Followers: <span id="followerCount">0</span> | Videos: <span id="videoCount">0</span>
-    </p>
+  <section class="channel-info" id="channelInfo">
+    <!-- info will go here -->
+    Loading channel info...
   </section>
 
   <section class="videos-list" id="videosList"></section>
@@ -158,9 +155,7 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    const channelName = document.getElementById("channelName");
-    const followerCount = document.getElementById("followerCount");
-    const videoCount = document.getElementById("videoCount");
+    const channelInfo = document.getElementById("channelInfo");
     const videosList = document.getElementById("videosList");
     const noVideos = document.getElementById("noVideos");
     const addVideoBtn = document.getElementById("addVideoBtn");
@@ -183,18 +178,19 @@
       console.log("Logged in user UID:", user.uid);
       let channelDoc = await getDoc(doc(db, "channels", user.uid));
       let channelData;
+      let channelId = user.uid;
 
       if (channelDoc.exists()) {
         channelData = channelDoc.data();
       } else {
-        // Try to find the channel where owner == user.uid (your case)
+        // Try to find the channel where owner == user.uid
         const channelsRef = collection(db, "channels");
         const q = query(channelsRef, where("owner", "==", user.uid));
         const querySnapshot = await getDocsQuery(q);
 
         if (!querySnapshot.empty) {
-          // Just take first match
           channelData = querySnapshot.docs[0].data();
+          channelId = querySnapshot.docs[0].id;
           console.log("Found channel by owner field:", channelData);
         } else {
           channelData = null;
@@ -202,48 +198,51 @@
       }
 
       if (channelData) {
-        channelName.textContent = channelData.name || "Unnamed Channel";
-        followerCount.textContent = channelData.followersCount || 0;
+        channelInfo.innerHTML = `
+          <div><span class="label">Channel Name:</span> ${channelData.name || "Unnamed Channel"}</div>
+          <div><span class="label">Description:</span> ${channelData.description || "No description provided."}</div>
+          <div><span class="label">Followers:</span> ${channelData.followersCount || 0}</div>
+          <div><span class="label">Videos:</span> <span id="videoCount">Loading...</span></div>
+        `;
       } else {
-        channelName.textContent = "No Channel Yet";
-        followerCount.textContent = 0;
+        channelInfo.innerHTML = `
+          <div>No Channel Yet</div>
+        `;
       }
 
-      // Load videos under the channel doc id if available, else skip
-      let channelId = user.uid;
-      if (!channelDoc.exists() && channelData) {
-        // If we found channelData by query, use that doc's ID
-        channelId = querySnapshot.docs[0].id;
-      }
+      // Load videos count
+      if (channelData) {
+        const videosCol = collection(db, "channels", channelId, "videos");
+        const videosSnap = await getDocs(videosCol);
+        const videoCountSpan = document.getElementById("videoCount");
+        if(videoCountSpan) videoCountSpan.textContent = videosSnap.size;
 
-      const videosCol = collection(db, "channels", channelId, "videos");
-      const videosSnap = await getDocs(videosCol);
+        if (videosSnap.size === 0) {
+          videosList.style.display = "none";
+          noVideos.style.display = "block";
+        } else {
+          noVideos.style.display = "none";
+          videosList.style.display = "grid";
+          videosList.innerHTML = "";
 
-      videoCount.textContent = videosSnap.size;
-
-      if (videosSnap.size === 0) {
+          videosSnap.forEach(docSnap => {
+            const vid = docSnap.data();
+            const card = document.createElement("div");
+            card.className = "video-card";
+            card.tabIndex = 0;
+            card.innerHTML = `
+              <div class="video-thumb" style="background-image:url('${vid.thumbnailUrl || 'https://via.placeholder.com/320x180?text=No+Thumbnail'}');"></div>
+              <div class="video-title">${vid.title || 'Untitled Video'}</div>
+            `;
+            card.addEventListener("click", () => {
+              window.location.href = \`video.html?id=\${docSnap.id}\`;
+            });
+            videosList.appendChild(card);
+          });
+        }
+      } else {
         videosList.style.display = "none";
         noVideos.style.display = "block";
-      } else {
-        noVideos.style.display = "none";
-        videosList.style.display = "grid";
-
-        videosList.innerHTML = "";
-
-        videosSnap.forEach(docSnap => {
-          const vid = docSnap.data();
-          const card = document.createElement("div");
-          card.className = "video-card";
-          card.tabIndex = 0;
-          card.innerHTML = `
-            <div class="video-thumb" style="background-image:url('${vid.thumbnailUrl || 'https://via.placeholder.com/320x180?text=No+Thumbnail'}');"></div>
-            <div class="video-title">${vid.title || 'Untitled Video'}</div>
-          `;
-          card.addEventListener("click", () => {
-            window.location.href = \`video.html?id=\${docSnap.id}\`;
-          });
-          videosList.appendChild(card);
-        });
       }
     });
   </script>
