@@ -1,62 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>JonahTube – Login</title>
   <meta charset="UTF-8" />
-  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js"></script>
-  <link rel="stylesheet" href="style.css">
+  <title>JonahTube Login</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+    input { margin: 5px; padding: 10px; width: 250px; }
+    button { margin: 10px; padding: 10px 20px; cursor: pointer; }
+  </style>
 </head>
 <body>
-  <h1>🎬 Welcome to JonahTube</h1>
-  <h2>Login or Sign Up</h2>
 
-  <!-- Google Sign-In Button -->
-  <button id="google-login">Sign in with Google</button>
+  <h1>Welcome to JonahTube</h1>
+  <button onclick="loginWithGoogle()">Sign in with Google</button>
 
-  <hr>
+  <hr />
 
-  <!-- Email Login -->
-  <input type="email" id="email" placeholder="Email"><br>
-  <input type="password" id="password" placeholder="Password"><br>
-  <button id="email-login">Login with Email</button>
-  <button id="email-signup">Sign Up with Email</button>
+  <input type="email" id="email" placeholder="Email" /><br />
+  <input type="password" id="password" placeholder="Password" /><br />
+  <button onclick="loginWithEmail()">Login with Email</button>
+  <button onclick="signupWithEmail()">Sign Up with Email</button>
 
-  <script>
-    // 🔥 Your Firebase Config (from Step 1 — paste yours here!)
+  <!-- Firebase scripts -->
+  <script type="module">
+    // --- Firebase imports ---
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+
+    // --- Your Firebase Config: REPLACE the values below with YOURS from Firebase console ---
     const firebaseConfig = {
-      apiKey: "YOUR-API-KEY",
-      authDomain: "YOUR-PROJECT.firebaseapp.com",
-      projectId: "YOUR-PROJECT-ID",
-      appId: "YOUR-APP-ID"
+      apiKey: "AIzaSyCIVGv1dkpCn6bKGstvbqDMHbPY9ce8tw8",
+      authDomain: "jonahtube-bf9db.firebaseapp.com",
+      projectId: "jonahtube-bf9db",
+      storageBucket: "jonahtube-bf9db.firebasestorage.app",
+      messagingSenderId: "757825713276",
+      appId: "1:757825713276:web:d755230351acd1159d45f9",
+      measurementId: "G-NF5N10T4Q1"
     };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
 
-    // 👉 Google Login
-    document.getElementById("google-login").onclick = () => {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider)
+    // --- Initialize Firebase ---
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    // --- Functions for buttons ---
+    window.loginWithGoogle = () => {
+      signInWithPopup(auth, provider)
         .then(() => window.location.href = "index.html")
-        .catch(error => alert(error.message));
+        .catch(e => alert(e.message));
     };
 
-    // 👉 Email Login
-    document.getElementById("email-login").onclick = () => {
+    window.loginWithEmail = () => {
       const email = document.getElementById("email").value;
-      const pass = document.getElementById("password").value;
-      auth.signInWithEmailAndPassword(email, pass)
+      const password = document.getElementById("password").value;
+      signInWithEmailAndPassword(auth, email, password)
         .then(() => window.location.href = "index.html")
-        .catch(error => alert(error.message));
+        .catch(e => alert(e.message));
     };
 
-    // 👉 Email Signup
-    document.getElementById("email-signup").onclick = () => {
+    window.signupWithEmail = () => {
       const email = document.getElementById("email").value;
-      const pass = document.getElementById("password").value;
-      auth.createUserWithEmailAndPassword(email, pass)
+      const password = document.getElementById("password").value;
+      createUserWithEmailAndPassword(auth, email, password)
         .then(() => window.location.href = "index.html")
-        .catch(error => alert(error.message));
+        .catch(e => alert(e.message));
     };
   </script>
 </body>
