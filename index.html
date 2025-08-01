@@ -19,6 +19,8 @@
       cursor: pointer;
       outline: none;
       padding: 0;
+      z-index: 1001;
+      display: none; /* hidden until logged in */
     }
     #userPhotoSmall {
       width: 40px;
@@ -107,13 +109,13 @@
       }
     });
 
-    // Sign out logic
+    // Sign out button
     signOutBtn.addEventListener("click", async () => {
       await signOut(auth);
       window.location.href = "login.html";
     });
 
-    // Redirect to Add Video page
+    // Add video button
     addVideoBtn.addEventListener("click", () => {
       window.location.href = "add-video.html";
     });
@@ -123,6 +125,8 @@
         currentUserId = user.uid;
         userPhotoSmall.src = user.photoURL || "default-user.png";
         userPhotoSmall.alt = `${user.displayName || "User"} photo`;
+
+        userMenuBtn.style.display = "inline-block";
 
         const channelDoc = await getDoc(doc(db, "channels", currentUserId));
         if (channelDoc.exists()) {
