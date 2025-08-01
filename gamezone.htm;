@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>JonahTube! - GameZone</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Welcome to JonahTube!</h1>
+    <nav>
+      <a href="index.html" class="nav-btn">Home</a>
+      <a href="gamezone.html" class="nav-btn">GameZone</a>
+      <a href="my-story.html" class="nav-btn">My Story</a>
+    </nav>
+  </header>
+  <main>
+    <section class="gamezone">
+      <h2>GameZone 🎮</h2>
+      <p>Play some fun games made by me! (More coming soon)</p>
+      <div class="games-list">
+        <!-- Example HTML5 game embed: Flappy Bird Clone (replace with actual games) -->
+        <div class="game-card">
+          <h3>Flappy Bird Clone</h3>
+          <iframe src="https://scratch.mit.edu/projects/471945173/embed" allowfullscreen></iframe>
+        </div>
+        <!-- Add more game cards as Jonah makes more games -->
+      </div>
+    </section>
+  </main>
+  <footer>
+    <p>© 2025 JonahTube. Made with 💙 by Jonah.</p>
+  </footer>
+</body>
+</html>
