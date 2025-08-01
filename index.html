@@ -1,38 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>JonahTube! - Home</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <title>JonahTube - Home</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      margin: 0;
+    }
+    /* User menu styles */
+    #userMenuBtn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      outline: none;
+      padding: 0;
+    }
+    #userPhotoSmall {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+    #userDropdown {
+      position: fixed;
+      top: 60px;
+      right: 10px;
+      background: white;
+      border: 1px solid #ccc;
+      padding: 15px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      display: none;
+      width: 220px;
+      font-family: sans-serif;
+      z-index: 1000;
+    }
+    #userDropdown button {
+      margin-top: 10px;
+      width: 100%;
+      padding: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Welcome to JonahTube!</h1>
-    <nav>
-      <a href="index.html" class="nav-btn">Home</a>
-      <a href="gamezone.html" class="nav-btn">GameZone</a>
-      <a href="my-story.html" class="nav-btn">My Story</a>
-    </nav>
-  </header>
-  <main>
-    <section class="welcome">
-      <h2>Hey, I'm Jonah!</h2>
-      <p>I'm 11 and I love making YouTube videos, playing games, and sharing my adventures. Check out my latest video below!</p>
-    </section>
-    <section class="video-section">
-      <div class="video-wrapper">
-        <!-- Replace the video ID with Jonah's actual YouTube video ID -->
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-          title="Jonah's Latest YouTube Video" frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen>
-        </iframe>
-      </div>
-    </section>
-  </main>
-  <footer>
-    <p>© 2025 JonahTube. Made with 💙 by Jonah.</p>
-  </footer>
+
+  <h1>Welcome to JonahTube!</h1>
+  <p>Your place for channels, videos, and games.</p>
+
+  <!-- User Account Button -->
+  <button id="userMenuBtn" aria-label="User Account" title="User Account">
+    <img id="userPhotoSmall" src="" alt="User Photo" />
+  </button>
+
+  <!-- Dropdown Panel -->
+  <div id="userDropdown" role="menu" aria-hidden="true">
+    <div><strong id="channelNameSmall"></strong></div>
+    <div>Followers: <span id="followerCount">0</span></div>
+    <div>Videos: <span id="videoCount">0</span></div>
+    <button id="addVideoBtn">Add Video</button>
+    <button id="signOutBtn">Sign Out</button>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCIVGv1dkpCn6bKGstvbqDMHbPY9ce8tw8",
+      authDomain: "jonahtube-bf9db.firebaseapp.com",
+      projectId: "jonahtube-bf9db",
+      storageBucket: "jonahtube-bf9db.firebasestorage.app",
+      messagingSenderId: "757825713276",
+      appId: "1:757825713276:web:d755230351acd1159d45f9",
+      measurementId: "G-NF5N10T4Q1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const userMenuBtn = document.getElementById("userMenuBtn");
+    const userDropdown = document.getElementById("userDropdown");
+    const userPhotoSmall = document.getElementById("userPhotoSmall");
+    const channelNameSmall = document.getElementById("channelNameSmall");
+    const followerCount = document.getElementById("followerCount");
+    const videoCount = document.getElementById("videoCount");
+    const addVideoBtn = document.getElementById("addVideoBtn");
+    const signOutBtn = document.getElementById("signOutBtn");
+
+    let currentUserId = null;
+
+    // Toggle dropdown visibility
+    userMenuBtn.addEventListener("click", () => {
+      if (userDropdown.style.display === "block") {
+        userDropdown.style.display = "none";
+        userDropdown.setAttribute("aria-hidden", "true");
+      } else {
+        userDropdown.style.display = "block";
+        userDropdown.setAttribute("aria-hidden", "false");
+      }
+    });
+
+    // Sign out logic
+    signOutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+      window.location.href = "login.html";
+    });
+
+    // Redirect to Add Video page
+    addVideoBtn.addEventListener("click", () => {
+      window.location.href = "add-video.html";
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        currentUserId = user.uid;
+        userPhotoSmall.src = user.photoURL || "default-user.png";
+        userPhotoSmall.alt = `${user.displayName || "User"} photo`;
+
+        const channelDoc = await getDoc(doc(db, "channels", currentUserId));
+        if (channelDoc.exists()) {
+          const data = channelDoc.data();
+          channelNameSmall.textContent = data.name || "Unnamed Channel";
+          followerCount.textContent = data.followersCount || 0;
+
+          const videosCol = collection(db, "channels", currentUserId, "videos");
+          const videosSnap = await getDocs(videosCol);
+          videoCount.textContent = videosSnap.size;
+        } else {
+          channelNameSmall.textContent = "No Channel Yet";
+          followerCount.textContent = 0;
+          videoCount.textContent = 0;
+        }
+      } else {
+        userMenuBtn.style.display = "none";
+      }
+    });
+  </script>
+
 </body>
 </html>
