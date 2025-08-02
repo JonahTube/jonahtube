@@ -50,11 +50,8 @@
     }
 
     notifBell.addEventListener("click", () => {
-      alert("📜 Please read our Community Guidelines here:\n\nhttps://docs.google.com/document/d/1AOA27SZsHX0TqiBbfaMlEV4avWhnm9gbvyixlkY80JA/edit?usp=sharing");
-
-      // Mark as read
-      localStorage.setItem("readGuidelines", "true");
-      notifDot.style.display = "none";
+      // Navigate to guidelines page
+      window.location.href = "guidelines.html";
     });
   </script>
 </body>
