@@ -2,77 +2,59 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>JonahTube - Home</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JonahTube</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Header -->
-  <header class="header">
-    <div class="logo">📺 JonahTube</div>
-    <input type="text" class="search-bar" placeholder="Search videos..." />
-    <div class="header-icons">
-      <button id="create-button" title="Create">➕</button>
-      <button id="notification-button" title="Notifications">🔔</button>
-      <button id="profile-button" title="Your Account">👤</button>
+  <header class="top-bar">
+    <div class="logo">JonahTube</div>
+    <input type="text" placeholder="Search..." class="search-bar" />
+    <div class="top-buttons">
+      <a href="add-video.html" class="icon-button">➕</a>
+      <div id="notification-bell" class="icon-button">
+        🔔
+        <span id="notif-dot" class="notif-dot"></span>
+      </div>
+      <a href="account.html" class="icon-button">👤</a>
     </div>
   </header>
 
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <a href="index.html">🏠 Home</a>
-    <a href="#">🎬 Shorts</a>
-    <a href="#">📺 Subscriptions</a>
-    <a href="#">📜 History</a>
-    <a href="#">📹 Your Videos</a>
-    <a href="#">👍 Liked Videos</a>
-    <a href="#">⚙️ Settings</a>
-  </aside>
+  <div class="main-content">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <a href="index.html">🏠 Home</a>
+      <a href="#">🎬 Shorts</a>
+      <a href="#">📺 Subscriptions</a>
+      <a href="#">🕓 History</a>
+      <a href="#">📤 Your Videos</a>
+      <a href="#">👍 Liked Videos</a>
+      <a href="#">⚙️ Settings</a>
+    </aside>
 
-  <!-- Main Content -->
-  <main class="main-content">
-    <section class="video-grid">
-      <div class="video-card">
-        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
-        <h4>Welcome to JonahTube</h4>
-        <p>Jonah • 1K views • 1 day ago</p>
-      </div>
-      <div class="video-card">
-        <iframe src="https://www.youtube.com/embed/L_jWHffIx5E" allowfullscreen></iframe>
-        <h4>Epic Launch</h4>
-        <p>Cool Creator • 3K views • 2 days ago</p>
-      </div>
-      <div class="video-card">
-        <iframe src="https://www.youtube.com/embed/oHg5SJYRHA0" allowfullscreen></iframe>
-        <h4>Just Vibes</h4>
-        <p>Fun Guy • 2K views • 5 days ago</p>
-      </div>
-    </section>
-
-    <section class="shorts-section">
-      <h3>Recommended Shorts</h3>
-      <div class="shorts-grid">
-        <iframe src="https://www.youtube.com/embed/ZHhqwBwmW9I" allowfullscreen></iframe>
-        <iframe src="https://www.youtube.com/embed/hY7m5jjJ9mM" allowfullscreen></iframe>
-        <iframe src="https://www.youtube.com/embed/jNQXAC9IVRw" allowfullscreen></iframe>
-        <iframe src="https://www.youtube.com/embed/MtN1YnoL46Q" allowfullscreen></iframe>
-        <iframe src="https://www.youtube.com/embed/tVj0ZTS4WF4" allowfullscreen></iframe>
-      </div>
-    </section>
-  </main>
+    <!-- Videos Grid -->
+    <main class="videos-grid">
+      <h2>Welcome to JonahTube!</h2>
+      <p>Here’s where your featured videos will go.</p>
+    </main>
+  </div>
 
   <script>
-    document.getElementById('create-button').addEventListener('click', () => {
-      window.location.href = 'add-video.html';
-    });
+    const notifBell = document.getElementById("notification-bell");
+    const notifDot = document.getElementById("notif-dot");
+    const hasRead = localStorage.getItem("readGuidelines");
 
-    document.getElementById('profile-button').addEventListener('click', () => {
-      window.location.href = 'account.html';
-    });
+    // Show red dot only if not read yet
+    if (hasRead === "true") {
+      notifDot.style.display = "none";
+    }
 
-    document.getElementById('notification-button').addEventListener('click', () => {
-      alert('No new notifications (yet) 😎');
+    notifBell.addEventListener("click", () => {
+      alert("📜 Please read our Community Guidelines here:\n\nhttps://docs.google.com/document/d/1AOA27SZsHX0TqiBbfaMlEV4avWhnm9gbvyixlkY80JA/edit?usp=sharing");
+
+      // Mark as read
+      localStorage.setItem("readGuidelines", "true");
+      notifDot.style.display = "none";
     });
   </script>
 </body>
