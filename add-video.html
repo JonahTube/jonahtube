@@ -636,7 +636,7 @@
     // Form submission
     document.getElementById('upload-form').addEventListener('submit', function(e) {
       e.preventDefault();
-      
+
       const formData = {
         url: document.getElementById('video-url').value,
         title: document.getElementById('video-title').value,
@@ -644,31 +644,60 @@
         category: document.getElementById('video-category').value,
         visibility: document.querySelector('.visibility-option.selected').dataset.visibility
       };
-      
+
+      // Extract YouTube video ID
+      const videoId = extractYouTubeID(formData.url);
+      if (!videoId) {
+        alert('Invalid YouTube URL');
+        return;
+      }
+
       // Simulate upload process
       const statusMessage = document.getElementById('status-message');
       const uploadButton = document.getElementById('upload-button');
-      
+
       uploadButton.textContent = 'Publishing...';
       uploadButton.disabled = true;
-      
+
       setTimeout(() => {
+        // Save video to localStorage
+        const videos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
+
+        const newVideo = {
+          id: Date.now().toString(),
+          videoId: videoId,
+          title: formData.title,
+          description: formData.description,
+          category: formData.category,
+          visibility: formData.visibility,
+          channel: 'Your Channel', // Default channel name
+          views: '0 views',
+          uploadTime: 'just now',
+          createdAt: new Date().toISOString(),
+          likes: 0,
+          dislikes: 0,
+          comments: []
+        };
+
+        videos.unshift(newVideo); // Add to beginning of array
+        localStorage.setItem('jonahtube_videos', JSON.stringify(videos));
+
         statusMessage.className = 'status-message success';
         statusMessage.textContent = `Video "${formData.title}" has been published successfully!`;
-        
+
         // Reset form
         this.reset();
         document.getElementById('url-preview').classList.remove('show');
         document.getElementById('title-count').textContent = '0 / 100';
         document.getElementById('description-count').textContent = '0 / 5000';
-        
+
         uploadButton.textContent = 'Publish';
         uploadButton.disabled = false;
-        
-        // Hide success message after 5 seconds
+
+        // Redirect to home page after 2 seconds
         setTimeout(() => {
-          statusMessage.style.display = 'none';
-        }, 5000);
+          window.location.href = 'index.html';
+        }, 2000);
       }, 2000);
     });
 
