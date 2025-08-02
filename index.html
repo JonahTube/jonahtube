@@ -2,138 +2,64 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>JonahTube - Your Channel Hub</title>
-  <style>
-    :root {
-      --main-color: #1e90ff;
-      --main-dark: #1565c0;
-      --bg-color: #f5f9ff;
-      --text-color: #333;
-      --card-bg: #fff;
-      --shadow-color: rgba(30, 144, 255, 0.2);
-    }
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      background: var(--bg-color);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: var(--text-color);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    nav {
-      background: var(--main-color);
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 24px;
-      box-shadow: 0 2px 8px var(--shadow-color);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    nav .logo {
-      font-weight: 700;
-      font-size: 1.5rem;
-      user-select: none;
-      cursor: default;
-      letter-spacing: 2px;
-    }
-    #userMenuBtn {
-      border: none;
-      background: none;
-      cursor: pointer;
-      padding: 0;
-      outline: none;
-      display: none;
-      width: 44px;
-      height: 44px;
-      overflow: hidden;
-      border-radius: 50%;
-      box-shadow: 0 0 0 2px white;
-    }
-    #userMenuBtn img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 50%;
-      display: block;
-    }
-    main {
-      flex: 1;
-      padding: 40px 24px;
-      max-width: 800px;
-      margin: 0 auto;
-      text-align: center;
-    }
-    main h1 {
-      font-size: 3rem;
-      margin-bottom: 12px;
-      color: var(--main-dark);
-      text-shadow: 1px 1px 2px var(--main-light);
-    }
-    main p {
-      font-size: 1.25rem;
-      color: #555;
-      margin-bottom: 24px;
-      user-select: none;
-    }
-    @media (max-width: 600px) {
-      main h1 {
-        font-size: 2.2rem;
-      }
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JonahTube - Home</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="icon" href="favicon.ico" type="image/x-icon"/>
 </head>
 <body>
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">📺 JonahTube</div>
+    <input type="text" class="search-bar" placeholder="Search videos..." />
+    <div class="header-icons">
+      <button title="Create">➕</button>
+      <button title="Notifications">🔔</button>
+      <button title="Account">👤</button>
+    </div>
+  </header>
 
-  <nav>
-    <div class="logo">JonahTube</div>
-    <a href="account.html" id="userMenuBtn" title="Your Account" aria-label="Your Account">
-      <img id="userPhotoSmall" src="" alt="User Photo" />
-    </a>
-  </nav>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <a href="#">🏠 Home</a>
+    <a href="#">🎬 Shorts</a>
+    <a href="#">📺 Subscriptions</a>
+    <a href="#">📜 History</a>
+    <a href="#">📹 Your Videos</a>
+    <a href="#">👍 Liked</a>
+    <a href="#">⚙️ Settings</a>
+  </aside>
 
-  <main>
-    <h1>Welcome to JonahTube!</h1>
-    <p>Your place for channels, videos, and games.</p>
+  <!-- Main Content -->
+  <main class="main-content">
+    <section class="video-grid">
+      <div class="video-card">
+        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+        <h4>Welcome to JonahTube</h4>
+        <p>Jonah • 1K views • 1 day ago</p>
+      </div>
+      <div class="video-card">
+        <iframe src="https://www.youtube.com/embed/L_jWHffIx5E" allowfullscreen></iframe>
+        <h4>Epic Launch</h4>
+        <p>Cool Creator • 3K views • 2 days ago</p>
+      </div>
+      <div class="video-card">
+        <iframe src="https://www.youtube.com/embed/oHg5SJYRHA0" allowfullscreen></iframe>
+        <h4>Just Vibes</h4>
+        <p>Fun Guy • 2K views • 5 days ago</p>
+      </div>
+    </section>
+
+    <section class="shorts-section">
+      <h3>Recommended Shorts</h3>
+      <div class="shorts-grid">
+        <iframe src="https://www.youtube.com/embed/ZHhqwBwmW9I" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/hY7m5jjJ9mM" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/jNQXAC9IVRw" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/MtN1YnoL46Q" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/tVj0ZTS4WF4" allowfullscreen></iframe>
+      </div>
+    </section>
   </main>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCIVGv1dkpCn6bKGstvbqDMHbPY9ce8tw8",
-      authDomain: "jonahtube-bf9db.firebaseapp.com",
-      projectId: "jonahtube-bf9db",
-      storageBucket: "jonahtube-bf9db.firebasestorage.app",
-      messagingSenderId: "757825713276",
-      appId: "1:757825713276:web:d755230351acd1159d45f9",
-      measurementId: "G-NF5N10T4Q1"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    const userMenuBtn = document.getElementById("userMenuBtn");
-    const userPhotoSmall = document.getElementById("userPhotoSmall");
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        userPhotoSmall.src = user.photoURL || "https://i.pravatar.cc/44";
-        userPhotoSmall.alt = `${user.displayName || "User"} photo`;
-        userMenuBtn.style.display = "inline-block";
-      } else {
-        userMenuBtn.style.display = "none";
-      }
-    });
-  </script>
-
 </body>
 </html>
