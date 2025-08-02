@@ -232,12 +232,26 @@ body, html {
   background: #a8a8a8;
 }
 
+.short-item {
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.short-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
 .shorts-grid iframe {
   width: 162px;
   height: 288px;
   border-radius: 12px;
   border: none;
   flex-shrink: 0;
+  pointer-events: none;
 }
 
 /* Responsive Design */
