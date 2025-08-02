@@ -34,147 +34,26 @@
 
     <!-- Videos Grid -->
     <main class="videos-grid">
-      <h2>Trending on JonahTube</h2>
-      <p>Check out these awesome videos from creators around the world!</p>
-      
-      <div class="video-grid">
-        <!-- Trending Music Videos -->
-        <div class="video-card" onclick="openVideo('3tmd-ClpJxA', 'As It Was', 'Harry Styles', '1.2B views', '1 year ago')">
-          <iframe src="https://www.youtube.com/embed/3tmd-ClpJxA" allowfullscreen></iframe>
-          <h4>As It Was</h4>
-          <p>Harry Styles • 1.2B views • 1 year ago</p>
-        </div>
+      <h2>JonahTube</h2>
+      <p>Your community's videos will appear here!</p>
 
-        <div class="video-card" onclick="openVideo('kJQP7kiw5Fk', 'despacito', 'Luis Fonsi ft. Daddy Yankee', '8.2B views', '6 years ago')">
-          <iframe src="https://www.youtube.com/embed/kJQP7kiw5Fk" allowfullscreen></iframe>
-          <h4>Despacito</h4>
-          <p>Luis Fonsi ft. Daddy Yankee • 8.2B views • 6 years ago</p>
-        </div>
+      <div class="video-grid" id="video-grid">
+        <!-- Videos will be dynamically loaded from localStorage -->
+      </div>
 
-        <div class="video-card" onclick="openVideo('fJ9rUzIMcZQ', 'Shape of You', 'Ed Sheeran', '5.9B views', '7 years ago')">
-          <iframe src="https://www.youtube.com/embed/fJ9rUzIMcZQ" allowfullscreen></iframe>
-          <h4>Shape of You</h4>
-          <p>Ed Sheeran • 5.9B views • 7 years ago</p>
-        </div>
-
-        <!-- Gaming Content -->
-        <div class="video-card" onclick="openVideo('WcWM_1hBu_c', 'Playing Minecraft For The First Time', 'PewDiePie', '89M views', '4 years ago')">
-          <iframe src="https://www.youtube.com/embed/WcWM_1hBu_c" allowfullscreen></iframe>
-          <h4>Playing Minecraft For The First Time</h4>
-          <p>PewDiePie • 89M views • 4 years ago</p>
-        </div>
-
-        <div class="video-card" onclick="openVideo('pJkHAsO6xjk', 'Among Us but with 99 players', 'MrBeast Gaming', '45M views', '3 years ago')">
-          <iframe src="https://www.youtube.com/embed/pJkHAsO6xjk" allowfullscreen></iframe>
-          <h4>Among Us but with 99 players</h4>
-          <p>MrBeast Gaming • 45M views • 3 years ago</p>
-        </div>
-
-        <div class="video-card" onclick="openVideo('rGqKZqNBV1M', 'I Bought Everything In 5 Stores', 'MrBeast', '167M views', '2 years ago')">
-          <iframe src="https://www.youtube.com/embed/rGqKZqNBV1M" allowfullscreen></iframe>
-          <h4>I Bought Everything In 5 Stores</h4>
-          <p>MrBeast • 167M views • 2 years ago</p>
-        </div>
-
-        <!-- Popular Entertainment -->
-        <div class="video-card" onclick="openVideo('9bZkp7q19f0', 'Gangnam Style', 'PSY', '4.7B views', '11 years ago')">
-          <iframe src="https://www.youtube.com/embed/9bZkp7q19f0" allowfullscreen></iframe>
-          <h4>Gangnam Style</h4>
-          <p>PSY • 4.7B views • 11 years ago</p>
-        </div>
-
-        <div class="video-card" onclick="openVideo('YQHsXMglC9A', 'See You Again ft. Charlie Puth', 'Wiz Khalifa', '5.7B views', '8 years ago')">
-          <iframe src="https://www.youtube.com/embed/YQHsXMglC9A" allowfullscreen></iframe>
-          <h4>See You Again ft. Charlie Puth</h4>
-          <p>Wiz Khalifa • 5.7B views • 8 years ago</p>
-        </div>
-
-        <div class="video-card" onclick="openVideo('hFZFjoX2cGg', 'Baby Shark Dance', 'Pinkfong! Kids Songs & Stories', '13.9B views', '6 years ago')">
-          <iframe src="https://www.youtube.com/embed/hFZFjoX2cGg" allowfullscreen></iframe>
-          <h4>Baby Shark Dance</h4>
-          <p>Pinkfong! Kids Songs & Stories • 13.9B views • 6 years ago</p>
-        </div>
-
-        <!-- Viral Hits -->
-        <div class="video-card" onclick="openVideo('60ItHLz5WEA', 'Friday', 'Rebecca Black', '148M views', '12 years ago')">
-          <iframe src="https://www.youtube.com/embed/60ItHLz5WEA" allowfullscreen></iframe>
-          <h4>Friday</h4>
-          <p>Rebecca Black • 148M views • 12 years ago</p>
-        </div>
-
-        <div class="video-card" onclick="openVideo('fWNaR-rxAic', 'Chocolate Rain', 'Tay Zonday', '135M views', '16 years ago')">
-          <iframe src="https://www.youtube.com/embed/fWNaR-rxAic" allowfullscreen></iframe>
-          <h4>Chocolate Rain</h4>
-          <p>Tay Zonday • 135M views • 16 years ago</p>
-        </div>
-
-        <div class="video-card" onclick="openVideo('iik25wqIuFo', 'David After Dentist', 'DavidAfterDentist', '139M views', '14 years ago')">
-          <iframe src="https://www.youtube.com/embed/iik25wqIuFo" allowfullscreen></iframe>
-          <h4>David After Dentist</h4>
-          <p>DavidAfterDentist • 139M views • 14 years ago</p>
-        </div>
-
-        <!-- Comedy & Memes -->
-        <div class="video-card" onclick="openVideo('Tt7bzxurJ1I', 'Charlie Bit My Finger', 'HDCYT', '881M views', '16 years ago')">
-          <iframe src="https://www.youtube.com/embed/Tt7bzxurJ1I" allowfullscreen></iframe>
-          <h4>Charlie Bit My Finger</h4>
-          <p>HDCYT • 881M views • 16 years ago</p>
-        </div>
-
-        <div class="video-card" onclick="openVideo('dQw4w9WgXcQ', 'Never Gonna Give You Up', 'Rick Astley', '1.4B views', '16 years ago')">
-          <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
-          <h4>Never Gonna Give You Up</h4>
-          <p>Rick Astley • 1.4B views • 16 years ago</p>
-        </div>
-
-        <div class="video-card" onclick="openVideo('oHg5SJYRHA0', 'Nyan Cat [original]', 'saraj00n', '233M views', '12 years ago')">
-          <iframe src="https://www.youtube.com/embed/oHg5SJYRHA0" allowfullscreen></iframe>
-          <h4>Nyan Cat [original]</h4>
-          <p>saraj00n • 233M views • 12 years ago</p>
-        </div>
-
-        <!-- Tech & Education -->
-        <div class="video-card" onclick="openVideo('rN6nlNC9WQA', 'iPhone 15 Pro Review', 'Marques Brownlee', '8.2M views', '3 months ago')">
-          <iframe src="https://www.youtube.com/embed/rN6nlNC9WQA" allowfullscreen></iframe>
-          <h4>iPhone 15 Pro Review</h4>
-          <p>Marques Brownlee • 8.2M views • 3 months ago</p>
-        </div>
-
-        <div class="video-card" onclick="openVideo('t7EAlTcZFwY', 'What If Earth Stopped Spinning?', 'Vsauce', '32M views', '8 years ago')">
-          <iframe src="https://www.youtube.com/embed/t7EAlTcZFwY" allowfullscreen></iframe>
-          <h4>What If Earth Stopped Spinning?</h4>
-          <p>Vsauce • 32M views • 8 years ago</p>
-        </div>
-
-        <div class="video-card" onclick="openVideo('lJIrF4YjHfQ', 'How Does WiFi Work?', 'Technology Connections', '2.1M views', '1 year ago')">
-          <iframe src="https://www.youtube.com/embed/lJIrF4YjHfQ" allowfullscreen></iframe>
-          <h4>How Does WiFi Work?</h4>
-          <p>Technology Connections • 2.1M views • 1 year ago</p>
-        </div>
+      <!-- Empty State -->
+      <div class="empty-state" id="empty-state">
+        <div class="empty-icon">📹</div>
+        <h3>No videos yet!</h3>
+        <p>Be the first to upload a video to JonahTube.</p>
+        <a href="add-video.html" class="upload-button">Upload Your First Video</a>
       </div>
 
       <!-- Shorts Section -->
-      <div class="shorts-section">
+      <div class="shorts-section" id="shorts-section" style="display: none;">
         <h3>🎬 Shorts</h3>
-        <div class="shorts-grid">
-          <div class="short-item" onclick="openShort('jNQXAC9IVRw')">
-            <iframe src="https://www.youtube.com/embed/jNQXAC9IVRw" allowfullscreen></iframe>
-          </div>
-          <div class="short-item" onclick="openShort('L_jWHffIx5E')">
-            <iframe src="https://www.youtube.com/embed/L_jWHffIx5E" allowfullscreen></iframe>
-          </div>
-          <div class="short-item" onclick="openShort('ZZ5LpwO-An4')">
-            <iframe src="https://www.youtube.com/embed/ZZ5LpwO-An4" allowfullscreen></iframe>
-          </div>
-          <div class="short-item" onclick="openShort('M7FIvfx5J10')">
-            <iframe src="https://www.youtube.com/embed/M7FIvfx5J10" allowfullscreen></iframe>
-          </div>
-          <div class="short-item" onclick="openShort('u2KZJzoz-qI')">
-            <iframe src="https://www.youtube.com/embed/u2KZJzoz-qI" allowfullscreen></iframe>
-          </div>
-          <div class="short-item" onclick="openShort('09R8_2nJtjg')">
-            <iframe src="https://www.youtube.com/embed/09R8_2nJtjg" allowfullscreen></iframe>
-          </div>
+        <div class="shorts-grid" id="shorts-grid">
+          <!-- Shorts will be dynamically loaded -->
         </div>
       </div>
     </main>
