@@ -202,16 +202,29 @@
 
     .header-btn {
       color: white;
-      font-size: 18px;
+      font-size: 14px;
       text-decoration: none;
-      padding: 8px;
-      border-radius: 50%;
+      padding: 8px 12px;
+      border-radius: 20px;
       background: rgba(255, 255, 255, 0.1);
       transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .header-btn:hover {
       background: rgba(255, 255, 255, 0.2);
+    }
+
+    .header-btn .button-icon {
+      font-size: 18px;
+    }
+
+    .header-btn .button-label {
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
     }
 
     .navigation-indicator {
