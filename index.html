@@ -232,6 +232,11 @@
 
     // Initialize subscriptions list on page load
     document.addEventListener('DOMContentLoaded', updateSubscriptionsList);
+
+    // Function to open shorts
+    function openShort(videoId) {
+      window.location.href = `shorts.html?v=${videoId}`;
+    }
   </script>
 </body>
 </html>
