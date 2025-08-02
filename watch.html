@@ -580,20 +580,23 @@
         return;
       }
 
+      // Load related videos first
+      loadRelatedVideos();
+
       // Set video iframe
       document.getElementById('video-iframe').src = `https://www.youtube.com/embed/${videoId}`;
-      
+
       // Set video info
       document.getElementById('video-title').textContent = videoTitle || 'Untitled Video';
       document.getElementById('video-stats').textContent = `${views || '0 views'} • ${time || 'Unknown time'}`;
       document.getElementById('channel-name').textContent = channelName || 'Unknown Channel';
-      document.getElementById('video-description').textContent = 'This is an amazing video! Like and subscribe for more content like this.';
+      document.getElementById('video-description').textContent = description || 'No description available.';
 
       // Load stored data
       loadVideoData();
       loadComments();
       loadSubscriptionStatus();
-      loadRelatedVideos();
+      loadRelatedVideosToUI();
       updateSubscriptionsList();
     }
 
