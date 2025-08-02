@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Watch - JonahTube</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .watch-container {
+      margin-left: 240px;
+      padding: 24px;
+      max-width: 1280px;
+      background-color: #f9f9f9;
+      min-height: calc(100vh - 56px);
+    }
+
+    .video-player {
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .video-player iframe {
+      width: 100%;
+      height: 480px;
+      border: none;
+    }
+
+    .video-info {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .video-title {
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: #0f0f0f;
+      line-height: 1.3;
+    }
+
+    .video-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .video-stats {
+      color: #606060;
+      font-size: 14px;
+    }
+
+    .video-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .like-dislike-container {
+      display: flex;
+      background: #f2f2f2;
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .like-btn, .dislike-btn {
+      padding: 8px 16px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.1s;
+    }
+
+    .like-btn:hover, .dislike-btn:hover {
+      background: #e5e5e5;
+    }
+
+    .like-btn.active {
+      color: #ff0000;
+      background: #ffe5e5;
+    }
+
+    .dislike-btn.active {
+      color: #ff0000;
+      background: #ffe5e5;
+    }
+
+    .like-btn .icon, .dislike-btn .icon {
+      font-size: 16px;
+    }
+
+    .subscribe-btn {
+      background: #0f0f0f;
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 18px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.1s;
+    }
+
+    .subscribe-btn:hover {
+      background: #272727;
+    }
+
+    .subscribe-btn.subscribed {
+      background: #f2f2f2;
+      color: #0f0f0f;
+    }
+
+    .subscribe-btn.subscribed:hover {
+      background: #e5e5e5;
+    }
+
+    .channel-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .channel-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #e5e5e5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .channel-details h4 {
+      font-size: 14px;
+      font-weight: 500;
+      margin: 0 0 2px 0;
+    }
+
+    .channel-details p {
+      font-size: 12px;
+      color: #606060;
+      margin: 0;
+    }
+
+    .video-description {
+      background: #f2f2f2;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 12px;
+    }
+
+    .description-text {
+      font-size: 14px;
+      line-height: 1.4;
+      color: #0f0f0f;
+    }
+
+    .comments-section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .comments-header {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 16px;
+      color: #0f0f0f;
+    }
+
+    .comment-form {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      align-items: flex-start;
+    }
+
+    .comment-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #e5e5e5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .comment-input-container {
+      flex: 1;
+    }
+
+    .comment-input {
+      width: 100%;
+      border: none;
+      border-bottom: 1px solid #e5e5e5;
+      padding: 8px 0;
+      font-size: 14px;
+      outline: none;
+      background: transparent;
+      resize: none;
+      font-family: inherit;
+    }
+
+    .comment-input:focus {
+      border-bottom-color: #0f0f0f;
+    }
+
+    .comment-actions {
+      display: none;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .comment-actions.active {
+      display: flex;
+    }
+
+    .comment-cancel, .comment-submit {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 18px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+
+    .comment-cancel {
+      background: transparent;
+      color: #606060;
+    }
+
+    .comment-cancel:hover {
+      background: #f2f2f2;
+    }
+
+    .comment-submit {
+      background: #065fd4;
+      color: #fff;
+    }
+
+    .comment-submit:hover {
+      background: #0b57c7;
+    }
+
+    .comment-submit:disabled {
+      background: #f2f2f2;
+      color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .comments-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .comment {
+      display: flex;
+      gap: 12px;
+    }
+
+    .comment-content {
+      flex: 1;
+    }
+
+    .comment-author {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .comment-time {
+      font-size: 12px;
+      color: #606060;
+      margin-left: 8px;
+    }
+
+    .comment-text {
+      font-size: 14px;
+      line-height: 1.4;
+      color: #0f0f0f;
+    }
+
+    .related-videos {
+      margin-left: 24px;
+      width: 400px;
+      flex-shrink: 0;
+    }
+
+    .related-videos h3 {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .related-video {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+      padding: 4px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.1s;
+    }
+
+    .related-video:hover {
+      background: #f2f2f2;
+    }
+
+    .related-thumbnail {
+      width: 168px;
+      height: 94px;
+      background: #e5e5e5;
+      border-radius: 6px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .related-thumbnail iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      pointer-events: none;
+    }
+
+    .related-info {
+      flex: 1;
+      padding: 4px 0;
+    }
+
+    .related-title {
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.3;
+      margin-bottom: 4px;
+      color: #0f0f0f;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .related-channel {
+      font-size: 12px;
+      color: #606060;
+      margin-bottom: 2px;
+    }
+
+    .related-views {
+      font-size: 12px;
+      color: #606060;
+    }
+
+    .watch-layout {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    .main-content-watch {
+      flex: 1;
+      min-width: 0;
+    }
+
+    @media (max-width: 1312px) {
+      .watch-container {
+        margin-left: 72px;
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .watch-layout {
+        flex-direction: column;
+      }
+      
+      .related-videos {
+        margin-left: 0;
+        width: 100%;
+      }
+      
+      .related-video {
+        max-width: 500px;
+      }
+    }
+
+    @media (max-width: 792px) {
+      .watch-container {
+        margin-left: 0;
+        padding: 16px;
+      }
+      
+      .video-player iframe {
+        height: 250px;
+      }
+      
+      .video-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="top-bar">
+    <div class="logo">JonahTube</div>
+    <input type="text" placeholder="Search..." class="search-bar" />
+    <div class="top-buttons">
+      <a href="add-video.html" class="icon-button">➕</a>
+      <div id="notification-bell" class="icon-button">
+        🔔
+        <span id="notif-dot" class="notif-dot"></span>
+      </div>
+      <a href="account.html" class="icon-button">👤</a>
+    </div>
+  </header>
+
+  <div class="main-content">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <a href="index.html">🏠 Home</a>
+      <a href="#">🎬 Shorts</a>
+      <a href="#" id="subscriptions-link">📺 Subscriptions</a>
+      <div id="subscriptions-list" style="display: none; padding-left: 20px; margin-top: 8px;"></div>
+      <a href="#">🕓 History</a>
+      <a href="#">📤 Your Videos</a>
+      <a href="#">👍 Liked Videos</a>
+      <a href="#">⚙️ Settings</a>
+    </aside>
+
+    <!-- Watch Page Content -->
+    <main class="watch-container">
+      <div class="watch-layout">
+        <div class="main-content-watch">
+          <!-- Video Player -->
+          <div class="video-player">
+            <iframe id="video-iframe" allowfullscreen></iframe>
+          </div>
+
+          <!-- Video Info -->
+          <div class="video-info">
+            <h1 class="video-title" id="video-title">Loading...</h1>
+            
+            <div class="video-meta">
+              <div class="video-stats" id="video-stats">Loading...</div>
+              <div class="video-actions">
+                <div class="like-dislike-container">
+                  <button class="like-btn" id="like-btn">
+                    <span class="icon">👍</span>
+                    <span id="like-count">0</span>
+                  </button>
+                  <button class="dislike-btn" id="dislike-btn">
+                    <span class="icon">👎</span>
+                    <span id="dislike-count">0</span>
+                  </button>
+                </div>
+                <button class="subscribe-btn" id="subscribe-btn">Subscribe</button>
+              </div>
+            </div>
+
+            <div class="channel-info">
+              <div class="channel-avatar" id="channel-avatar">📺</div>
+              <div class="channel-details">
+                <h4 id="channel-name">Loading...</h4>
+                <p id="channel-subscribers">0 subscribers</p>
+              </div>
+            </div>
+
+            <div class="video-description">
+              <div class="description-text" id="video-description">Loading...</div>
+            </div>
+          </div>
+
+          <!-- Comments Section -->
+          <div class="comments-section">
+            <div class="comments-header">
+              <span id="comment-count">0</span> Comments
+            </div>
+
+            <div class="comment-form">
+              <div class="comment-avatar">👤</div>
+              <div class="comment-input-container">
+                <textarea 
+                  class="comment-input" 
+                  id="comment-input"
+                  placeholder="Add a comment..."
+                  rows="1"
+                ></textarea>
+                <div class="comment-actions" id="comment-actions">
+                  <button class="comment-cancel" id="comment-cancel">Cancel</button>
+                  <button class="comment-submit" id="comment-submit" disabled>Comment</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="comments-list" id="comments-list">
+              <!-- Comments will be dynamically added here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Related Videos -->
+        <div class="related-videos">
+          <h3>Up next</h3>
+          <div id="related-videos-list">
+            <!-- Related videos will be dynamically added here -->
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Video data and state management
+    const urlParams = new URLSearchParams(window.location.search);
+    const videoId = urlParams.get('v');
+    const videoTitle = urlParams.get('title');
+    const channelName = urlParams.get('channel');
+    const views = urlParams.get('views');
+    const time = urlParams.get('time');
+
+    // Sample related videos data
+    const relatedVideos = [
+      { id: 'jNQXAC9IVRw', title: 'Basketball Trick Shots That Will Blow Your Mind', channel: 'HoopMaster', views: '1.8M views', time: '1 week ago' },
+      { id: 'L_jWHffIx5E', title: 'Soccer Skills & Goals Compilation', channel: 'FootballFever', views: '4.1M views', time: '5 days ago' },
+      { id: 'kJQP7kiw5Fk', title: 'Minecraft: Building the Ultimate Castle', channel: 'BlockMaster', views: '987K views', time: '2 days ago' },
+      { id: 'fJ9rUzIMcZQ', title: 'Fortnite Victory Royale Montage', channel: 'GameGod', views: '1.5M views', time: '4 days ago' },
+      { id: 'ZZ5LpwO-An4', title: 'Among Us But With 1000 Players', channel: 'CrewMate', views: '3.2M views', time: '1 week ago' }
+    ];
+
+    // Initialize page
+    function initializePage() {
+      if (!videoId) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      // Set video iframe
+      document.getElementById('video-iframe').src = `https://www.youtube.com/embed/${videoId}`;
+      
+      // Set video info
+      document.getElementById('video-title').textContent = videoTitle || 'Untitled Video';
+      document.getElementById('video-stats').textContent = `${views || '0 views'} • ${time || 'Unknown time'}`;
+      document.getElementById('channel-name').textContent = channelName || 'Unknown Channel';
+      document.getElementById('video-description').textContent = 'This is an amazing video! Like and subscribe for more content like this.';
+
+      // Load stored data
+      loadVideoData();
+      loadComments();
+      loadSubscriptionStatus();
+      loadRelatedVideos();
+      updateSubscriptionsList();
+    }
+
+    // Local storage keys
+    const getVideoKey = (key) => `video_${videoId}_${key}`;
+    const getChannelKey = (key) => `channel_${channelName}_${key}`;
+
+    // Video interaction functions
+    function loadVideoData() {
+      const likes = parseInt(localStorage.getItem(getVideoKey('likes')) || '0');
+      const dislikes = parseInt(localStorage.getItem(getVideoKey('dislikes')) || '0');
+      const userLiked = localStorage.getItem(getVideoKey('userLiked'));
+      const userDisliked = localStorage.getItem(getVideoKey('userDisliked'));
+
+      document.getElementById('like-count').textContent = likes;
+      document.getElementById('dislike-count').textContent = dislikes;
+
+      if (userLiked === 'true') {
+        document.getElementById('like-btn').classList.add('active');
+      }
+      if (userDisliked === 'true') {
+        document.getElementById('dislike-btn').classList.add('active');
+      }
+
+      // Set subscriber count
+      const subscriberCount = parseInt(localStorage.getItem(getChannelKey('subscribers')) || Math.floor(Math.random() * 1000000));
+      localStorage.setItem(getChannelKey('subscribers'), subscriberCount);
+      document.getElementById('channel-subscribers').textContent = `${formatNumber(subscriberCount)} subscribers`;
+    }
+
+    function formatNumber(num) {
+      if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+      if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+      return num.toString();
+    }
+
+    // Like/Dislike functionality
+    document.getElementById('like-btn').addEventListener('click', function() {
+      const likeBtn = this;
+      const dislikeBtn = document.getElementById('dislike-btn');
+      const likeCountEl = document.getElementById('like-count');
+      
+      let likes = parseInt(likeCountEl.textContent);
+      const wasLiked = likeBtn.classList.contains('active');
+      const wasDisliked = dislikeBtn.classList.contains('active');
+
+      // Remove dislike if it was active
+      if (wasDisliked) {
+        dislikeBtn.classList.remove('active');
+        localStorage.setItem(getVideoKey('userDisliked'), 'false');
+        const dislikes = parseInt(document.getElementById('dislike-count').textContent) - 1;
+        document.getElementById('dislike-count').textContent = Math.max(0, dislikes);
+        localStorage.setItem(getVideoKey('dislikes'), Math.max(0, dislikes));
+      }
+
+      // Toggle like
+      if (wasLiked) {
+        likeBtn.classList.remove('active');
+        likes = Math.max(0, likes - 1);
+        localStorage.setItem(getVideoKey('userLiked'), 'false');
+      } else {
+        likeBtn.classList.add('active');
+        likes += 1;
+        localStorage.setItem(getVideoKey('userLiked'), 'true');
+      }
+
+      likeCountEl.textContent = likes;
+      localStorage.setItem(getVideoKey('likes'), likes);
+    });
+
+    document.getElementById('dislike-btn').addEventListener('click', function() {
+      const dislikeBtn = this;
+      const likeBtn = document.getElementById('like-btn');
+      const dislikeCountEl = document.getElementById('dislike-count');
+      
+      let dislikes = parseInt(dislikeCountEl.textContent);
+      const wasDisliked = dislikeBtn.classList.contains('active');
+      const wasLiked = likeBtn.classList.contains('active');
+
+      // Remove like if it was active
+      if (wasLiked) {
+        likeBtn.classList.remove('active');
+        localStorage.setItem(getVideoKey('userLiked'), 'false');
+        const likes = parseInt(document.getElementById('like-count').textContent) - 1;
+        document.getElementById('like-count').textContent = Math.max(0, likes);
+        localStorage.setItem(getVideoKey('likes'), Math.max(0, likes));
+      }
+
+      // Toggle dislike
+      if (wasDisliked) {
+        dislikeBtn.classList.remove('active');
+        dislikes = Math.max(0, dislikes - 1);
+        localStorage.setItem(getVideoKey('userDisliked'), 'false');
+      } else {
+        dislikeBtn.classList.add('active');
+        dislikes += 1;
+        localStorage.setItem(getVideoKey('userDisliked'), 'true');
+      }
+
+      dislikeCountEl.textContent = dislikes;
+      localStorage.setItem(getVideoKey('dislikes'), dislikes);
+    });
+
+    // Subscribe functionality
+    function loadSubscriptionStatus() {
+      const isSubscribed = localStorage.getItem(getChannelKey('subscribed')) === 'true';
+      const subscribeBtn = document.getElementById('subscribe-btn');
+      
+      if (isSubscribed) {
+        subscribeBtn.textContent = 'Unsubscribe';
+        subscribeBtn.classList.add('subscribed');
+      }
+    }
+
+    document.getElementById('subscribe-btn').addEventListener('click', function() {
+      const subscribeBtn = this;
+      const isSubscribed = subscribeBtn.classList.contains('subscribed');
+      
+      if (isSubscribed) {
+        subscribeBtn.textContent = 'Subscribe';
+        subscribeBtn.classList.remove('subscribed');
+        localStorage.setItem(getChannelKey('subscribed'), 'false');
+        
+        // Remove from subscriptions list
+        const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '[]');
+        const updatedSubscriptions = subscriptions.filter(sub => sub.channel !== channelName);
+        localStorage.setItem('subscriptions', JSON.stringify(updatedSubscriptions));
+        
+        // Update subscriber count
+        let subscriberCount = parseInt(localStorage.getItem(getChannelKey('subscribers'))) - 1;
+        localStorage.setItem(getChannelKey('subscribers'), Math.max(0, subscriberCount));
+        document.getElementById('channel-subscribers').textContent = `${formatNumber(subscriberCount)} subscribers`;
+      } else {
+        subscribeBtn.textContent = 'Unsubscribe';
+        subscribeBtn.classList.add('subscribed');
+        localStorage.setItem(getChannelKey('subscribed'), 'true');
+        
+        // Add to subscriptions list
+        const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '[]');
+        const newSubscription = { channel: channelName, avatar: '📺' };
+        if (!subscriptions.find(sub => sub.channel === channelName)) {
+          subscriptions.push(newSubscription);
+          localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
+        }
+        
+        // Update subscriber count
+        let subscriberCount = parseInt(localStorage.getItem(getChannelKey('subscribers'))) + 1;
+        localStorage.setItem(getChannelKey('subscribers'), subscriberCount);
+        document.getElementById('channel-subscribers').textContent = `${formatNumber(subscriberCount)} subscribers`;
+      }
+      
+      updateSubscriptionsList();
+    });
+
+    // Comment functionality
+    const commentInput = document.getElementById('comment-input');
+    const commentActions = document.getElementById('comment-actions');
+    const commentSubmit = document.getElementById('comment-submit');
+    const commentCancel = document.getElementById('comment-cancel');
+
+    commentInput.addEventListener('focus', () => {
+      commentActions.classList.add('active');
+    });
+
+    commentInput.addEventListener('input', () => {
+      commentSubmit.disabled = commentInput.value.trim() === '';
+    });
+
+    commentCancel.addEventListener('click', () => {
+      commentInput.value = '';
+      commentInput.blur();
+      commentActions.classList.remove('active');
+      commentSubmit.disabled = true;
+    });
+
+    commentSubmit.addEventListener('click', () => {
+      const commentText = commentInput.value.trim();
+      if (commentText) {
+        addComment(commentText);
+        commentInput.value = '';
+        commentActions.classList.remove('active');
+        commentSubmit.disabled = true;
+      }
+    });
+
+    function addComment(text) {
+      const comments = JSON.parse(localStorage.getItem(getVideoKey('comments')) || '[]');
+      const newComment = {
+        id: Date.now(),
+        author: 'You',
+        text: text,
+        timestamp: new Date().toISOString()
+      };
+      comments.unshift(newComment);
+      localStorage.setItem(getVideoKey('comments'), JSON.stringify(comments));
+      loadComments();
+    }
+
+    function loadComments() {
+      const comments = JSON.parse(localStorage.getItem(getVideoKey('comments')) || '[]');
+      const commentsList = document.getElementById('comments-list');
+      const commentCount = document.getElementById('comment-count');
+      
+      commentCount.textContent = comments.length;
+      commentsList.innerHTML = '';
+      
+      comments.forEach(comment => {
+        const commentEl = createCommentElement(comment);
+        commentsList.appendChild(commentEl);
+      });
+    }
+
+    function createCommentElement(comment) {
+      const commentEl = document.createElement('div');
+      commentEl.className = 'comment';
+      
+      const timeAgo = getTimeAgo(new Date(comment.timestamp));
+      
+      commentEl.innerHTML = `
+        <div class="comment-avatar">👤</div>
+        <div class="comment-content">
+          <div class="comment-author">
+            ${comment.author}
+            <span class="comment-time">${timeAgo}</span>
+          </div>
+          <div class="comment-text">${comment.text}</div>
+        </div>
+      `;
+      
+      return commentEl;
+    }
+
+    function getTimeAgo(date) {
+      const now = new Date();
+      const diffMs = now - date;
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffHours = Math.floor(diffMs / 3600000);
+      const diffDays = Math.floor(diffMs / 86400000);
+      
+      if (diffMins < 1) return 'just now';
+      if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+      if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+      return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+    }
+
+    // Related videos
+    function loadRelatedVideos() {
+      const relatedList = document.getElementById('related-videos-list');
+      relatedList.innerHTML = '';
+      
+      relatedVideos.forEach(video => {
+        const videoEl = createRelatedVideoElement(video);
+        relatedList.appendChild(videoEl);
+      });
+    }
+
+    function createRelatedVideoElement(video) {
+      const videoEl = document.createElement('div');
+      videoEl.className = 'related-video';
+      videoEl.onclick = () => {
+        window.location.href = `watch.html?v=${video.id}&title=${encodeURIComponent(video.title)}&channel=${encodeURIComponent(video.channel)}&views=${encodeURIComponent(video.views)}&time=${encodeURIComponent(video.time)}`;
+      };
+      
+      videoEl.innerHTML = `
+        <div class="related-thumbnail">
+          <iframe src="https://www.youtube.com/embed/${video.id}"></iframe>
+        </div>
+        <div class="related-info">
+          <div class="related-title">${video.title}</div>
+          <div class="related-channel">${video.channel}</div>
+          <div class="related-views">${video.views} • ${video.time}</div>
+        </div>
+      `;
+      
+      return videoEl;
+    }
+
+    // Update subscriptions list in sidebar
+    function updateSubscriptionsList() {
+      const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '[]');
+      const subscriptionsList = document.getElementById('subscriptions-list');
+      const subscriptionsLink = document.getElementById('subscriptions-link');
+      
+      if (subscriptions.length > 0) {
+        subscriptionsList.innerHTML = '';
+        subscriptions.forEach(sub => {
+          const subEl = document.createElement('a');
+          subEl.href = '#';
+          subEl.style.cssText = 'display: block; padding: 8px 0; color: #606060; text-decoration: none; font-size: 12px;';
+          subEl.innerHTML = `${sub.avatar} ${sub.channel}`;
+          subscriptionsList.appendChild(subEl);
+        });
+        subscriptionsList.style.display = 'block';
+      } else {
+        subscriptionsList.style.display = 'none';
+      }
+    }
+
+    // Notification bell functionality
+    const notifBell = document.getElementById("notification-bell");
+    const notifDot = document.getElementById("notif-dot");
+    const hasRead = localStorage.getItem("readGuidelines");
+
+    if (hasRead === "true") {
+      notifDot.style.display = "none";
+    }
+
+    notifBell.addEventListener("click", () => {
+      window.location.href = "guidelines.html";
+    });
+
+    // Initialize the page
+    initializePage();
+  </script>
+</body>
+</html>
