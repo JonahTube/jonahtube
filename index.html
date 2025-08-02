@@ -182,6 +182,44 @@
       // Navigate to guidelines page
       window.location.href = "guidelines.html";
     });
+
+    // Function to open video in watch page
+    function openVideo(videoId, title, channel, views, time) {
+      const url = `watch.html?v=${videoId}&title=${encodeURIComponent(title)}&channel=${encodeURIComponent(channel)}&views=${encodeURIComponent(views)}&time=${encodeURIComponent(time)}`;
+      window.location.href = url;
+    }
+
+    // Update subscriptions in sidebar
+    function updateSubscriptionsList() {
+      const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '[]');
+      const subscriptionsLink = document.querySelector('#subscriptions-link');
+
+      // Create or update subscriptions display
+      let subscriptionsList = document.querySelector('#subscriptions-list');
+      if (!subscriptionsList) {
+        subscriptionsList = document.createElement('div');
+        subscriptionsList.id = 'subscriptions-list';
+        subscriptionsList.style.cssText = 'padding-left: 20px; margin-top: 8px;';
+        subscriptionsLink.parentNode.insertBefore(subscriptionsList, subscriptionsLink.nextSibling);
+      }
+
+      if (subscriptions.length > 0) {
+        subscriptionsList.innerHTML = '';
+        subscriptions.forEach(sub => {
+          const subEl = document.createElement('a');
+          subEl.href = '#';
+          subEl.style.cssText = 'display: block; padding: 8px 0; color: #606060; text-decoration: none; font-size: 12px;';
+          subEl.innerHTML = `${sub.avatar} ${sub.channel}`;
+          subscriptionsList.appendChild(subEl);
+        });
+        subscriptionsList.style.display = 'block';
+      } else {
+        subscriptionsList.style.display = 'none';
+      }
+    }
+
+    // Initialize subscriptions list on page load
+    document.addEventListener('DOMContentLoaded', updateSubscriptionsList);
   </script>
 </body>
 </html>
