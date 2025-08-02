@@ -30,7 +30,12 @@
         alert("Signed in!");
       } catch (error) {
         console.error("Login error:", error.message);
-        alert("Login failed. See console.");
+
+        if (error.code === 'auth/unauthorized-domain') {
+          alert(`Authentication Error: This domain is not authorized for Firebase Auth.\n\nTo fix this:\n1. Go to Firebase Console\n2. Navigate to Authentication > Settings > Authorized domains\n3. Add the current domain: ${window.location.hostname}\n\nFor development, you may need to add: localhost, 127.0.0.1, or your dev server domain.`);
+        } else {
+          alert(`Login failed: ${error.message}`);
+        }
       }
     };
 
