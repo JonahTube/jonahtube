@@ -351,6 +351,19 @@ body, html {
   box-shadow: 0 4px 12px rgba(31, 136, 61, 0.3);
 }
 
+@media (max-width: 768px) {
+  .button-label {
+    display: none;
+  }
+
+  .icon-button {
+    min-width: 40px;
+    width: 40px;
+    padding: 0;
+    border-radius: 50%;
+  }
+}
+
 @media (max-width: 480px) {
   .video-grid {
     grid-template-columns: 1fr;
