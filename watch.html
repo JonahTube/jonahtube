@@ -843,10 +843,15 @@
     }
 
     // Related videos
-    function loadRelatedVideos() {
+    function loadRelatedVideosToUI() {
       const relatedList = document.getElementById('related-videos-list');
       relatedList.innerHTML = '';
-      
+
+      if (relatedVideos.length === 0) {
+        relatedList.innerHTML = '<p style="color: #606060; padding: 16px; text-align: center;">No related videos available</p>';
+        return;
+      }
+
       relatedVideos.forEach(video => {
         const videoEl = createRelatedVideoElement(video);
         relatedList.appendChild(videoEl);
