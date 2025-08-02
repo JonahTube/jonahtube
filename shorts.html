@@ -369,69 +369,46 @@
   </div>
 
   <script>
-    // Shorts data
-    const shortsData = [
-      {
-        id: 'jNQXAC9IVRw',
-        title: 'Me at the zoo',
-        channel: 'jawed',
-        description: 'The very first YouTube video ever uploaded! 🦓 Historic moment',
-        views: '298M views',
-        likes: 8900000,
-        comments: 12500000,
-        avatar: '🦓'
-      },
-      {
-        id: 'L_jWHffIx5E',
-        title: 'Keyboard Cat',
-        channel: 'Charlie Schmidt',
-        description: 'Classic internet legend 🐱 Play him off! #keyboardcat',
-        views: '67M views',
-        likes: 654000,
-        comments: 89200,
-        avatar: '🎹'
-      },
-      {
-        id: 'ZZ5LpwO-An4',
-        title: 'Grumpy Cat',
-        channel: 'Grumpy Cat',
-        description: 'The original grumpy sensation 😾 RIP to a legend',
-        views: '45M views',
-        likes: 1560000,
-        comments: 234000,
-        avatar: '😾'
-      },
-      {
-        id: 'M7FIvfx5J10',
-        title: 'Double Rainbow',
-        channel: 'hungrybear9562',
-        description: 'What does it mean?! 🌈 Pure wonder and excitement',
-        views: '48M views',
-        likes: 948000,
-        comments: 167000,
-        avatar: '🌈'
-      },
-      {
-        id: 'u2KZJzoz-qI',
-        title: 'Hide yo kids, hide yo wife',
-        channel: 'NewsChannel5',
-        description: 'Antoine Dodson becomes internet sensation 📺 Classic news',
-        views: '89M views',
-        likes: 2870000,
-        comments: 352000,
-        avatar: '📺'
-      },
-      {
-        id: '09R8_2nJtjg',
-        title: 'Sneezing Panda',
-        channel: 'Rumble Viral',
-        description: 'Baby panda surprises mom with sneeze 🐼 So cute!',
-        views: '251M views',
-        likes: 726000,
-        comments: 189000,
-        avatar: '🐼'
+    // Load shorts from localStorage
+    let shortsData = [];
+
+    function loadShortsData() {
+      const allVideos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
+      shortsData = allVideos.filter(video =>
+        video.category === 'shorts' ||
+        video.title.toLowerCase().includes('short') ||
+        video.description?.toLowerCase().includes('short')
+      ).map(video => ({
+        id: video.videoId,
+        title: video.title,
+        channel: video.channel,
+        description: video.description || 'No description',
+        views: video.views || '0 views',
+        likes: video.likes || 0,
+        comments: video.comments?.length || 0,
+        avatar: '📹'
+      }));
+
+      // If no shorts, show empty state
+      if (shortsData.length === 0) {
+        showEmptyState();
+        return false;
       }
-    ];
+
+      return true;
+    }
+
+    function showEmptyState() {
+      const viewer = document.getElementById('shorts-viewer');
+      viewer.innerHTML = `
+        <div style="height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center; padding: 40px;">
+          <div style="font-size: 64px; margin-bottom: 24px; opacity: 0.6;">🎬</div>
+          <h2 style="font-size: 24px; margin-bottom: 16px;">No Shorts Yet!</h2>
+          <p style="font-size: 16px; margin-bottom: 32px; opacity: 0.8;">Upload your first short video to get started.</p>
+          <a href="add-video.html" style="background: #ff0000; color: white; text-decoration: none; padding: 12px 24px; border-radius: 24px; font-weight: 500;">Upload Short</a>
+        </div>
+      `;
+    }
 
     let currentShortIndex = 0;
     let isLoading = false;
