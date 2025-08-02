@@ -2,75 +2,727 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Add Video - JonahTube</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Upload Video - JonahTube</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .upload-container {
+      margin-left: 240px;
+      padding: 24px;
+      background-color: #f9f9f9;
+      min-height: calc(100vh - 56px);
+      max-width: 1200px;
+    }
+
+    .upload-header {
+      margin-bottom: 32px;
+    }
+
+    .upload-title {
+      font-size: 24px;
+      font-weight: 400;
+      color: #0f0f0f;
+      margin-bottom: 8px;
+    }
+
+    .upload-subtitle {
+      font-size: 14px;
+      color: #606060;
+    }
+
+    .upload-card {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .upload-tabs {
+      display: flex;
+      border-bottom: 1px solid #e5e5e5;
+      background: #ffffff;
+    }
+
+    .upload-tab {
+      padding: 16px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #606060;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .upload-tab.active {
+      color: #065fd4;
+      border-bottom-color: #065fd4;
+    }
+
+    .upload-tab:hover {
+      background: #f8f9fa;
+    }
+
+    .upload-content {
+      padding: 24px;
+    }
+
+    .upload-form {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #0f0f0f;
+    }
+
+    .form-input, .form-textarea, .form-select {
+      padding: 12px 16px;
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: #ffffff;
+    }
+
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      outline: none;
+      border-color: #0969da;
+      box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.3);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .form-input::placeholder, .form-textarea::placeholder {
+      color: #656d76;
+    }
+
+    .url-preview {
+      margin-top: 12px;
+      padding: 16px;
+      background: #f6f8fa;
+      border-radius: 8px;
+      border: 1px solid #d0d7de;
+      display: none;
+    }
+
+    .url-preview.show {
+      display: block;
+    }
+
+    .preview-title {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: #0f0f0f;
+    }
+
+    .preview-thumbnail {
+      width: 120px;
+      height: 68px;
+      background: #e5e5e5;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+
+    .preview-thumbnail iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      pointer-events: none;
+    }
+
+    .video-details-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .thumbnail-section {
+      background: #f6f8fa;
+      border: 2px dashed #d0d7de;
+      border-radius: 8px;
+      padding: 24px;
+      text-align: center;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .thumbnail-section.has-thumbnail {
+      border-style: solid;
+      background: #ffffff;
+    }
+
+    .thumbnail-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.6;
+    }
+
+    .thumbnail-text {
+      font-size: 14px;
+      color: #656d76;
+      margin-bottom: 16px;
+    }
+
+    .thumbnail-button {
+      background: #065fd4;
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 18px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .thumbnail-button:hover {
+      background: #0550c7;
+    }
+
+    .visibility-section {
+      background: #f8f9fa;
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .visibility-title {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 12px;
+      color: #0f0f0f;
+    }
+
+    .visibility-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .visibility-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #ffffff;
+      transition: all 0.2s;
+    }
+
+    .visibility-option:hover {
+      border-color: #0969da;
+      background: #f6f8fa;
+    }
+
+    .visibility-option.selected {
+      border-color: #0969da;
+      background: #dbeafe;
+    }
+
+    .visibility-radio {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #d0d7de;
+      border-radius: 50%;
+      position: relative;
+    }
+
+    .visibility-option.selected .visibility-radio {
+      border-color: #0969da;
+    }
+
+    .visibility-option.selected .visibility-radio::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 8px;
+      height: 8px;
+      background: #0969da;
+      border-radius: 50%;
+    }
+
+    .visibility-info h4 {
+      margin: 0 0 4px 0;
+      font-size: 14px;
+      font-weight: 500;
+      color: #0f0f0f;
+    }
+
+    .visibility-info p {
+      margin: 0;
+      font-size: 12px;
+      color: #656d76;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      padding-top: 24px;
+      border-top: 1px solid #e5e5e5;
+      margin-top: 24px;
+    }
+
+    .btn-secondary {
+      background: #f6f8fa;
+      color: #24292f;
+      border: 1px solid #d0d7de;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: #f3f4f6;
+      border-color: #afb8c1;
+    }
+
+    .btn-primary {
+      background: #1f883d;
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: #1a7f37;
+    }
+
+    .btn-primary:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    .status-message {
+      margin-top: 16px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .status-message.success {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+      display: block;
+    }
+
+    .status-message.error {
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+      display: block;
+    }
+
+    .character-count {
+      font-size: 12px;
+      color: #656d76;
+      text-align: right;
+      margin-top: 4px;
+    }
+
+    .character-count.warning {
+      color: #d97706;
+    }
+
+    .character-count.error {
+      color: #dc2626;
+    }
+
+    @media (max-width: 1312px) {
+      .upload-container {
+        margin-left: 72px;
+      }
+    }
+
+    @media (max-width: 792px) {
+      .upload-container {
+        margin-left: 0;
+        padding: 16px;
+      }
+      
+      .video-details-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .form-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="header">
-    <div class="logo">📺 JonahTube</div>
-    <input type="text" class="search-bar" placeholder="Search videos..." />
-    <div class="header-icons">
-      <button id="create-button" title="Create">➕</button>
-      <button id="notification-button" title="Notifications">🔔</button>
-      <button id="profile-button" title="Your Account">👤</button>
+  <header class="top-bar">
+    <div class="logo">JonahTube</div>
+    <input type="text" placeholder="Search..." class="search-bar" />
+    <div class="top-buttons">
+      <a href="add-video.html" class="icon-button">
+        <span class="button-icon">➕</span>
+        <span class="button-label">Create</span>
+      </a>
+      <div id="notification-bell" class="icon-button">
+        <span class="button-icon">🔔</span>
+        <span class="button-label">Notifications</span>
+        <span id="notif-dot" class="notif-dot"></span>
+      </div>
+      <a href="account.html" class="icon-button">
+        <span class="button-icon">👤</span>
+        <span class="button-label">Profile</span>
+      </a>
     </div>
   </header>
 
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <a href="index.html">🏠 Home</a>
-    <a href="#">🎬 Shorts</a>
-    <a href="#">📺 Subscriptions</a>
-    <a href="#">📜 History</a>
-    <a href="#">📹 Your Videos</a>
-    <a href="#">👍 Liked Videos</a>
-    <a href="#">⚙️ Settings</a>
-  </aside>
+  <div class="main-content">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <a href="index.html">🏠 Home</a>
+      <a href="shorts.html">🎬 Shorts</a>
+      <a href="#" id="subscriptions-link">📺 Subscriptions</a>
+      <a href="#">🕓 History</a>
+      <a href="#">📤 Your Videos</a>
+      <a href="#">👍 Liked Videos</a>
+      <a href="#">⚙️ Settings</a>
+    </aside>
 
-  <!-- Main Content -->
-  <main class="main-content">
-    <h1>Add a New Video</h1>
-    <form id="add-video-form">
-      <label for="video-title">Video Title</label>
-      <input type="text" id="video-title" name="video-title" required />
+    <!-- Upload Container -->
+    <main class="upload-container">
+      <div class="upload-header">
+        <h1 class="upload-title">Upload video</h1>
+        <p class="upload-subtitle">Post a video to your channel</p>
+      </div>
 
-      <label for="video-url">YouTube Video URL</label>
-      <input type="url" id="video-url" name="video-url" required placeholder="https://www.youtube.com/watch?v=..." />
+      <div class="upload-card">
+        <div class="upload-tabs">
+          <div class="upload-tab active" data-tab="details">Details</div>
+          <div class="upload-tab" data-tab="visibility">Visibility</div>
+        </div>
 
-      <label for="video-description">Description</label>
-      <textarea id="video-description" name="video-description" rows="4"></textarea>
+        <div class="upload-content">
+          <form id="upload-form" class="upload-form">
+            <!-- Details Tab -->
+            <div id="details-tab" class="tab-content">
+              <div class="video-details-grid">
+                <div class="details-section">
+                  <div class="form-group">
+                    <label class="form-label" for="video-url">YouTube Video URL *</label>
+                    <input 
+                      type="url" 
+                      id="video-url" 
+                      class="form-input" 
+                      placeholder="https://www.youtube.com/watch?v=..." 
+                      required 
+                    />
+                    <div id="url-preview" class="url-preview">
+                      <div class="preview-title">Video Preview</div>
+                      <div class="preview-thumbnail" id="preview-thumbnail"></div>
+                    </div>
+                  </div>
 
-      <button type="submit">Add Video</button>
-    </form>
-    <p id="status"></p>
-  </main>
+                  <div class="form-group">
+                    <label class="form-label" for="video-title">Title *</label>
+                    <input 
+                      type="text" 
+                      id="video-title" 
+                      class="form-input" 
+                      placeholder="Add a title that describes your video"
+                      maxlength="100"
+                      required 
+                    />
+                    <div class="character-count" id="title-count">0 / 100</div>
+                  </div>
 
+                  <div class="form-group">
+                    <label class="form-label" for="video-description">Description</label>
+                    <textarea 
+                      id="video-description" 
+                      class="form-textarea" 
+                      placeholder="Tell viewers about your video"
+                      maxlength="5000"
+                    ></textarea>
+                    <div class="character-count" id="description-count">0 / 5000</div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="video-category">Category</label>
+                    <select id="video-category" class="form-select">
+                      <option value="">Select a category</option>
+                      <option value="gaming">Gaming</option>
+                      <option value="sports">Sports</option>
+                      <option value="music">Music</option>
+                      <option value="entertainment">Entertainment</option>
+                      <option value="education">Education</option>
+                      <option value="science">Science & Technology</option>
+                      <option value="comedy">Comedy</option>
+                      <option value="lifestyle">Lifestyle</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="thumbnail-section" id="thumbnail-section">
+                  <div class="thumbnail-icon">🎬</div>
+                  <div class="thumbnail-text">Thumbnail will be generated from video URL</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Visibility Tab -->
+            <div id="visibility-tab" class="tab-content" style="display: none;">
+              <div class="visibility-section">
+                <div class="visibility-title">Choose when to publish and who can see your video</div>
+                <div class="visibility-options">
+                  <div class="visibility-option selected" data-visibility="public">
+                    <div class="visibility-radio"></div>
+                    <div class="visibility-info">
+                      <h4>🌍 Public</h4>
+                      <p>Anyone can search for and view</p>
+                    </div>
+                  </div>
+                  <div class="visibility-option" data-visibility="unlisted">
+                    <div class="visibility-radio"></div>
+                    <div class="visibility-info">
+                      <h4>🔗 Unlisted</h4>
+                      <p>Anyone with the link can view</p>
+                    </div>
+                  </div>
+                  <div class="visibility-option" data-visibility="private">
+                    <div class="visibility-radio"></div>
+                    <div class="visibility-info">
+                      <h4>🔒 Private</h4>
+                      <p>Only you can view</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn-secondary" onclick="window.location.href='index.html'">
+                Cancel
+              </button>
+              <button type="submit" class="btn-primary" id="upload-button" disabled>
+                Publish
+              </button>
+            </div>
+          </form>
+
+          <div id="status-message" class="status-message"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="add-video.js"></script>
   <script>
-    // Navigation button handlers (same as index.html)
-    document.getElementById('create-button').addEventListener('click', () => {
-      window.location.href = 'add-video.html';
-    });
-    document.getElementById('profile-button').addEventListener('click', () => {
-      window.location.href = 'account.html';
-    });
-    document.getElementById('notification-button').addEventListener('click', () => {
-      alert('No new notifications (yet) 😎');
+    // Tab switching functionality
+    document.querySelectorAll('.upload-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabName = tab.dataset.tab;
+        
+        // Update active tab
+        document.querySelectorAll('.upload-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        // Show corresponding content
+        document.querySelectorAll('.tab-content').forEach(content => {
+          content.style.display = 'none';
+        });
+        document.getElementById(`${tabName}-tab`).style.display = 'block';
+      });
     });
 
-    // Form submission (example placeholder)
-    document.getElementById('add-video-form').addEventListener('submit', e => {
+    // Visibility option selection
+    document.querySelectorAll('.visibility-option').forEach(option => {
+      option.addEventListener('click', () => {
+        document.querySelectorAll('.visibility-option').forEach(o => o.classList.remove('selected'));
+        option.classList.add('selected');
+      });
+    });
+
+    // Character count functionality
+    function updateCharacterCount(inputId, countId, maxLength) {
+      const input = document.getElementById(inputId);
+      const counter = document.getElementById(countId);
+      
+      input.addEventListener('input', () => {
+        const currentLength = input.value.length;
+        counter.textContent = `${currentLength} / ${maxLength}`;
+        
+        counter.classList.remove('warning', 'error');
+        if (currentLength > maxLength * 0.9) {
+          counter.classList.add('warning');
+        }
+        if (currentLength >= maxLength) {
+          counter.classList.add('error');
+        }
+        
+        checkFormValidity();
+      });
+    }
+
+    updateCharacterCount('video-title', 'title-count', 100);
+    updateCharacterCount('video-description', 'description-count', 5000);
+
+    // URL preview functionality
+    document.getElementById('video-url').addEventListener('input', function() {
+      const url = this.value;
+      const preview = document.getElementById('url-preview');
+      const thumbnail = document.getElementById('preview-thumbnail');
+      
+      if (url && isValidYouTubeUrl(url)) {
+        const videoId = extractYouTubeID(url);
+        if (videoId) {
+          thumbnail.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}"></iframe>`;
+          preview.classList.add('show');
+          
+          // Auto-generate title if empty
+          const titleInput = document.getElementById('video-title');
+          if (!titleInput.value) {
+            titleInput.value = `Video ${videoId}`;
+            document.getElementById('title-count').textContent = `${titleInput.value.length} / 100`;
+          }
+        }
+      } else {
+        preview.classList.remove('show');
+      }
+      
+      checkFormValidity();
+    });
+
+    // Form validation
+    function checkFormValidity() {
+      const url = document.getElementById('video-url').value;
+      const title = document.getElementById('video-title').value;
+      const uploadButton = document.getElementById('upload-button');
+      
+      const isValid = url && title && isValidYouTubeUrl(url);
+      uploadButton.disabled = !isValid;
+    }
+
+    function isValidYouTubeUrl(url) {
+      const pattern = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[\w-]+/;
+      return pattern.test(url);
+    }
+
+    function extractYouTubeID(url) {
+      const regExp = /^.*(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([^#&?]*).*/;
+      const match = url.match(regExp);
+      return (match && match[1].length === 11) ? match[1] : null;
+    }
+
+    // Form submission
+    document.getElementById('upload-form').addEventListener('submit', function(e) {
       e.preventDefault();
-      const title = e.target['video-title'].value;
-      const url = e.target['video-url'].value;
-      const description = e.target['video-description'].value;
 
-      // Here you’d add Firebase logic or storage code...
+      const formData = {
+        url: document.getElementById('video-url').value,
+        title: document.getElementById('video-title').value,
+        description: document.getElementById('video-description').value,
+        category: document.getElementById('video-category').value,
+        visibility: document.querySelector('.visibility-option.selected').dataset.visibility
+      };
 
-      document.getElementById('status').textContent = `Video "${title}" added successfully!`;
-      e.target.reset();
+      // Extract YouTube video ID
+      const videoId = extractYouTubeID(formData.url);
+      if (!videoId) {
+        alert('Invalid YouTube URL');
+        return;
+      }
+
+      // Simulate upload process
+      const statusMessage = document.getElementById('status-message');
+      const uploadButton = document.getElementById('upload-button');
+
+      uploadButton.textContent = 'Publishing...';
+      uploadButton.disabled = true;
+
+      setTimeout(() => {
+        // Save video to localStorage
+        const videos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
+
+        const newVideo = {
+          id: Date.now().toString(),
+          videoId: videoId,
+          title: formData.title,
+          description: formData.description,
+          category: formData.category,
+          visibility: formData.visibility,
+          channel: 'Your Channel', // Default channel name
+          views: '0 views',
+          uploadTime: 'just now',
+          createdAt: new Date().toISOString(),
+          likes: 0,
+          dislikes: 0,
+          comments: []
+        };
+
+        videos.unshift(newVideo); // Add to beginning of array
+        localStorage.setItem('jonahtube_videos', JSON.stringify(videos));
+
+        statusMessage.className = 'status-message success';
+        statusMessage.textContent = `Video "${formData.title}" has been published successfully!`;
+
+        // Reset form
+        this.reset();
+        document.getElementById('url-preview').classList.remove('show');
+        document.getElementById('title-count').textContent = '0 / 100';
+        document.getElementById('description-count').textContent = '0 / 5000';
+
+        uploadButton.textContent = 'Publish';
+        uploadButton.disabled = false;
+
+        // Redirect to home page after 2 seconds
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 2000);
+      }, 2000);
     });
+
+    // Notification bell functionality
+    const notifBell = document.getElementById("notification-bell");
+    const notifDot = document.getElementById("notif-dot");
+    const hasRead = localStorage.getItem("readGuidelines");
+
+    if (hasRead === "true") {
+      notifDot.style.display = "none";
+    }
+
+    notifBell.addEventListener("click", () => {
+      window.location.href = "guidelines.html";
+    });
+
+    // Initial form validation check
+    checkFormValidity();
   </script>
 </body>
 </html>

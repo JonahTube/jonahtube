@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Firebase Domain Debug - JonahTube</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    .debug-box {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    .domain-info {
+      background: #e3f2fd;
+      padding: 15px;
+      border-radius: 6px;
+      border-left: 4px solid #2196F3;
+      margin: 15px 0;
+    }
+    .error-box {
+      background: #ffebee;
+      padding: 15px;
+      border-radius: 6px;
+      border-left: 4px solid #f44336;
+      margin: 15px 0;
+    }
+    .success-box {
+      background: #e8f5e8;
+      padding: 15px;
+      border-radius: 6px;
+      border-left: 4px solid #4caf50;
+      margin: 15px 0;
+    }
+    code {
+      background: #f5f5f5;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Monaco', 'Menlo', monospace;
+    }
+    .copy-btn {
+      background: #2196F3;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    .copy-btn:hover {
+      background: #1976D2;
+    }
+  </style>
+</head>
+<body>
+  <div class="debug-box">
+    <h1>🔧 Firebase Authentication Domain Debug</h1>
+    <p>This page helps diagnose and fix the <strong>auth/unauthorized-domain</strong> error.</p>
+  </div>
+
+  <div class="debug-box">
+    <h2>📍 Current Domain Information</h2>
+    <div class="domain-info">
+      <p><strong>Current URL:</strong> <code id="currentUrl"></code></p>
+      <p><strong>Hostname:</strong> <code id="hostname"></code></p>
+      <p><strong>Port:</strong> <code id="port"></code></p>
+      <p><strong>Protocol:</strong> <code id="protocol"></code></p>
+      <p><strong>Full Origin:</strong> <code id="origin"></code> <button class="copy-btn" onclick="copyToClipboard('origin')">Copy</button></p>
+    </div>
+  </div>
+
+  <div class="debug-box">
+    <h2>🛠️ How to Fix the Error</h2>
+    <div class="error-box">
+      <h3>Firebase Error: auth/unauthorized-domain</h3>
+      <p>This error occurs because the current domain is not authorized in your Firebase project settings.</p>
+    </div>
+
+    <h3>📋 Step-by-Step Fix:</h3>
+    <ol>
+      <li>Go to the <a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a></li>
+      <li>Select your project: <strong>jonahtube-bf9db</strong></li>
+      <li>Navigate to <strong>Authentication</strong> → <strong>Settings</strong> → <strong>Authorized domains</strong></li>
+      <li>Click <strong>"Add domain"</strong> and add these domains:</li>
+    </ol>
+
+    <div class="domain-info">
+      <h4>🏷️ Domains to Add:</h4>
+      <ul>
+        <li><code>localhost</code> <button class="copy-btn" onclick="copyText('localhost')">Copy</button></li>
+        <li><code>127.0.0.1</code> <button class="copy-btn" onclick="copyText('127.0.0.1')">Copy</button></li>
+        <li><code id="currentDomain"></code> <button class="copy-btn" onclick="copyToClipboard('currentDomain')">Copy</button></li>
+      </ul>
+      <p><small>💡 <strong>Tip:</strong> The current domain is auto-detected above. For development, you typically need localhost and 127.0.0.1.</small></p>
+    </div>
+  </div>
+
+  <div class="debug-box">
+    <h2>🧪 Test Authentication</h2>
+    <p>After adding the domains to Firebase, test the login here:</p>
+    <button onclick="testAuth()" style="background: #4caf50; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 16px;">
+      🔐 Test Google Login
+    </button>
+    <div id="authResult" style="margin-top: 15px;"></div>
+  </div>
+
+  <div class="debug-box">
+    <p><a href="index.html">← Back to JonahTube</a> | <a href="login.html">Go to Login Page</a></p>
+  </div>
+
+  <script type="module">
+    // Display current domain info
+    document.getElementById('currentUrl').textContent = window.location.href;
+    document.getElementById('hostname').textContent = window.location.hostname;
+    document.getElementById('port').textContent = window.location.port || '80/443 (default)';
+    document.getElementById('protocol').textContent = window.location.protocol;
+    document.getElementById('origin').textContent = window.location.origin;
+    document.getElementById('currentDomain').textContent = window.location.hostname;
+
+    // Copy to clipboard function
+    window.copyToClipboard = function(elementId) {
+      const text = document.getElementById(elementId).textContent;
+      copyText(text);
+    };
+
+    window.copyText = function(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        // Brief visual feedback
+        event.target.textContent = 'Copied!';
+        event.target.style.background = '#4caf50';
+        setTimeout(() => {
+          event.target.textContent = 'Copy';
+          event.target.style.background = '#2196F3';
+        }, 1000);
+      });
+    };
+
+    // Test authentication
+    window.testAuth = async function() {
+      const resultDiv = document.getElementById('authResult');
+      resultDiv.innerHTML = '<p>🔄 Testing authentication...</p>';
+
+      try {
+        const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js");
+        const { getAuth, GoogleAuthProvider, signInWithPopup } = await import("https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js");
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyCIVGv1dkpCn6bKGstvbqDMHbPY9ce8tw8",
+          authDomain: "jonahtube-bf9db.firebaseapp.com",
+          projectId: "jonahtube-bf9db",
+          storageBucket: "jonahtube-bf9db.firebasestorage.app",
+          messagingSenderId: "757825713276",
+          appId: "1:757825713276:web:d755230351acd1159d45f9",
+          measurementId: "G-NF5N10T4Q1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        const result = await signInWithPopup(auth, provider);
+        resultDiv.innerHTML = `
+          <div class="success-box">
+            <h4>✅ Authentication Successful!</h4>
+            <p><strong>User:</strong> ${result.user.displayName || 'No name'}</p>
+            <p><strong>Email:</strong> ${result.user.email}</p>
+            <p>You can now use JonahTube normally!</p>
+          </div>
+        `;
+      } catch (error) {
+        console.error('Auth test error:', error);
+        
+        if (error.code === 'auth/unauthorized-domain') {
+          resultDiv.innerHTML = `
+            <div class="error-box">
+              <h4>❌ Still Getting Domain Error</h4>
+              <p><strong>Error:</strong> ${error.message}</p>
+              <p>Make sure you've added <code>${window.location.hostname}</code> to Firebase authorized domains and waited a few minutes for changes to take effect.</p>
+            </div>
+          `;
+        } else {
+          resultDiv.innerHTML = `
+            <div class="error-box">
+              <h4>❌ Authentication Failed</h4>
+              <p><strong>Error:</strong> ${error.message}</p>
+              <p><strong>Code:</strong> ${error.code}</p>
+            </div>
+          `;
+        }
+      }
+    };
+  </script>
+</body>
+</html>

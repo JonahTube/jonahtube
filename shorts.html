@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shorts - JonahTube</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .shorts-container {
+      margin-left: 0;
+      padding: 0;
+      background-color: #000;
+      min-height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .shorts-viewer {
+      height: 100vh;
+      width: 100%;
+      position: relative;
+      overflow-y: auto;
+      scroll-snap-type: y mandatory;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .shorts-viewer::-webkit-scrollbar {
+      display: none;
+    }
+
+    .short-video {
+      height: 100vh;
+      width: 100%;
+      position: relative;
+      scroll-snap-align: start;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+    }
+
+    .short-video iframe {
+      width: min(400px, 100vw);
+      height: min(710px, 100vh);
+      border: none;
+      border-radius: 0;
+    }
+
+    .short-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.7));
+      padding: 20px;
+      color: white;
+      z-index: 10;
+    }
+
+    .short-info {
+      max-width: 400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .short-details {
+      flex: 1;
+      padding-right: 16px;
+    }
+
+    .short-title {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
+    .short-channel {
+      font-size: 12px;
+      opacity: 0.8;
+      margin-bottom: 8px;
+    }
+
+    .short-description {
+      font-size: 12px;
+      opacity: 0.9;
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+
+    .short-stats {
+      font-size: 11px;
+      opacity: 0.7;
+    }
+
+    .short-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .short-action-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      backdrop-filter: blur(10px);
+    }
+
+    .short-action-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.1);
+    }
+
+    .short-action-btn.active {
+      background: rgba(255, 0, 0, 0.8);
+    }
+
+    .short-action-count {
+      font-size: 10px;
+      margin-top: 4px;
+      opacity: 0.8;
+    }
+
+    .subscribe-btn-short {
+      background: #ff0000;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 18px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .subscribe-btn-short:hover {
+      background: #cc0000;
+    }
+
+    .subscribe-btn-short.subscribed {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .shorts-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      z-index: 20;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .shorts-header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .back-btn {
+      color: white;
+      font-size: 20px;
+      text-decoration: none;
+      padding: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      transition: background 0.2s;
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .shorts-title {
+      color: white;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .shorts-header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-btn {
+      color: white;
+      font-size: 14px;
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .header-btn .button-icon {
+      font-size: 18px;
+    }
+
+    .header-btn .button-label {
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .navigation-indicator {
+      position: fixed;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 15;
+    }
+
+    .nav-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transition: all 0.2s;
+    }
+
+    .nav-dot.active {
+      background: white;
+      transform: scale(1.5);
+    }
+
+    .comments-overlay {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(10px);
+      transform: translateY(100%);
+      transition: transform 0.3s;
+      z-index: 25;
+      max-height: 70vh;
+      border-radius: 12px 12px 0 0;
+    }
+
+    .comments-overlay.show {
+      transform: translateY(0);
+    }
+
+    .comments-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .close-comments {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .comments-content {
+      padding: 16px 20px;
+      max-height: 50vh;
+      overflow-y: auto;
+    }
+
+    @media (max-width: 768px) {
+      .short-video iframe {
+        width: 100vw;
+        height: 100vh;
+      }
+
+      .short-actions {
+        position: fixed;
+        right: 16px;
+        bottom: 120px;
+      }
+
+      .short-overlay {
+        left: 16px;
+        right: 80px;
+      }
+
+      .header-btn .button-label {
+        display: none;
+      }
+
+      .header-btn {
+        width: 40px;
+        height: 40px;
+        padding: 8px;
+        border-radius: 50%;
+        justify-content: center;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .shorts-container {
+        margin-left: 240px;
+      }
+      
+      .shorts-header {
+        left: 240px;
+      }
+    }
+
+    @media (max-width: 1312px) and (min-width: 769px) {
+      .shorts-container {
+        margin-left: 72px;
+      }
+      
+      .shorts-header {
+        left: 72px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Desktop Sidebar (hidden on mobile) -->
+  <aside class="sidebar" style="display: none;">
+    <a href="index.html">🏠 Home</a>
+    <a href="shorts.html">🎬 Shorts</a>
+    <a href="#" id="subscriptions-link">📺 Subscriptions</a>
+    <div id="subscriptions-list" style="padding-left: 20px; margin-top: 8px; display: none;"></div>
+    <a href="#">🕓 History</a>
+    <a href="#">📤 Your Videos</a>
+    <a href="#">👍 Liked Videos</a>
+    <a href="#">⚙️ Settings</a>
+  </aside>
+
+  <!-- Shorts Header -->
+  <header class="shorts-header">
+    <div class="shorts-header-left">
+      <a href="index.html" class="back-btn">←</a>
+      <div class="shorts-title">Shorts</div>
+    </div>
+    <div class="shorts-header-right">
+      <a href="#" class="header-btn">
+        <span class="button-icon">🔍</span>
+        <span class="button-label">Search</span>
+      </a>
+      <a href="add-video.html" class="header-btn">
+        <span class="button-icon">➕</span>
+        <span class="button-label">Create</span>
+      </a>
+      <a href="account.html" class="header-btn">
+        <span class="button-icon">👤</span>
+        <span class="button-label">Profile</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Navigation Indicator -->
+  <div class="navigation-indicator" id="nav-indicator">
+    <!-- Dots will be generated by JavaScript -->
+  </div>
+
+  <!-- Shorts Container -->
+  <main class="shorts-container">
+    <div class="shorts-viewer" id="shorts-viewer">
+      <!-- Short videos will be dynamically loaded here -->
+    </div>
+  </main>
+
+  <!-- Comments Overlay -->
+  <div class="comments-overlay" id="comments-overlay">
+    <div class="comments-header">
+      <span id="comments-count">0 Comments</span>
+      <button class="close-comments" onclick="closeComments()">✕</button>
+    </div>
+    <div class="comments-content" id="comments-content">
+      <!-- Comments will be loaded here -->
+    </div>
+  </div>
+
+  <script>
+    // Load shorts from localStorage
+    let shortsData = [];
+
+    function loadShortsData() {
+      const allVideos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
+      shortsData = allVideos.filter(video =>
+        video.category === 'shorts' ||
+        video.title.toLowerCase().includes('short') ||
+        video.description?.toLowerCase().includes('short')
+      ).map(video => ({
+        id: video.videoId,
+        title: video.title,
+        channel: video.channel,
+        description: video.description || 'No description',
+        views: video.views || '0 views',
+        likes: video.likes || 0,
+        comments: video.comments?.length || 0,
+        avatar: '📹'
+      }));
+
+      // If no shorts, show empty state
+      if (shortsData.length === 0) {
+        showEmptyState();
+        return false;
+      }
+
+      return true;
+    }
+
+    function showEmptyState() {
+      const viewer = document.getElementById('shorts-viewer');
+      viewer.innerHTML = `
+        <div style="height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center; padding: 40px;">
+          <div style="font-size: 64px; margin-bottom: 24px; opacity: 0.6;">🎬</div>
+          <h2 style="font-size: 24px; margin-bottom: 16px;">No Shorts Yet!</h2>
+          <p style="font-size: 16px; margin-bottom: 32px; opacity: 0.8;">Upload your first short video to get started.</p>
+          <a href="add-video.html" style="background: #ff0000; color: white; text-decoration: none; padding: 12px 24px; border-radius: 24px; font-weight: 500;">Upload Short</a>
+        </div>
+      `;
+    }
+
+    let currentShortIndex = 0;
+    let isLoading = false;
+
+    // Initialize shorts viewer
+    function initializeShorts() {
+      const viewer = document.getElementById('shorts-viewer');
+      const indicator = document.getElementById('nav-indicator');
+
+      // Load shorts data first
+      if (!loadShortsData()) {
+        return; // No shorts available, empty state shown
+      }
+
+      // Create navigation dots
+      shortsData.forEach((_, index) => {
+        const dot = document.createElement('div');
+        dot.className = `nav-dot ${index === 0 ? 'active' : ''}`;
+        dot.onclick = () => scrollToShort(index);
+        indicator.appendChild(dot);
+      });
+
+      // Load first batch of shorts
+      loadShorts();
+
+      // Handle scroll events
+      viewer.addEventListener('scroll', handleScroll);
+
+      // Show sidebar on desktop
+      if (window.innerWidth > 768) {
+        document.querySelector('.sidebar').style.display = 'block';
+      }
+    }
+
+    function loadShorts() {
+      const viewer = document.getElementById('shorts-viewer');
+      
+      shortsData.forEach((short, index) => {
+        const shortEl = createShortElement(short, index);
+        viewer.appendChild(shortEl);
+      });
+    }
+
+    function createShortElement(short, index) {
+      const shortEl = document.createElement('div');
+      shortEl.className = 'short-video';
+      shortEl.dataset.index = index;
+      
+      // Generate random subscriber count
+      const subscriberCount = Math.floor(Math.random() * 500000) + 50000;
+      
+      shortEl.innerHTML = `
+        <iframe 
+          src="https://www.youtube.com/embed/${short.id}?autoplay=0&controls=1&modestbranding=1" 
+          allowfullscreen
+        ></iframe>
+        
+        <div class="short-overlay">
+          <div class="short-info">
+            <div class="short-details">
+              <div class="short-title">${short.title}</div>
+              <div class="short-channel">
+                ${short.avatar} ${short.channel}
+                <button class="subscribe-btn-short" onclick="toggleSubscribe('${short.channel}', this)">
+                  Subscribe
+                </button>
+              </div>
+              <div class="short-description">${short.description}</div>
+              <div class="short-stats">${short.views} • ${formatNumber(subscriberCount)} subscribers</div>
+            </div>
+            
+            <div class="short-actions">
+              <div style="text-align: center;">
+                <button class="short-action-btn" onclick="toggleLike(${index}, this)">
+                  👍
+                </button>
+                <div class="short-action-count" id="like-count-${index}">${formatNumber(short.likes)}</div>
+              </div>
+              
+              <div style="text-align: center;">
+                <button class="short-action-btn" onclick="toggleDislike(${index}, this)">
+                  👎
+                </button>
+                <div class="short-action-count">Dislike</div>
+              </div>
+              
+              <div style="text-align: center;">
+                <button class="short-action-btn" onclick="showComments(${index})">
+                  💬
+                </button>
+                <div class="short-action-count">${formatNumber(short.comments)}</div>
+              </div>
+              
+              <div style="text-align: center;">
+                <button class="short-action-btn" onclick="shareShort(${index})">
+                  📤
+                </button>
+                <div class="short-action-count">Share</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      return shortEl;
+    }
+
+    function formatNumber(num) {
+      if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+      if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+      return num.toString();
+    }
+
+    function handleScroll() {
+      const viewer = document.getElementById('shorts-viewer');
+      const scrollTop = viewer.scrollTop;
+      const viewHeight = viewer.clientHeight;
+      
+      // Calculate current short index
+      const newIndex = Math.round(scrollTop / viewHeight);
+      
+      if (newIndex !== currentShortIndex && newIndex < shortsData.length) {
+        currentShortIndex = newIndex;
+        updateNavigationIndicator();
+      }
+    }
+
+    function updateNavigationIndicator() {
+      const dots = document.querySelectorAll('.nav-dot');
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentShortIndex);
+      });
+    }
+
+    function scrollToShort(index) {
+      const viewer = document.getElementById('shorts-viewer');
+      const targetScroll = index * viewer.clientHeight;
+      viewer.scrollTo({ top: targetScroll, behavior: 'smooth' });
+    }
+
+    // Action functions
+    function toggleLike(index, button) {
+      const likeCountEl = document.getElementById(`like-count-${index}`);
+      const isLiked = button.classList.contains('active');
+      
+      // Remove any dislike state first
+      const shortEl = button.closest('.short-video');
+      const dislikeBtn = shortEl.querySelector('.short-action-btn:nth-child(1)');
+      if (dislikeBtn && dislikeBtn !== button) {
+        dislikeBtn.classList.remove('active');
+      }
+      
+      if (isLiked) {
+        button.classList.remove('active');
+        const currentCount = parseInt(likeCountEl.textContent.replace(/[KM]/g, '')) * 1000;
+        shortsData[index].likes = Math.max(0, currentCount - 1);
+      } else {
+        button.classList.add('active');
+        const currentCount = parseInt(likeCountEl.textContent.replace(/[KM]/g, '')) * 1000;
+        shortsData[index].likes = currentCount + 1;
+      }
+      
+      likeCountEl.textContent = formatNumber(shortsData[index].likes);
+      
+      // Store like state
+      const videoId = shortsData[index].id;
+      localStorage.setItem(`short_${videoId}_liked`, !isLiked);
+    }
+
+    function toggleDislike(index, button) {
+      const isDisliked = button.classList.contains('active');
+      
+      // Remove any like state first
+      const shortEl = button.closest('.short-video');
+      const likeBtn = shortEl.querySelector('.short-action-btn:nth-child(1)');
+      if (likeBtn && likeBtn !== button) {
+        likeBtn.classList.remove('active');
+      }
+      
+      button.classList.toggle('active');
+      
+      // Store dislike state
+      const videoId = shortsData[index].id;
+      localStorage.setItem(`short_${videoId}_disliked`, !isDisliked);
+    }
+
+    function toggleSubscribe(channel, button) {
+      const isSubscribed = button.classList.contains('subscribed');
+      
+      if (isSubscribed) {
+        button.textContent = 'Subscribe';
+        button.classList.remove('subscribed');
+        
+        // Remove from subscriptions
+        const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '[]');
+        const updatedSubscriptions = subscriptions.filter(sub => sub.channel !== channel);
+        localStorage.setItem('subscriptions', JSON.stringify(updatedSubscriptions));
+      } else {
+        button.textContent = 'Subscribed';
+        button.classList.add('subscribed');
+        
+        // Add to subscriptions
+        const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '[]');
+        const newSubscription = { channel: channel, avatar: '📺' };
+        if (!subscriptions.find(sub => sub.channel === channel)) {
+          subscriptions.push(newSubscription);
+          localStorage.setItem('subscriptions', JSON.stringify(subscriptions));
+        }
+      }
+    }
+
+    function showComments(index) {
+      const overlay = document.getElementById('comments-overlay');
+      const content = document.getElementById('comments-content');
+      const countEl = document.getElementById('comments-count');
+      
+      const short = shortsData[index];
+      countEl.textContent = `${formatNumber(short.comments)} Comments`;
+      
+      // Generate sample comments
+      const sampleComments = [
+        { author: 'User123', text: 'This is amazing! 🔥', time: '2h ago' },
+        { author: 'VideoFan', text: 'How did you do this?!', time: '5h ago' },
+        { author: 'Creator99', text: 'So cool! Keep it up!', time: '1d ago' },
+        { author: 'WatcherX', text: 'Best one yet! 👏', time: '2d ago' }
+      ];
+      
+      content.innerHTML = sampleComments.map(comment => `
+        <div style="margin-bottom: 16px; color: white;">
+          <div style="font-weight: 500; font-size: 13px; margin-bottom: 4px;">
+            👤 ${comment.author} <span style="opacity: 0.7; font-weight: normal;">${comment.time}</span>
+          </div>
+          <div style="font-size: 14px; line-height: 1.4;">${comment.text}</div>
+        </div>
+      `).join('');
+      
+      overlay.classList.add('show');
+    }
+
+    function closeComments() {
+      document.getElementById('comments-overlay').classList.remove('show');
+    }
+
+    function shareShort(index) {
+      const short = shortsData[index];
+      const url = `${window.location.origin}/shorts.html?v=${short.id}`;
+      
+      if (navigator.share) {
+        navigator.share({
+          title: short.title,
+          text: short.description,
+          url: url
+        });
+      } else {
+        navigator.clipboard.writeText(url);
+        alert('Link copied to clipboard!');
+      }
+    }
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', initializeShorts);
+
+    // Handle URL parameters for direct short access
+    const urlParams = new URLSearchParams(window.location.search);
+    const videoId = urlParams.get('v');
+    if (videoId) {
+      const shortIndex = shortsData.findIndex(short => short.id === videoId);
+      if (shortIndex !== -1) {
+        setTimeout(() => scrollToShort(shortIndex), 500);
+      }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (currentShortIndex > 0) {
+          scrollToShort(currentShortIndex - 1);
+        }
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (currentShortIndex < shortsData.length - 1) {
+          scrollToShort(currentShortIndex + 1);
+        }
+      }
+    });
+
+    // Update subscriptions display
+    function updateSubscriptionsList() {
+      const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '[]');
+      const subscriptionsList = document.getElementById('subscriptions-list');
+      
+      if (subscriptions.length > 0 && subscriptionsList) {
+        subscriptionsList.innerHTML = '';
+        subscriptions.forEach(sub => {
+          const subEl = document.createElement('a');
+          subEl.href = '#';
+          subEl.style.cssText = 'display: block; padding: 8px 0; color: #606060; text-decoration: none; font-size: 12px;';
+          subEl.innerHTML = `${sub.avatar} ${sub.channel}`;
+          subscriptionsList.appendChild(subEl);
+        });
+        subscriptionsList.style.display = 'block';
+      }
+    }
+
+    updateSubscriptionsList();
+  </script>
+</body>
+</html>
