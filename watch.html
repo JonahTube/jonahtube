@@ -862,9 +862,17 @@
       const videoEl = document.createElement('div');
       videoEl.className = 'related-video';
       videoEl.onclick = () => {
-        window.location.href = `watch.html?v=${video.id}&title=${encodeURIComponent(video.title)}&channel=${encodeURIComponent(video.channel)}&views=${encodeURIComponent(video.views)}&time=${encodeURIComponent(video.time)}`;
+        // Find the full video data from localStorage
+        const allVideos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
+        const fullVideo = allVideos.find(v => v.videoId === video.id);
+
+        if (fullVideo) {
+          window.location.href = `watch.html?v=${video.id}&title=${encodeURIComponent(video.title)}&channel=${encodeURIComponent(video.channel)}&views=${encodeURIComponent(video.views)}&time=${encodeURIComponent(video.time)}&description=${encodeURIComponent(fullVideo.description || '')}&category=${encodeURIComponent(fullVideo.category || '')}`;
+        } else {
+          window.location.href = `watch.html?v=${video.id}&title=${encodeURIComponent(video.title)}&channel=${encodeURIComponent(video.channel)}&views=${encodeURIComponent(video.views)}&time=${encodeURIComponent(video.time)}`;
+        }
       };
-      
+
       videoEl.innerHTML = `
         <div class="related-thumbnail">
           <iframe src="https://www.youtube.com/embed/${video.id}"></iframe>
@@ -875,7 +883,7 @@
           <div class="related-views">${video.views} • ${video.time}</div>
         </div>
       `;
-      
+
       return videoEl;
     }
 
