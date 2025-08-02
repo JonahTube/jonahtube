@@ -3,63 +3,64 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>JonahTube - Home</title>
-  <link rel="stylesheet" href="style.css"/>
-  <link rel="icon" href="favicon.ico" type="image/x-icon"/>
+  <title>JonahTube</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Header -->
-  <header class="header">
-    <div class="logo">📺 JonahTube</div>
-    <input type="text" class="search-bar" placeholder="Search videos..." />
-    <div class="header-icons">
-      <button title="Create">➕</button>
-      <button title="Notifications">🔔</button>
-      <button title="Account">👤</button>
+  <div class="header">
+    <div class="logo">JonahTube</div>
+    <div class="search-bar">
+      <input type="text" placeholder="Search" />
     </div>
-  </header>
+    <div class="header-icons">
+      <button id="create-btn" title="Create">➕</button>
+      <button id="notification-btn" title="Notifications">🔔</button>
+      <button id="profile-btn" title="Your Channel">👤</button>
+    </div>
+  </div>
 
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <a href="#">🏠 Home</a>
+  <div class="sidebar">
+    <a href="index.html">🏠 Home</a>
     <a href="#">🎬 Shorts</a>
     <a href="#">📺 Subscriptions</a>
-    <a href="#">📜 History</a>
-    <a href="#">📹 Your Videos</a>
-    <a href="#">👍 Liked</a>
+    <a href="#">🕘 History</a>
+    <a href="account.html">📁 Your Videos</a>
+    <a href="#">👍 Liked Videos</a>
     <a href="#">⚙️ Settings</a>
-  </aside>
+  </div>
 
-  <!-- Main Content -->
-  <main class="main-content">
-    <section class="video-grid">
-      <div class="video-card">
-        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
-        <h4>Welcome to JonahTube</h4>
-        <p>Jonah • 1K views • 1 day ago</p>
-      </div>
-      <div class="video-card">
-        <iframe src="https://www.youtube.com/embed/L_jWHffIx5E" allowfullscreen></iframe>
-        <h4>Epic Launch</h4>
-        <p>Cool Creator • 3K views • 2 days ago</p>
-      </div>
-      <div class="video-card">
-        <iframe src="https://www.youtube.com/embed/oHg5SJYRHA0" allowfullscreen></iframe>
-        <h4>Just Vibes</h4>
-        <p>Fun Guy • 2K views • 5 days ago</p>
-      </div>
-    </section>
+  <div class="content">
+    <!-- Video Grid Placeholder -->
+    <div class="video-grid">
+      <div class="video-card">Video 1</div>
+      <div class="video-card">Video 2</div>
+      <div class="video-card">Video 3</div>
+      <div class="video-card">Video 4</div>
+      <div class="video-card">Video 5</div>
+      <div class="video-card">Video 6</div>
+    </div>
 
-    <section class="shorts-section">
+    <!-- Shorts Row -->
+    <div class="shorts-section">
       <h3>Recommended Shorts</h3>
       <div class="shorts-grid">
-        <iframe src="https://www.youtube.com/embed/ZHhqwBwmW9I" allowfullscreen></iframe>
-        <iframe src="https://www.youtube.com/embed/hY7m5jjJ9mM" allowfullscreen></iframe>
-        <iframe src="https://www.youtube.com/embed/jNQXAC9IVRw" allowfullscreen></iframe>
-        <iframe src="https://www.youtube.com/embed/MtN1YnoL46Q" allowfullscreen></iframe>
-        <iframe src="https://www.youtube.com/embed/tVj0ZTS4WF4" allowfullscreen></iframe>
+        <div class="short">Short 1</div>
+        <div class="short">Short 2</div>
+        <div class="short">Short 3</div>
+        <div class="short">Short 4</div>
+        <div class="short">Short 5</div>
       </div>
-    </section>
-  </main>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("create-btn").onclick = () => {
+      window.location.href = "add-video.html";
+    };
+
+    document.getElementById("profile-btn").onclick = () => {
+      window.location.href = "account.html";
+    };
+  </script>
 </body>
 </html>
