@@ -2,23 +2,75 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Add Video</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Add Video - JonahTube</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>Upload a New Video</h1>
-    <form id="videoForm">
-      <input type="text" id="title" placeholder="Video Title" required />
-      <textarea id="description" placeholder="Video Description" required></textarea>
-      <input type="url" id="videoUrl" placeholder="YouTube Embed URL" required />
-      <button type="submit">Publish Video</button>
-    </form>
-    <div id="status"></div>
-    <a href="account.html" class="back-link">← Back to Account</a>
-  </div>
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">📺 JonahTube</div>
+    <input type="text" class="search-bar" placeholder="Search videos..." />
+    <div class="header-icons">
+      <button id="create-button" title="Create">➕</button>
+      <button id="notification-button" title="Notifications">🔔</button>
+      <button id="profile-button" title="Your Account">👤</button>
+    </div>
+  </header>
 
-  <script type="module" src="add-video.js"></script>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <a href="index.html">🏠 Home</a>
+    <a href="#">🎬 Shorts</a>
+    <a href="#">📺 Subscriptions</a>
+    <a href="#">📜 History</a>
+    <a href="#">📹 Your Videos</a>
+    <a href="#">👍 Liked Videos</a>
+    <a href="#">⚙️ Settings</a>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <h1>Add a New Video</h1>
+    <form id="add-video-form">
+      <label for="video-title">Video Title</label>
+      <input type="text" id="video-title" name="video-title" required />
+
+      <label for="video-url">YouTube Video URL</label>
+      <input type="url" id="video-url" name="video-url" required placeholder="https://www.youtube.com/watch?v=..." />
+
+      <label for="video-description">Description</label>
+      <textarea id="video-description" name="video-description" rows="4"></textarea>
+
+      <button type="submit">Add Video</button>
+    </form>
+    <p id="status"></p>
+  </main>
+
+  <script>
+    // Navigation button handlers (same as index.html)
+    document.getElementById('create-button').addEventListener('click', () => {
+      window.location.href = 'add-video.html';
+    });
+    document.getElementById('profile-button').addEventListener('click', () => {
+      window.location.href = 'account.html';
+    });
+    document.getElementById('notification-button').addEventListener('click', () => {
+      alert('No new notifications (yet) 😎');
+    });
+
+    // Form submission (example placeholder)
+    document.getElementById('add-video-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const title = e.target['video-title'].value;
+      const url = e.target['video-url'].value;
+      const description = e.target['video-description'].value;
+
+      // Here you’d add Firebase logic or storage code...
+
+      document.getElementById('status').textContent = `Video "${title}" added successfully!`;
+      e.target.reset();
+    });
+  </script>
 </body>
 </html>
