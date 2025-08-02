@@ -417,7 +417,12 @@
     function initializeShorts() {
       const viewer = document.getElementById('shorts-viewer');
       const indicator = document.getElementById('nav-indicator');
-      
+
+      // Load shorts data first
+      if (!loadShortsData()) {
+        return; // No shorts available, empty state shown
+      }
+
       // Create navigation dots
       shortsData.forEach((_, index) => {
         const dot = document.createElement('div');
@@ -428,10 +433,10 @@
 
       // Load first batch of shorts
       loadShorts();
-      
+
       // Handle scroll events
       viewer.addEventListener('scroll', handleScroll);
-      
+
       // Show sidebar on desktop
       if (window.innerWidth > 768) {
         document.querySelector('.sidebar').style.display = 'block';
