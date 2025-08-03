@@ -174,22 +174,82 @@ class JonahTubeCreator {
   }
 
   setupContentModeration() {
-    // Content moderation keywords and severity levels
-    this.moderationRules = {
-      severe: [
-        'hate', 'violence', 'threat', 'abuse', 'harassment', 'bully',
-        'inappropriate', 'explicit', 'sexual', 'nude', 'drug', 'weapon'
-      ],
-      moderate: [
-        'spam', 'fake', 'scam', 'clickbait', 'misleading', 'copyright',
-        'stolen', 'copied', 'plagiarized'
-      ],
-      mild: [
-        'rude', 'mean', 'negative', 'offensive'
-      ]
-    };
+    // Setup real-time content validation
+    this.setupContentValidator('video-title', 'title-validation', 'video-title');
+    this.setupContentValidator('video-description', 'description-validation', 'video-description');
+    this.setupContentValidator('record-title', 'record-title-validation', 'video-title');
+    this.setupContentValidator('record-description', 'record-description-validation', 'video-description');
+  }
 
-    this.userViolations = JSON.parse(localStorage.getItem('userViolations') || '[]');
+  setupContentValidator(inputId, validationId, contentType) {
+    const input = document.getElementById(inputId);
+    const validation = document.getElementById(validationId);
+
+    if (!input || !validation) return;
+
+    input.addEventListener('input', () => {
+      this.validateContent(inputId);
+    });
+
+    input.addEventListener('blur', () => {
+      this.validateContent(inputId);
+    });
+  }
+
+  validateContent(inputId) {
+    const input = document.getElementById(inputId);
+    const validationEl = document.getElementById(inputId.replace(/^(video-|record-)/, '') + '-validation');
+
+    if (!input || !validationEl) return;
+
+    const content = input.value;
+    const contentType = inputId.includes('title') ? 'video-title' : 'video-description';
+
+    // Use the global content moderation system
+    const result = window.ContentModeration.checkContent(content, contentType);
+
+    // Update input styling
+    input.classList.remove('blocked-content');
+
+    // Update validation display
+    validationEl.classList.remove('show', 'error', 'warning', 'success');
+
+    if (!result.isAppropriate) {
+      input.classList.add('blocked-content');
+      validationEl.classList.add('show', 'error');
+
+      let message = '❌ Content not allowed: ';
+      if (result.blockedWords.length > 0) {
+        message += 'Contains inappropriate words: ' + result.blockedWords.join(', ');
+      } else if (result.suspiciousPatterns.length > 0) {
+        message += 'Contains inappropriate patterns';
+      } else {
+        message += result.issues[0];
+      }
+
+      validationEl.innerHTML = '<div>' + message + '</div>' +
+        (result.suggestions.length > 0 ? '<div class="moderation-suggestions show"><strong>Suggestions:</strong><ul>' + result.suggestions.map(s => '<li>' + s + '</li>').join('') + '</ul></div>' : '');
+    } else if (result.issues.length > 0) {
+      validationEl.classList.add('show', 'warning');
+      validationEl.innerHTML = '⚠️ ' + result.issues.join(', ');
+    } else if (content.length > 10) {
+      const score = window.ContentModeration.getContentSafetyScore(content);
+      if (score >= 80) {
+        validationEl.classList.add('show', 'success');
+        validationEl.innerHTML = '<div style="display: flex; align-items: center; gap: 8px;"><div class="safety-indicator safe"></div><span>✅ Content approved (Safety Score: ' + score + '/100)</span></div>';
+      }
+    }
+
+    // Check if suggested clean content is available
+    if (!result.isAppropriate && content.length > 0) {
+      const cleanContent = window.ContentModeration.suggestCleanContent(content);
+      if (cleanContent !== content) {
+        const suggestionEl = document.createElement('div');
+        suggestionEl.className = 'moderation-suggestions show';
+        suggestionEl.innerHTML = '<strong>Suggested alternative:</strong><br>"' + cleanContent + '"<button onclick="document.getElementById(\'' + inputId + '\').value=\'' + cleanContent.replace(/'/g, "\\'") + '\'; document.getElementById(\'' + inputId + '\').dispatchEvent(new Event(\'input\'));" style="margin-left: 8px; padding: 4px 8px; background: var(--success-color); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px;">Use This</button>';
+        validationEl.appendChild(suggestionEl);
+      }
+    }
   }
 
   selectCreationOption(option) {
