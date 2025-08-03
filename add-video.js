@@ -617,36 +617,33 @@ class JonahTubeCreator {
   async handleFormSubmission() {
     const title = document.getElementById('video-title').value;
     const description = document.getElementById('video-description').value;
-    
-    // Content moderation
-    const violations = this.moderateContent(title, description);
-    const moderationResult = this.handleViolations(violations);
-    
+
+    // Enhanced content moderation check
+    const moderationResult = this.checkContentBeforeSubmission(title, description);
+
     if (!moderationResult.allowed) {
-      this.showNotification(moderationResult.message, 'error');
-      
-      // Log the action
-      if (moderationResult.action === 'permanent_ban') {
-        localStorage.setItem('accountStatus', 'banned');
-      } else if (moderationResult.action === 'suspension') {
-        const suspensionEnd = Date.now() + (7 * 24 * 60 * 60 * 1000); // 7 days
-        localStorage.setItem('suspensionEnd', suspensionEnd.toString());
+      this.showNotification(
+        '❌ Upload blocked: ' + moderationResult.message,
+        'error'
+      );
+
+      // Show suggestions if available
+      if (moderationResult.suggestions && moderationResult.suggestions.length > 0) {
+        setTimeout(() => {
+          this.showNotification(
+            '💡 Suggestions: ' + moderationResult.suggestions.join(', '),
+            'info'
+          );
+        }, 1000);
       }
-      
-      return;
-    }
-    
-    // Check account status
-    const accountStatus = localStorage.getItem('accountStatus');
-    if (accountStatus === 'banned') {
-      this.showNotification('Your account has been banned.', 'error');
-      return;
-    }
-    
-    const suspensionEnd = localStorage.getItem('suspensionEnd');
-    if (suspensionEnd && Date.now() < parseInt(suspensionEnd)) {
-      const remaining = new Date(parseInt(suspensionEnd));
-      this.showNotification(`Your account is suspended until ${remaining.toLocaleDateString()}.`, 'error');
+
+      // Focus the problematic field
+      if (moderationResult.field === 'title') {
+        document.getElementById('video-title').focus();
+      } else if (moderationResult.field === 'description') {
+        document.getElementById('video-description').focus();
+      }
+
       return;
     }
     
@@ -673,18 +670,31 @@ class JonahTubeCreator {
   async publishRecording() {
     const title = document.getElementById('record-title').value;
     const description = document.getElementById('record-description').value;
-    
+
     if (!title || !this.recordedBlob) {
       this.showNotification('Please provide a title for your recording.', 'error');
       return;
     }
-    
-    // Content moderation
-    const violations = this.moderateContent(title, description);
-    const moderationResult = this.handleViolations(violations);
-    
+
+    // Enhanced content moderation check
+    const moderationResult = this.checkContentBeforeSubmission(title, description);
+
     if (!moderationResult.allowed) {
-      this.showNotification(moderationResult.message, 'error');
+      this.showNotification(
+        '❌ Recording blocked: ' + moderationResult.message,
+        'error'
+      );
+
+      // Show suggestions if available
+      if (moderationResult.suggestions && moderationResult.suggestions.length > 0) {
+        setTimeout(() => {
+          this.showNotification(
+            '💡 Suggestions: ' + moderationResult.suggestions.join(', '),
+            'info'
+          );
+        }, 1000);
+      }
+
       return;
     }
     
@@ -745,10 +755,12 @@ class JonahTubeCreator {
       videos.unshift(newVideo);
       localStorage.setItem('jonahtube_videos', JSON.stringify(videos));
       
-      // Update user's video count
+      // Update user's video count and content safety tracking
       const userStats = JSON.parse(localStorage.getItem('userStats') || '{}');
       userStats.videosUploaded = (userStats.videosUploaded || 0) + 1;
       userStats.totalViews = (userStats.totalViews || 0);
+      userStats.contentSafetyScore = moderationResult.score || 100;
+      userStats.lastUpload = new Date().toISOString();
       localStorage.setItem('userStats', JSON.stringify(userStats));
       
       statusMessage.className = 'status-message success';
