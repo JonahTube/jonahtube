@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>JonahTube</title>
+  <title>JonahTube - Share Your Story</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -26,7 +26,7 @@
       </div>
       <div class="icon-button" id="user-menu">
         <span class="button-icon">👤</span>
-        <span class="button-label" id="user-display">Sign In</span>
+        <span class="button-label" id="user-display">Join Now</span>
       </div>
     </div>
   </header>
@@ -41,7 +41,7 @@
       </div>
       <div class="sidebar-section">
         <a href="#">⟲ History</a>
-        <a href="account.html" id="your-channel-link">📤 Your Channel</a>
+        <a href="account.html" id="your-channel-link">⚡ Creator Studio</a>
         <a href="#">♡ Liked Videos</a>
         <a href="gamezone.html">🎮 GameZone</a>
         <a href="my-story.html">📖 My Story</a>
@@ -61,8 +61,8 @@
       </div>
 
       <div id="home-content">
-        <h2>Welcome to JonahTube</h2>
-        <p>Discover amazing content from our creative community!</p>
+        <h2>Discover Amazing Content</h2>
+        <p>Join the community and explore incredible videos from creators around the world!</p>
 
         <div class="video-grid" id="video-grid">
           <!-- Videos will be dynamically loaded from localStorage -->
@@ -71,14 +71,14 @@
         <!-- Empty State -->
         <div class="empty-state" id="empty-state">
           <div class="empty-icon">▶</div>
-          <h3>No videos yet!</h3>
-          <p>Be the first to upload a video to JonahTube.</p>
-          <a href="add-video.html" class="upload-button">Upload Your First Video</a>
+          <h3>Welcome to JonahTube!</h3>
+          <p>Start your creative journey and share your story with the world.</p>
+          <a href="landing.html" class="upload-button">Get Started</a>
         </div>
 
         <!-- Shorts Section -->
         <div class="shorts-section" id="shorts-section" style="display: none;">
-          <h3>⧉ Shorts</h3>
+          <h3>⧉ Trending Shorts</h3>
           <div class="shorts-grid" id="shorts-grid">
             <!-- Shorts will be dynamically loaded -->
           </div>
@@ -88,23 +88,56 @@
   </div>
 
   <!-- User Menu Dropdown -->
-  <div id="user-dropdown" style="display: none; position: absolute; top: 60px; right: 20px; background: var(--background-secondary); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); min-width: 200px; z-index: 1000;">
-    <div style="padding: 16px;">
+  <div id="user-dropdown" style="display: none; position: absolute; top: 60px; right: 20px; background: var(--background-secondary); border: 1px solid var(--border-color); border-radius: 16px; box-shadow: 0 12px 48px rgba(0, 0, 0, 0.2); min-width: 240px; z-index: 1000; backdrop-filter: blur(20px);">
+    <div style="padding: 20px;">
       <div id="user-info" style="display: none;">
-        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);">
-          <div style="width: 40px; height: 40px; background: var(--primary-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;" id="user-avatar">A</div>
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);">
+          <div style="width: 48px; height: 48px; background: var(--primary-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 18px;" id="user-avatar">A</div>
           <div>
-            <div style="font-weight: 600; color: var(--text-primary);" id="user-name"></div>
+            <div style="font-weight: 700; color: var(--text-primary); font-size: 16px;" id="user-name"></div>
             <div style="font-size: 14px; color: var(--text-secondary);" id="user-email"></div>
           </div>
         </div>
-        <a href="account.html" style="display: block; padding: 8px 0; color: var(--text-primary); text-decoration: none; font-size: 14px;">⚡ Creator Studio</a>
-        <a href="#" style="display: block; padding: 8px 0; color: var(--text-primary); text-decoration: none; font-size: 14px;" id="settings-menu">⚙ Settings</a>
-        <a href="#" style="display: block; padding: 8px 0; color: var(--text-primary); text-decoration: none; font-size: 14px;" id="logout-menu">↗ Sign Out</a>
+        <a href="account.html" style="display: block; padding: 12px 0; color: var(--text-primary); text-decoration: none; font-size: 15px; font-weight: 600; transition: color 0.2s;">⚡ Creator Studio</a>
+        <a href="#" style="display: block; padding: 12px 0; color: var(--text-primary); text-decoration: none; font-size: 15px; font-weight: 600; transition: color 0.2s;" id="settings-menu">⚙ Settings</a>
+        <a href="#" style="display: block; padding: 12px 0; color: var(--text-primary); text-decoration: none; font-size: 15px; font-weight: 600; transition: color 0.2s;" id="logout-menu">↗ Sign Out</a>
       </div>
       <div id="auth-links">
-        <a href="login.html" style="display: block; padding: 8px 0; color: var(--focus-color); text-decoration: none; font-size: 14px; font-weight: 500;">→ Sign In</a>
-        <a href="signup.html" style="display: block; padding: 8px 0; color: var(--focus-color); text-decoration: none; font-size: 14px; font-weight: 500;">+ Create Account</a>
+        <a href="login.html" style="display: block; padding: 12px 0; color: var(--focus-color); text-decoration: none; font-size: 15px; font-weight: 600;">→ Sign In</a>
+        <a href="signup.html" style="display: block; padding: 12px 0; color: var(--focus-color); text-decoration: none; font-size: 15px; font-weight: 600;">+ Create Account</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Completion Modal -->
+  <div id="profile-completion-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 9999; backdrop-filter: blur(10px);">
+    <div style="display: flex; align-items: center; justify-content: center; height: 100%; padding: 20px;">
+      <div style="background: var(--background-secondary); border-radius: 24px; padding: 40px; max-width: 500px; width: 100%; box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3); border: 1px solid var(--border-color);">
+        <div style="text-align: center; margin-bottom: 32px;">
+          <div style="font-size: 48px; margin-bottom: 16px;">🎬</div>
+          <h2 style="font-size: 24px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">Complete Your Profile</h2>
+          <p style="color: var(--text-secondary); font-size: 16px;">Set up your channel name and handle to get started</p>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+          <label style="display: block; font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">Channel Name</label>
+          <input type="text" id="modal-channel-name" placeholder="Your awesome channel" style="width: 100%; padding: 16px 20px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 16px; background: var(--background-tertiary); color: var(--text-primary); box-sizing: border-box;">
+          <div id="modal-name-validation" style="font-size: 13px; margin-top: 6px; min-height: 18px; font-weight: 500;"></div>
+        </div>
+
+        <div style="margin-bottom: 32px;">
+          <label style="display: block; font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">Handle</label>
+          <input type="text" id="modal-channel-handle" placeholder="yourhandle" style="width: 100%; padding: 16px 20px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 16px; background: var(--background-tertiary); color: var(--text-primary); box-sizing: border-box;">
+          <div id="modal-handle-validation" style="font-size: 13px; margin-top: 6px; min-height: 18px; font-weight: 500;"></div>
+          <div id="modal-handle-preview" style="margin-top: 8px; padding: 12px 16px; background: var(--background-tertiary); border-radius: 12px; border: 1px solid var(--border-color); font-size: 14px; color: var(--text-secondary); font-weight: 500; display: none;">
+            Your channel URL: jonahtube.com/@<span id="modal-handle-url"></span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 16px;">
+          <button id="modal-skip" style="flex: 1; background: var(--background-tertiary); color: var(--text-primary); border: 2px solid var(--border-color); padding: 16px 24px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer;">Skip for Now</button>
+          <button id="modal-save" style="flex: 1; background: var(--primary-gradient); color: white; border: none; padding: 16px 24px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 16px rgba(255, 0, 80, 0.4);" disabled>Save & Continue</button>
+        </div>
       </div>
     </div>
   </div>
@@ -118,6 +151,7 @@
       }
 
       init() {
+        this.checkFirstVisit();
         this.setupTheme();
         this.setupEventListeners();
         this.setupSearch();
@@ -125,10 +159,182 @@
         this.loadVideos();
         this.updateSubscriptionsList();
         this.handleUrlSearch();
+        this.checkProfileCompletion();
+      }
+
+      checkFirstVisit() {
+        const hasVisited = localStorage.getItem('hasVisitedJonahTube');
+        if (!hasVisited) {
+          localStorage.setItem('hasVisitedJonahTube', 'true');
+          window.location.href = 'landing.html';
+          return;
+        }
+      }
+
+      checkProfileCompletion() {
+        if (this.isLoggedIn && this.currentUser) {
+          // Check if user needs to complete channel setup
+          if (!this.currentUser.channelName || !this.currentUser.channelHandle || this.currentUser.needsChannelSetup) {
+            this.showProfileCompletionModal();
+          }
+        }
+      }
+
+      showProfileCompletionModal() {
+        const modal = document.getElementById('profile-completion-modal');
+        const nameInput = document.getElementById('modal-channel-name');
+        const handleInput = document.getElementById('modal-channel-handle');
+        
+        modal.style.display = 'block';
+        
+        // Pre-fill if we have some data
+        if (this.currentUser.channelName) {
+          nameInput.value = this.currentUser.channelName;
+        }
+        if (this.currentUser.channelHandle) {
+          handleInput.value = this.currentUser.channelHandle.replace('@', '');
+        }
+        
+        this.setupProfileCompletionHandlers();
+      }
+
+      setupProfileCompletionHandlers() {
+        const nameInput = document.getElementById('modal-channel-name');
+        const handleInput = document.getElementById('modal-channel-handle');
+        const saveBtn = document.getElementById('modal-save');
+        const skipBtn = document.getElementById('modal-skip');
+        
+        const validateAndUpdate = () => {
+          const name = nameInput.value.trim();
+          const handle = handleInput.value.trim();
+          
+          let nameValid = name.length >= 3 && name.length <= 30;
+          let handleValid = handle.length >= 3 && handle.length <= 20 && /^[a-zA-Z0-9_-]+$/.test(handle);
+          
+          // Update validation messages
+          const nameValidation = document.getElementById('modal-name-validation');
+          const handleValidation = document.getElementById('modal-handle-validation');
+          const handlePreview = document.getElementById('modal-handle-preview');
+          const handleUrl = document.getElementById('modal-handle-url');
+          
+          if (name) {
+            if (nameValid) {
+              nameValidation.textContent = '✓ Looks good';
+              nameValidation.style.color = 'var(--success-color)';
+              nameInput.style.borderColor = 'var(--success-color)';
+            } else {
+              nameValidation.textContent = 'Must be 3-30 characters';
+              nameValidation.style.color = 'var(--danger-color)';
+              nameInput.style.borderColor = 'var(--danger-color)';
+            }
+          } else {
+            nameValidation.textContent = '';
+            nameInput.style.borderColor = 'var(--border-color)';
+          }
+          
+          if (handle) {
+            if (handleValid) {
+              handleValidation.textContent = '✓ Handle available';
+              handleValidation.style.color = 'var(--success-color)';
+              handleInput.style.borderColor = 'var(--success-color)';
+              handlePreview.style.display = 'block';
+              handleUrl.textContent = handle;
+            } else {
+              handleValidation.textContent = 'Must be 3-20 characters, letters/numbers/_/- only';
+              handleValidation.style.color = 'var(--danger-color)';
+              handleInput.style.borderColor = 'var(--danger-color)';
+              handlePreview.style.display = 'none';
+            }
+          } else {
+            handleValidation.textContent = '';
+            handleInput.style.borderColor = 'var(--border-color)';
+            handlePreview.style.display = 'none';
+          }
+          
+          saveBtn.disabled = !(nameValid && handleValid);
+        };
+        
+        nameInput.addEventListener('input', validateAndUpdate);
+        handleInput.addEventListener('input', validateAndUpdate);
+        
+        saveBtn.addEventListener('click', () => {
+          this.saveProfileCompletion();
+        });
+        
+        skipBtn.addEventListener('click', () => {
+          this.skipProfileCompletion();
+        });
+        
+        validateAndUpdate();
+      }
+
+      async saveProfileCompletion() {
+        const name = document.getElementById('modal-channel-name').value.trim();
+        const handle = document.getElementById('modal-channel-handle').value.trim();
+        
+        // Update current user
+        this.currentUser.channelName = name;
+        this.currentUser.channelHandle = handle;
+        this.currentUser.needsChannelSetup = false;
+        
+        localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+        
+        // Update in registered users
+        const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+        const userIndex = users.findIndex(u => u.id === this.currentUser.id);
+        if (userIndex !== -1) {
+          users[userIndex].channelName = name;
+          users[userIndex].channelHandle = handle;
+          users[userIndex].needsChannelSetup = false;
+          localStorage.setItem('registeredUsers', JSON.stringify(users));
+        }
+        
+        // Save channel data
+        const channelData = {
+          name: name,
+          handle: '@' + handle,
+          description: '',
+          category: '',
+          avatar: name.charAt(0).toUpperCase()
+        };
+        localStorage.setItem('channelData', JSON.stringify(channelData));
+        
+        // Hide modal
+        document.getElementById('profile-completion-modal').style.display = 'none';
+        
+        this.showNotification('Profile completed! Welcome to JonahTube!', 'success');
+        this.updateUserInterface();
+      }
+
+      skipProfileCompletion() {
+        // Set default values
+        const defaultName = this.currentUser.displayName || 'My Channel';
+        const defaultHandle = 'user' + this.currentUser.id;
+        
+        this.currentUser.channelName = defaultName;
+        this.currentUser.channelHandle = defaultHandle;
+        this.currentUser.needsChannelSetup = false;
+        
+        localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+        
+        // Save minimal channel data
+        const channelData = {
+          name: defaultName,
+          handle: '@' + defaultHandle,
+          description: '',
+          category: '',
+          avatar: defaultName.charAt(0).toUpperCase()
+        };
+        localStorage.setItem('channelData', JSON.stringify(channelData));
+        
+        // Hide modal
+        document.getElementById('profile-completion-modal').style.display = 'none';
+        
+        this.updateUserInterface();
       }
 
       setupTheme() {
-        const currentTheme = localStorage.getItem('theme') || 'light';
+        const currentTheme = localStorage.getItem('theme') || 'dark';
         document.documentElement.setAttribute('data-theme', currentTheme);
       }
 
@@ -243,7 +449,7 @@
           document.getElementById('user-email').textContent = this.currentUser.email || '';
           
           // Update avatar
-          const avatar = this.currentUser.displayName?.charAt(0).toUpperCase() || 'U';
+          const avatar = (this.currentUser.channelName || this.currentUser.displayName || 'U').charAt(0).toUpperCase();
           document.getElementById('user-avatar').textContent = avatar;
 
           // Update sidebar link
@@ -253,7 +459,7 @@
           }
         } else {
           // Not logged in
-          userDisplay.textContent = 'Sign In';
+          userDisplay.textContent = 'Join Now';
           userInfo.style.display = 'none';
           authLinks.style.display = 'block';
         }
