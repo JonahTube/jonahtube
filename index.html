@@ -402,6 +402,29 @@
         const performSearch = () => {
           const query = searchInput.value.trim();
           if (query) {
+            // Check search query for inappropriate content
+            const moderationResult = window.ContentModeration.checkContent(query, 'search');
+            if (!moderationResult.isAppropriate) {
+              this.showNotification(
+                '❌ Search blocked: ' + moderationResult.issues.join(', '),
+                'error'
+              );
+
+              // Clear the search input
+              searchInput.value = '';
+
+              // Show suggestion if available
+              if (moderationResult.suggestions.length > 0) {
+                setTimeout(() => {
+                  this.showNotification(
+                    '💡 Try searching for: ' + moderationResult.suggestions.join(', '),
+                    'info'
+                  );
+                }, 1000);
+              }
+              return;
+            }
+
             this.searchVideos(query);
           }
         };
