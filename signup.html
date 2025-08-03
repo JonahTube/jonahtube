@@ -1037,11 +1037,22 @@
             } else if (!this.validationRules.channelName.pattern.test(value)) {
               isValid = false;
               message = 'Only letters, numbers, spaces, hyphens and underscores allowed';
-            } else if (this.isChannelNameTaken(value)) {
-              isValid = false;
-              message = 'This channel name is already taken';
             } else {
-              message = '✓ Channel name available';
+              // Content moderation check
+              const moderationResult = window.ContentModeration.checkContent(value, 'channel-name');
+              if (!moderationResult.isAppropriate) {
+                isValid = false;
+                message = '❌ Channel name not allowed: ' + moderationResult.issues.join(', ');
+                if (moderationResult.suggestions.length > 0) {
+                  message += '. Try: ' + moderationResult.suggestions[0];
+                }
+              } else if (this.isChannelNameTaken(value)) {
+                isValid = false;
+                message = 'This channel name is already taken';
+              } else {
+                const score = window.ContentModeration.getContentSafetyScore(value);
+                message = '✓ Channel name available (Safety: ' + score + '/100)';
+              }
             }
             break;
 
