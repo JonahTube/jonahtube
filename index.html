@@ -436,11 +436,23 @@
           }
         });
 
-        // Search suggestions
+        // Search suggestions with content moderation
         searchInput.addEventListener('input', () => {
           const query = searchInput.value.trim();
           if (query.length > 2) {
-            this.showSearchSuggestions(query);
+            // Check if the partial query is appropriate
+            const moderationResult = window.ContentModeration.checkContent(query, 'search');
+            if (!moderationResult.isAppropriate) {
+              // Show warning in search suggestions
+              searchSuggestions.innerHTML = `
+                <div class="search-suggestion" style="color: var(--danger-color); background: rgba(244, 67, 54, 0.1);">
+                  ❌ ${moderationResult.issues[0]}
+                </div>
+              `;
+              searchSuggestions.style.display = 'block';
+            } else {
+              this.showSearchSuggestions(query);
+            }
           } else {
             searchSuggestions.style.display = 'none';
           }
