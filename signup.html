@@ -1069,11 +1069,22 @@
             } else if (!this.validationRules.channelHandle.pattern.test(value)) {
               isValid = false;
               message = 'Only letters, numbers, hyphens and underscores allowed';
-            } else if (this.isHandleTaken(value)) {
-              isValid = false;
-              message = 'This handle is already taken';
             } else {
-              message = '✓ Handle available';
+              // Content moderation check
+              const moderationResult = window.ContentModeration.checkContent(value, 'channel-handle');
+              if (!moderationResult.isAppropriate) {
+                isValid = false;
+                message = '❌ Handle not allowed: ' + moderationResult.issues.join(', ');
+                if (moderationResult.suggestions.length > 0) {
+                  message += '. Try: ' + moderationResult.suggestions[0];
+                }
+              } else if (this.isHandleTaken(value)) {
+                isValid = false;
+                message = 'This handle is already taken';
+              } else {
+                const score = window.ContentModeration.getContentSafetyScore(value);
+                message = '✓ Handle available (Safety: ' + score + '/100)';
+              }
             }
             break;
 
