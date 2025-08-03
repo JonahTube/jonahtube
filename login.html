@@ -1,72 +1,572 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>JonahTube - Login</title>
-  <script type="module">
-    // Import Firebase modules
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign In - JonahTube</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
 
-    // Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyCIVGv1dkpCn6bKGstvbqDMHbPY9ce8tw8",
-      authDomain: "jonahtube-bf9db.firebaseapp.com",
-      projectId: "jonahtube-bf9db",
-      storageBucket: "jonahtube-bf9db.firebasestorage.app",
-      messagingSenderId: "757825713276",
-      appId: "1:757825713276:web:d755230351acd1159d45f9",
-      measurementId: "G-NF5N10T4Q1"
-    };
+    .auth-container {
+      width: 100%;
+      max-width: 400px;
+      background: var(--background-secondary);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
+    .auth-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
 
-    // Sign in with Google when button clicked
-    window.googleLogin = async () => {
-      try {
-        await signInWithPopup(auth, provider);
-        alert("Signed in!");
-      } catch (error) {
-        console.error("Login error:", error.message);
+    .auth-logo {
+      font-size: 32px;
+      font-weight: 700;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
 
-        if (error.code === 'auth/unauthorized-domain') {
-          alert(`Authentication Error: This domain is not authorized for Firebase Auth.\n\nTo fix this:\n1. Go to Firebase Console\n2. Navigate to Authentication > Settings > Authorized domains\n3. Add the current domain: ${window.location.hostname}\n\nFor development, you may need to add: localhost, 127.0.0.1, or your dev server domain.`);
-        } else {
-          alert(`Login failed: ${error.message}`);
+    .auth-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .auth-subtitle {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .input-group {
+      position: relative;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 16px 20px;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      font-size: 16px;
+      background: var(--background-primary);
+      color: var(--text-primary);
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .form-input:focus {
+      border-color: var(--focus-color);
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+      outline: none;
+    }
+
+    .form-input::placeholder {
+      color: var(--text-tertiary);
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-tertiary);
+      font-size: 18px;
+    }
+
+    .form-input.with-icon {
+      padding-left: 50px;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      font-size: 18px;
+      padding: 4px;
+    }
+
+    .forgot-password {
+      text-align: right;
+      margin-top: -8px;
+    }
+
+    .forgot-password a {
+      color: var(--focus-color);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .forgot-password a:hover {
+      text-decoration: underline;
+    }
+
+    .auth-button {
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .auth-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .auth-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 24px 0;
+      color: var(--text-tertiary);
+      font-size: 14px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border-color);
+    }
+
+    .divider span {
+      padding: 0 16px;
+    }
+
+    .social-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .social-button {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      background: var(--background-secondary);
+      color: var(--text-primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .social-button:hover {
+      border-color: var(--focus-color);
+      transform: translateY(-2px);
+    }
+
+    .auth-footer {
+      text-align: center;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .auth-footer p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .auth-footer a {
+      color: var(--focus-color);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .auth-footer a:hover {
+      text-decoration: underline;
+    }
+
+    .back-to-home {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 12px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .back-to-home:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .error-message {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid var(--danger-color);
+      color: var(--danger-color);
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .success-message {
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid var(--success-color);
+      color: var(--success-color);
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    @media (max-width: 480px) {
+      .auth-container {
+        padding: 30px 20px;
+        margin: 0 10px;
+      }
+      
+      .back-to-home {
+        position: relative;
+        top: 0;
+        left: 0;
+        margin-bottom: 20px;
+        display: inline-flex;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back-to-home">
+    <span>←</span>
+    <span>Back to Home</span>
+  </a>
+
+  <div class="auth-container">
+    <div class="auth-header">
+      <div class="auth-logo">JonahTube</div>
+      <h1 class="auth-title">Welcome Back</h1>
+      <p class="auth-subtitle">Sign in to your account to continue</p>
+    </div>
+
+    <div class="error-message" id="error-message"></div>
+    <div class="success-message" id="success-message"></div>
+
+    <form class="auth-form" id="login-form">
+      <div class="input-group">
+        <span class="input-icon">@</span>
+        <input
+          type="email"
+          class="form-input with-icon"
+          placeholder="Email address"
+          required
+          id="email"
+          autocomplete="email"
+        />
+      </div>
+
+      <div class="input-group">
+        <span class="input-icon">🔒</span>
+        <input
+          type="password"
+          class="form-input with-icon"
+          placeholder="Password"
+          required
+          id="password"
+          autocomplete="current-password"
+        />
+        <button type="button" class="password-toggle" id="password-toggle">
+          👁️
+        </button>
+      </div>
+
+      <div class="forgot-password">
+        <a href="#" id="forgot-password-link">Forgot password?</a>
+      </div>
+
+      <button type="submit" class="auth-button" id="login-button">
+        Sign In
+      </button>
+    </form>
+
+    <div class="divider">
+      <span>or continue with</span>
+    </div>
+
+    <div class="social-buttons">
+      <button class="social-button" id="google-login">
+        G Google
+      </button>
+      <button class="social-button" id="github-login">
+        ⚡ GitHub
+      </button>
+    </div>
+
+    <div class="auth-footer">
+      <p>Don't have an account?</p>
+      <a href="signup.html">Create an account</a>
+    </div>
+  </div>
+
+  <script>
+    class LoginManager {
+      constructor() {
+        this.init();
+      }
+
+      init() {
+        this.setupEventListeners();
+        this.setupTheme();
+        this.checkExistingAuth();
+      }
+
+      setupEventListeners() {
+        // Form submission
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+          e.preventDefault();
+          this.handleLogin();
+        });
+
+        // Password toggle
+        document.getElementById('password-toggle').addEventListener('click', () => {
+          this.togglePassword();
+        });
+
+        // Social logins
+        document.getElementById('google-login').addEventListener('click', () => {
+          this.handleSocialLogin('google');
+        });
+
+        document.getElementById('github-login').addEventListener('click', () => {
+          this.handleSocialLogin('github');
+        });
+
+        // Forgot password
+        document.getElementById('forgot-password-link').addEventListener('click', (e) => {
+          e.preventDefault();
+          this.handleForgotPassword();
+        });
+      }
+
+      setupTheme() {
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
         }
       }
-    };
 
-    // Show user info if logged in
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const name = user.displayName;
-        const email = user.email;
-        const photoURL = user.photoURL;
-
-        document.getElementById("userInfo").style.display = "block";
-        document.getElementById("userName").textContent = `Welcome, ${name || "No Name"}`;
-        document.getElementById("userEmail").textContent = `Email: ${email}`;
-        if (photoURL) {
-          document.getElementById("userPhoto").src = photoURL;
-        } else {
-          document.getElementById("userPhoto").style.display = "none";
+      checkExistingAuth() {
+        const currentUser = localStorage.getItem('currentUser');
+        if (currentUser) {
+          this.showSuccess('You are already logged in. Redirecting...');
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 1500);
         }
       }
+
+      async handleLogin() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const loginButton = document.getElementById('login-button');
+
+        if (!email || !password) {
+          this.showError('Please fill in all fields');
+          return;
+        }
+
+        if (!this.isValidEmail(email)) {
+          this.showError('Please enter a valid email address');
+          return;
+        }
+
+        // Disable button and show loading
+        loginButton.disabled = true;
+        loginButton.textContent = 'Signing In...';
+
+        try {
+          // Simulate API call
+          await new Promise(resolve => setTimeout(resolve, 1500));
+
+          // Check credentials (demo implementation)
+          const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+          const user = users.find(u => u.email === email && u.password === password);
+
+          if (!user) {
+            throw new Error('Invalid email or password');
+          }
+
+          // Store user session
+          const currentUser = {
+            id: user.id,
+            email: user.email,
+            displayName: user.displayName,
+            photoURL: user.photoURL || null,
+            loginTime: new Date().toISOString()
+          };
+
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
+          localStorage.setItem('isLoggedIn', 'true');
+
+          this.showSuccess('Login successful! Redirecting...');
+
+          // Redirect to home page
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 1000);
+
+        } catch (error) {
+          this.showError(error.message || 'Login failed. Please try again.');
+        } finally {
+          loginButton.disabled = false;
+          loginButton.textContent = 'Sign In';
+        }
+      }
+
+      togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const toggleButton = document.getElementById('password-toggle');
+
+        if (passwordInput.type === 'password') {
+          passwordInput.type = 'text';
+          toggleButton.textContent = '🙈';
+        } else {
+          passwordInput.type = 'password';
+          toggleButton.textContent = '👁️';
+        }
+      }
+
+      async handleSocialLogin(provider) {
+        this.showError(''); // Clear any existing errors
+        
+        try {
+          // Simulate social login
+          await new Promise(resolve => setTimeout(resolve, 1000));
+
+          const mockUser = {
+            id: Date.now().toString(),
+            email: `user@${provider}.com`,
+            displayName: `${provider.charAt(0).toUpperCase() + provider.slice(1)} User`,
+            photoURL: null,
+            provider: provider,
+            loginTime: new Date().toISOString()
+          };
+
+          localStorage.setItem('currentUser', JSON.stringify(mockUser));
+          localStorage.setItem('isLoggedIn', 'true');
+
+          this.showSuccess(`Signed in with ${provider}! Redirecting...`);
+
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 1000);
+
+        } catch (error) {
+          this.showError(`Failed to sign in with ${provider}`);
+        }
+      }
+
+      handleForgotPassword() {
+        const email = document.getElementById('email').value;
+        
+        if (!email) {
+          this.showError('Please enter your email address first');
+          return;
+        }
+
+        if (!this.isValidEmail(email)) {
+          this.showError('Please enter a valid email address');
+          return;
+        }
+
+        // Simulate password reset
+        this.showSuccess('Password reset link sent to your email!');
+      }
+
+      isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+      }
+
+      showError(message) {
+        const errorElement = document.getElementById('error-message');
+        const successElement = document.getElementById('success-message');
+        
+        successElement.style.display = 'none';
+        
+        if (message) {
+          errorElement.textContent = message;
+          errorElement.style.display = 'block';
+        } else {
+          errorElement.style.display = 'none';
+        }
+      }
+
+      showSuccess(message) {
+        const errorElement = document.getElementById('error-message');
+        const successElement = document.getElementById('success-message');
+        
+        errorElement.style.display = 'none';
+        
+        if (message) {
+          successElement.textContent = message;
+          successElement.style.display = 'block';
+        } else {
+          successElement.style.display = 'none';
+        }
+      }
+    }
+
+    // Initialize login manager
+    document.addEventListener('DOMContentLoaded', () => {
+      new LoginManager();
     });
   </script>
-</head>
-<body style="font-family: sans-serif; text-align: center; padding: 50px;">
-  <h1>JonahTube Login</h1>
-  <button onclick="googleLogin()">Sign in with Google</button>
-
-  <!-- User Info Section -->
-  <div id="userInfo" style="display: none; margin-top: 20px;">
-    <p id="userName"></p>
-    <p id="userEmail"></p>
-    <img id="userPhoto" width="60" height="60" style="border-radius: 50%;" />
-  </div>
 </body>
 </html>
