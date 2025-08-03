@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Join JonahTube - Create Your Story</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: linear-gradient(135deg, #000000 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #e94560 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .auth-container {
+      width: 100%;
+      max-width: 420px;
+      background: var(--background-secondary);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--primary-gradient);
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .auth-logo {
+      font-size: 36px;
+      font-weight: 900;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+      filter: drop-shadow(0 0 10px rgba(255, 0, 80, 0.3));
+    }
+
+    .auth-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .auth-subtitle {
+      color: var(--text-secondary);
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .input-group {
+      position: relative;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 18px 24px;
+      border: 2px solid var(--border-color);
+      border-radius: 16px;
+      font-size: 16px;
+      background: var(--background-tertiary);
+      color: var(--text-primary);
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+      font-weight: 500;
+    }
+
+    .form-input:focus {
+      border-color: var(--focus-color);
+      background: var(--background-secondary);
+      box-shadow: 0 0 0 4px rgba(255, 0, 80, 0.1);
+      outline: none;
+      transform: scale(1.02);
+    }
+
+    .form-input.with-icon {
+      padding-left: 54px;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-tertiary);
+      font-size: 20px;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      font-size: 18px;
+      padding: 6px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .password-toggle:hover {
+      background: var(--hover-background);
+      color: var(--text-primary);
+    }
+
+    .field-validation {
+      font-size: 13px;
+      margin-top: 6px;
+      min-height: 18px;
+      font-weight: 500;
+    }
+
+    .field-validation.error {
+      color: var(--danger-color);
+    }
+
+    .field-validation.success {
+      color: var(--success-color);
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin: 8px 0;
+    }
+
+    .custom-checkbox {
+      position: relative;
+      width: 24px;
+      height: 24px;
+      margin-top: 2px;
+    }
+
+    .custom-checkbox input {
+      opacity: 0;
+      position: absolute;
+    }
+
+    .checkmark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 24px;
+      width: 24px;
+      background: var(--background-tertiary);
+      border: 2px solid var(--border-color);
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .custom-checkbox:hover input ~ .checkmark {
+      border-color: var(--focus-color);
+      background: rgba(255, 0, 80, 0.1);
+    }
+
+    .custom-checkbox input:checked ~ .checkmark {
+      background: var(--primary-gradient);
+      border-color: var(--focus-color);
+    }
+
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+      left: 7px;
+      top: 3px;
+      width: 6px;
+      height: 12px;
+      border: solid white;
+      border-width: 0 3px 3px 0;
+      transform: rotate(45deg);
+    }
+
+    .custom-checkbox input:checked ~ .checkmark:after {
+      display: block;
+    }
+
+    .checkbox-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      font-weight: 500;
+    }
+
+    .checkbox-label a {
+      color: var(--focus-color);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .checkbox-label a:hover {
+      text-decoration: underline;
+    }
+
+    .auth-button {
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      padding: 18px 32px;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 8px 24px rgba(255, 0, 80, 0.4);
+      margin-top: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .auth-button:hover::before {
+      left: 100%;
+    }
+
+    .auth-button:hover:not(:disabled) {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 36px rgba(255, 0, 80, 0.6);
+    }
+
+    .auth-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .auth-footer {
+      text-align: center;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .auth-link {
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .auth-link a {
+      color: var(--focus-color);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .auth-link a:hover {
+      text-decoration: underline;
+    }
+
+    .success-message, .error-message {
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .success-message {
+      background: rgba(76, 175, 80, 0.1);
+      color: var(--success-color);
+      border: 1px solid rgba(76, 175, 80, 0.3);
+    }
+
+    .error-message {
+      background: rgba(244, 67, 54, 0.1);
+      color: var(--danger-color);
+      border: 1px solid rgba(244, 67, 54, 0.3);
+    }
+
+    .quick-stats {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .quick-stat {
+      text-align: center;
+    }
+
+    .quick-stat-number {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--focus-color);
+    }
+
+    .quick-stat-label {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    @media (max-width: 480px) {
+      .auth-container {
+        padding: 32px 24px;
+        margin: 16px;
+      }
+
+      .quick-stats {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .quick-stat {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-header">
+      <div class="auth-logo">JonahTube</div>
+      <h1 class="auth-title">Join JonahTube</h1>
+      <p class="auth-subtitle">Create your account in seconds and start creating!</p>
+    </div>
+
+    <div class="quick-stats">
+      <div class="quick-stat">
+        <div class="quick-stat-number">10K+</div>
+        <div class="quick-stat-label">Creators</div>
+      </div>
+      <div class="quick-stat">
+        <div class="quick-stat-number">50K+</div>
+        <div class="quick-stat-label">Videos</div>
+      </div>
+      <div class="quick-stat">
+        <div class="quick-stat-number">100%</div>
+        <div class="quick-stat-label">Safe</div>
+      </div>
+    </div>
+
+    <div class="error-message" id="error-message"></div>
+    <div class="success-message" id="success-message"></div>
+
+    <form class="auth-form" id="signup-form">
+      <div class="input-group">
+        <span class="input-icon">👤</span>
+        <input
+          type="text"
+          class="form-input with-icon"
+          placeholder="Your name"
+          required
+          id="displayName"
+          autocomplete="name"
+        />
+        <div class="field-validation" id="displayName-validation"></div>
+      </div>
+
+      <div class="input-group">
+        <span class="input-icon">@</span>
+        <input
+          type="email"
+          class="form-input with-icon"
+          placeholder="Email address"
+          required
+          id="email"
+          autocomplete="email"
+        />
+        <div class="field-validation" id="email-validation"></div>
+      </div>
+
+      <div class="input-group">
+        <span class="input-icon">🔒</span>
+        <input
+          type="password"
+          class="form-input with-icon"
+          placeholder="Create password (min 6 characters)"
+          required
+          id="password"
+          minlength="6"
+          autocomplete="new-password"
+        />
+        <button type="button" class="password-toggle" id="password-toggle">👁️</button>
+        <div class="field-validation" id="password-validation"></div>
+      </div>
+
+      <div class="checkbox-group">
+        <label class="custom-checkbox">
+          <input type="checkbox" id="agreeTerms" required>
+          <span class="checkmark"></span>
+        </label>
+        <label class="checkbox-label" for="agreeTerms">
+          I agree to the <a href="guidelines.html" target="_blank">Terms</a> and confirm I'm 13+ years old
+        </label>
+      </div>
+
+      <button type="submit" class="auth-button" id="signup-button">
+        🚀 Create Account & Start Creating
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <div class="auth-link">
+        Already have an account? <a href="login.html">Sign in here</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="content-moderation.js"></script>
+  <script>
+    class SimpleSignupManager {
+      constructor() {
+        this.setupEventListeners();
+        this.setupValidation();
+      }
+
+      setupEventListeners() {
+        const form = document.getElementById('signup-form');
+        const passwordToggle = document.getElementById('password-toggle');
+        
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          this.handleSignup();
+        });
+
+        passwordToggle.addEventListener('click', () => {
+          this.togglePassword();
+        });
+
+        // Real-time validation
+        ['displayName', 'email', 'password'].forEach(fieldId => {
+          const field = document.getElementById(fieldId);
+          field.addEventListener('input', () => {
+            this.validateField(fieldId);
+          });
+          field.addEventListener('blur', () => {
+            this.validateField(fieldId);
+          });
+        });
+      }
+
+      setupValidation() {
+        // Setup content moderation for name field
+        const nameField = document.getElementById('displayName');
+        nameField.addEventListener('input', () => {
+          this.validateNameWithModeration();
+        });
+      }
+
+      validateNameWithModeration() {
+        const nameField = document.getElementById('displayName');
+        const validation = document.getElementById('displayName-validation');
+        const name = nameField.value.trim();
+
+        if (name.length === 0) {
+          validation.textContent = '';
+          validation.className = 'field-validation';
+          return;
+        }
+
+        // Content moderation check
+        const moderationResult = window.ContentModeration.checkContent(name, 'general');
+        if (!moderationResult.isAppropriate) {
+          validation.textContent = '❌ Name not allowed: ' + moderationResult.issues[0];
+          validation.className = 'field-validation error';
+          nameField.style.borderColor = 'var(--danger-color)';
+          return false;
+        }
+
+        if (name.length < 2) {
+          validation.textContent = 'Name must be at least 2 characters';
+          validation.className = 'field-validation error';
+          nameField.style.borderColor = 'var(--danger-color)';
+          return false;
+        }
+
+        validation.textContent = '✓ Looks good';
+        validation.className = 'field-validation success';
+        nameField.style.borderColor = 'var(--success-color)';
+        return true;
+      }
+
+      validateField(fieldId) {
+        const field = document.getElementById(fieldId);
+        const validation = document.getElementById(fieldId + '-validation');
+        const value = field.value.trim();
+
+        switch (fieldId) {
+          case 'email':
+            if (!value) {
+              validation.textContent = '';
+              validation.className = 'field-validation';
+              field.style.borderColor = 'var(--border-color)';
+              return false;
+            }
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) {
+              validation.textContent = 'Please enter a valid email address';
+              validation.className = 'field-validation error';
+              field.style.borderColor = 'var(--danger-color)';
+              return false;
+            }
+
+            // Check if email is already taken
+            const existingUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+            if (existingUsers.find(user => user.email === value)) {
+              validation.textContent = 'This email is already registered';
+              validation.className = 'field-validation error';
+              field.style.borderColor = 'var(--danger-color)';
+              return false;
+            }
+
+            validation.textContent = '✓ Email available';
+            validation.className = 'field-validation success';
+            field.style.borderColor = 'var(--success-color)';
+            return true;
+
+          case 'password':
+            if (!value) {
+              validation.textContent = '';
+              validation.className = 'field-validation';
+              field.style.borderColor = 'var(--border-color)';
+              return false;
+            }
+
+            if (value.length < 6) {
+              validation.textContent = 'Password must be at least 6 characters';
+              validation.className = 'field-validation error';
+              field.style.borderColor = 'var(--danger-color)';
+              return false;
+            }
+
+            validation.textContent = '✓ Password strength good';
+            validation.className = 'field-validation success';
+            field.style.borderColor = 'var(--success-color)';
+            return true;
+        }
+        return true;
+      }
+
+      togglePassword() {
+        const passwordField = document.getElementById('password');
+        const toggleButton = document.getElementById('password-toggle');
+        
+        if (passwordField.type === 'password') {
+          passwordField.type = 'text';
+          toggleButton.textContent = '🙈';
+        } else {
+          passwordField.type = 'password';
+          toggleButton.textContent = '👁️';
+        }
+      }
+
+      async handleSignup() {
+        const displayName = document.getElementById('displayName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const agreeTerms = document.getElementById('agreeTerms').checked;
+
+        // Validate all fields
+        const nameValid = this.validateNameWithModeration();
+        const emailValid = this.validateField('email');
+        const passwordValid = this.validateField('password');
+
+        if (!nameValid || !emailValid || !passwordValid) {
+          this.showError('Please fix the errors above');
+          return;
+        }
+
+        if (!agreeTerms) {
+          this.showError('Please agree to the terms and confirm your age');
+          return;
+        }
+
+        // Show loading state
+        const button = document.getElementById('signup-button');
+        const originalText = button.textContent;
+        button.textContent = '⏳ Creating Account...';
+        button.disabled = true;
+
+        try {
+          // Simulate account creation
+          await new Promise(resolve => setTimeout(resolve, 1500));
+
+          // Create user account
+          const userId = Date.now().toString();
+          const defaultChannelHandle = displayName.toLowerCase().replace(/[^a-z0-9]/g, '') + Math.floor(Math.random() * 1000);
+          
+          const user = {
+            id: userId,
+            email: email,
+            displayName: displayName,
+            channelName: displayName + "'s Channel",
+            channelHandle: defaultChannelHandle,
+            createdAt: new Date().toISOString(),
+            avatar: displayName.charAt(0).toUpperCase(),
+            needsChannelSetup: false // Skip channel setup for simple signup
+          };
+
+          // Save to localStorage
+          const existingUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+          existingUsers.push(user);
+          localStorage.setItem('registeredUsers', JSON.stringify(existingUsers));
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          localStorage.setItem('isLoggedIn', 'true');
+
+          // Save channel data
+          const channelData = {
+            name: user.channelName,
+            handle: '@' + user.channelHandle,
+            description: '',
+            category: '',
+            avatar: user.avatar
+          };
+          localStorage.setItem('channelData', JSON.stringify(channelData));
+
+          this.showSuccess('🎉 Account created! Redirecting to your new channel...');
+          
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 2000);
+
+        } catch (error) {
+          this.showError('Something went wrong. Please try again.');
+          button.textContent = originalText;
+          button.disabled = false;
+        }
+      }
+
+      showError(message) {
+        const errorDiv = document.getElementById('error-message');
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+        document.getElementById('success-message').style.display = 'none';
+        
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+          errorDiv.style.display = 'none';
+        }, 5000);
+      }
+
+      showSuccess(message) {
+        const successDiv = document.getElementById('success-message');
+        successDiv.textContent = message;
+        successDiv.style.display = 'block';
+        document.getElementById('error-message').style.display = 'none';
+      }
+    }
+
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      new SimpleSignupManager();
+    });
+  </script>
+</body>
+</html>
