@@ -9,40 +9,82 @@
 <body>
   <header class="top-bar">
     <div class="logo">JonahTube</div>
-    <input type="text" placeholder="Search..." class="search-bar" />
+    <div class="search-container">
+      <input type="text" placeholder="Search..." class="search-bar" />
+      <button class="search-button">🔍</button>
+    </div>
     <div class="top-buttons">
-      <a href="add-video.html" class="icon-button">
+      <div class="icon-button create-button" id="create-button">
         <span class="button-icon">➕</span>
         <span class="button-label">Create</span>
-      </a>
+      </div>
+      <div class="create-menu" id="create-menu">
+        <button class="create-menu-item" onclick="showUploadOptions()">
+          <span class="create-menu-icon">📹</span>
+          <span>Upload video</span>
+        </button>
+        <button class="create-menu-item" onclick="showRecordOptions()">
+          <span class="create-menu-icon">🎥</span>
+          <span>Record video</span>
+        </button>
+      </div>
       <div id="notification-bell" class="icon-button">
         <span class="button-icon">🔔</span>
         <span class="button-label">Notifications</span>
         <span id="notif-dot" class="notif-dot"></span>
       </div>
-      <a href="account.html" class="icon-button">
-        <span class="button-icon">👤</span>
-        <span class="button-label">Profile</span>
+      <a href="profile.html" class="profile-button" id="profile-button">
+        U
       </a>
     </div>
   </header>
 
   <div class="main-content">
     <!-- Sidebar -->
-    <aside class="sidebar">
-      <a href="index.html">🏠 Home</a>
-      <a href="shorts.html">🎬 Shorts</a>
-      <a href="#" id="subscriptions-link">📺 Subscriptions</a>
-      <a href="#">🕓 History</a>
-      <a href="#">📤 Your Videos</a>
-      <a href="#">👍 Liked Videos</a>
-      <a href="#">⚙️ Settings</a>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-section">
+        <a href="index.html" class="active">
+          <span class="sidebar-icon">🏠</span>
+          <span>Home</span>
+        </a>
+        <a href="shorts.html">
+          <span class="sidebar-icon">🎬</span>
+          <span>Shorts</span>
+        </a>
+        <a href="#" id="subscriptions-link">
+          <span class="sidebar-icon">📺</span>
+          <span>Subscriptions</span>
+        </a>
+      </div>
+      <div class="sidebar-section">
+        <a href="profile.html">
+          <span class="sidebar-icon">👤</span>
+          <span>Your channel</span>
+        </a>
+        <a href="#">
+          <span class="sidebar-icon">🕓</span>
+          <span>History</span>
+        </a>
+        <a href="#">
+          <span class="sidebar-icon">📤</span>
+          <span>Your videos</span>
+        </a>
+        <a href="#">
+          <span class="sidebar-icon">👍</span>
+          <span>Liked videos</span>
+        </a>
+      </div>
+      <div class="sidebar-section">
+        <a href="#">
+          <span class="sidebar-icon">⚙️</span>
+          <span>Settings</span>
+        </a>
+      </div>
     </aside>
 
     <!-- Videos Grid -->
     <main class="videos-grid">
-      <h2>JonahTube</h2>
-      <p>Your community's videos will appear here!</p>
+      <h2>Home</h2>
 
       <div class="video-grid" id="video-grid">
         <!-- Videos will be dynamically loaded from localStorage -->
@@ -53,12 +95,12 @@
         <div class="empty-icon">📹</div>
         <h3>No videos yet!</h3>
         <p>Be the first to upload a video to JonahTube.</p>
-        <a href="add-video.html" class="upload-button">Upload Your First Video</a>
+        <button class="upload-button" onclick="showUploadOptions()">Upload Your First Video</button>
       </div>
 
       <!-- Shorts Section -->
       <div class="shorts-section" id="shorts-section" style="display: none;">
-        <h3>🎬 Shorts</h3>
+        <h3>Shorts</h3>
         <div class="shorts-grid" id="shorts-grid">
           <!-- Shorts will be dynamically loaded -->
         </div>
@@ -66,7 +108,69 @@
     </main>
   </div>
 
+  <!-- Upload Options Modal -->
+  <div class="modal-overlay" id="upload-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Create</h2>
+        <button class="modal-close" onclick="closeUploadModal()">✕</button>
+      </div>
+      <div class="modal-content">
+        <div class="upload-options">
+          <button class="upload-option" onclick="window.location.href='add-video.html'">
+            <div class="upload-option-icon">📹</div>
+            <div class="upload-option-content">
+              <h3>Upload video</h3>
+              <p>Select or drag and drop video files</p>
+            </div>
+          </button>
+          <button class="upload-option" onclick="startRecording()">
+            <div class="upload-option-icon">🎥</div>
+            <div class="upload-option-content">
+              <h3>Record video</h3>
+              <p>Use your camera to record a new video</p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
   <script>
+    // Create menu functionality
+    const createButton = document.getElementById('create-button');
+    const createMenu = document.getElementById('create-menu');
+    
+    createButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      createMenu.classList.toggle('show');
+    });
+    
+    document.addEventListener('click', () => {
+      createMenu.classList.remove('show');
+    });
+    
+    createMenu.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+
+    // Upload modal functions
+    function showUploadOptions() {
+      document.getElementById('upload-modal').classList.add('show');
+      createMenu.classList.remove('show');
+    }
+    
+    function showRecordOptions() {
+      showUploadOptions();
+    }
+    
+    function closeUploadModal() {
+      document.getElementById('upload-modal').classList.remove('show');
+    }
+    
+    function startRecording() {
+      window.location.href = 'record.html';
+    }
+
     const notifBell = document.getElementById("notification-bell");
     const notifDot = document.getElementById("notif-dot");
     const hasRead = localStorage.getItem("readGuidelines");
@@ -128,9 +232,20 @@
       const timeAgo = getTimeAgo(new Date(video.createdAt));
 
       card.innerHTML = `
-        <iframe src="https://www.youtube.com/embed/${video.videoId}" allowfullscreen></iframe>
-        <h4>${video.title}</h4>
-        <p>${video.channel} • ${video.views || '0 views'} • ${timeAgo}</p>
+        <div class="video-thumbnail">
+          <iframe src="https://www.youtube.com/embed/${video.videoId}" allowfullscreen></iframe>
+          <div class="video-duration">10:24</div>
+        </div>
+        <div class="video-info">
+          <div class="channel-avatar">${video.channel.charAt(0).toUpperCase()}</div>
+          <div class="video-details">
+            <h4>${video.title}</h4>
+            <div class="video-metadata">
+              <a href="#" class="channel-name">${video.channel}</a><br>
+              ${video.views || '0 views'} • ${timeAgo}
+            </div>
+          </div>
+        </div>
       `;
 
       return card;
@@ -222,7 +337,58 @@
     document.addEventListener('DOMContentLoaded', () => {
       updateSubscriptionsList();
       loadVideos();
+      
+      // Set profile button initial
+      const profileButton = document.getElementById('profile-button');
+      const userName = localStorage.getItem('userName') || 'User';
+      profileButton.textContent = userName.charAt(0).toUpperCase();
     });
   </script>
+  
+  <style>
+    .upload-options {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .upload-option {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      border: 1px solid var(--yt-spec-outline);
+      border-radius: 8px;
+      background: none;
+      cursor: pointer;
+      transition: all 0.1s;
+      text-align: left;
+      width: 100%;
+    }
+    
+    .upload-option:hover {
+      background: var(--yt-spec-button-chip-background-hover);
+      border-color: var(--yt-spec-call-to-action);
+    }
+    
+    .upload-option-icon {
+      font-size: 32px;
+      width: 48px;
+      text-align: center;
+    }
+    
+    .upload-option-content h3 {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: var(--yt-spec-text-primary);
+    }
+    
+    .upload-option-content p {
+      font-size: 14px;
+      color: var(--yt-spec-text-secondary);
+      margin: 0;
+    }
+  </style>
 </body>
 </html>

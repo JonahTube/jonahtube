@@ -384,20 +384,22 @@
 <body>
   <header class="top-bar">
     <div class="logo">JonahTube</div>
-    <input type="text" placeholder="Search..." class="search-bar" />
+    <div class="search-container">
+      <input type="text" placeholder="Search..." class="search-bar" />
+      <button class="search-button">🔍</button>
+    </div>
     <div class="top-buttons">
-      <a href="add-video.html" class="icon-button">
+      <div class="icon-button create-button" id="create-button">
         <span class="button-icon">➕</span>
         <span class="button-label">Create</span>
-      </a>
+      </div>
       <div id="notification-bell" class="icon-button">
         <span class="button-icon">🔔</span>
         <span class="button-label">Notifications</span>
         <span id="notif-dot" class="notif-dot"></span>
       </div>
-      <a href="account.html" class="icon-button">
-        <span class="button-icon">👤</span>
-        <span class="button-label">Profile</span>
+      <a href="profile.html" class="profile-button" id="profile-button">
+        U
       </a>
     </div>
   </header>
@@ -405,13 +407,38 @@
   <div class="main-content">
     <!-- Sidebar -->
     <aside class="sidebar">
-      <a href="index.html">🏠 Home</a>
-      <a href="shorts.html">🎬 Shorts</a>
-      <a href="#" id="subscriptions-link">📺 Subscriptions</a>
-      <a href="#">🕓 History</a>
-      <a href="#">📤 Your Videos</a>
-      <a href="#">👍 Liked Videos</a>
-      <a href="#">⚙️ Settings</a>
+      <div class="sidebar-section">
+        <a href="index.html">
+          <span class="sidebar-icon">🏠</span>
+          <span>Home</span>
+        </a>
+        <a href="shorts.html">
+          <span class="sidebar-icon">🎬</span>
+          <span>Shorts</span>
+        </a>
+        <a href="#" id="subscriptions-link">
+          <span class="sidebar-icon">📺</span>
+          <span>Subscriptions</span>
+        </a>
+      </div>
+      <div class="sidebar-section">
+        <a href="profile.html">
+          <span class="sidebar-icon">👤</span>
+          <span>Your channel</span>
+        </a>
+        <a href="#">
+          <span class="sidebar-icon">🕓</span>
+          <span>History</span>
+        </a>
+        <a href="#">
+          <span class="sidebar-icon">📤</span>
+          <span>Your videos</span>
+        </a>
+        <a href="#">
+          <span class="sidebar-icon">👍</span>
+          <span>Liked videos</span>
+        </a>
+      </div>
     </aside>
 
     <!-- Upload Container -->
@@ -434,17 +461,20 @@
               <div class="video-details-grid">
                 <div class="details-section">
                   <div class="form-group">
-                    <label class="form-label" for="video-url">YouTube Video URL *</label>
+                    <label class="form-label" for="video-url" id="url-label">YouTube Video URL *</label>
                     <input 
                       type="url" 
                       id="video-url" 
                       class="form-input" 
-                      placeholder="https://www.youtube.com/watch?v=..." 
-                      required 
+                      placeholder="https://www.youtube.com/watch?v=..."
                     />
                     <div id="url-preview" class="url-preview">
                       <div class="preview-title">Video Preview</div>
                       <div class="preview-thumbnail" id="preview-thumbnail"></div>
+                    </div>
+                    <div id="recorded-video-preview" class="url-preview" style="display: none;">
+                      <div class="preview-title">Recorded Video Preview</div>
+                      <video id="recorded-video-player" controls style="width: 100%; max-width: 320px; height: 180px; border-radius: 8px;"></video>
                     </div>
                   </div>
 
@@ -544,6 +574,30 @@
 
   <script src="add-video.js"></script>
   <script>
+    // Check if this is from recording
+    const urlParams = new URLSearchParams(window.location.search);
+    const isRecorded = urlParams.get('recorded') === 'true';
+    
+    if (isRecorded) {
+      // Handle recorded video
+      const recordedVideoUrl = localStorage.getItem('recordedVideo');
+      if (recordedVideoUrl) {
+        document.getElementById('url-label').textContent = 'Recorded Video *';
+        document.getElementById('video-url').style.display = 'none';
+        document.getElementById('recorded-video-preview').style.display = 'block';
+        document.getElementById('recorded-video-player').src = recordedVideoUrl;
+        
+        // Auto-fill title
+        const titleInput = document.getElementById('video-title');
+        if (!titleInput.value) {
+          titleInput.value = `My Recorded Video ${new Date().toLocaleDateString()}`;
+          document.getElementById('title-count').textContent = `${titleInput.value.length} / 100`;
+        }
+        
+        checkFormValidity();
+      }
+    }
+
     // Tab switching functionality
     document.querySelectorAll('.upload-tab').forEach(tab => {
       tab.addEventListener('click', () => {
@@ -621,11 +675,11 @@
 
     // Form validation
     function checkFormValidity() {
-      const url = document.getElementById('video-url').value;
+      const url = isRecorded ? 'recorded' : document.getElementById('video-url').value;
       const title = document.getElementById('video-title').value;
       const uploadButton = document.getElementById('upload-button');
       
-      const isValid = url && title && isValidYouTubeUrl(url);
+      const isValid = url && title && (isRecorded || isValidYouTubeUrl(url));
       uploadButton.disabled = !isValid;
     }
 
@@ -645,18 +699,24 @@
       e.preventDefault();
 
       const formData = {
-        url: document.getElementById('video-url').value,
+        url: isRecorded ? 'recorded' : document.getElementById('video-url').value,
         title: document.getElementById('video-title').value,
         description: document.getElementById('video-description').value,
         category: document.getElementById('video-category').value,
         visibility: document.querySelector('.visibility-option.selected').dataset.visibility
       };
 
-      // Extract YouTube video ID
-      const videoId = extractYouTubeID(formData.url);
-      if (!videoId) {
-        alert('Invalid YouTube URL');
-        return;
+      let videoId;
+      if (isRecorded) {
+        // Generate a unique ID for recorded video
+        videoId = 'recorded_' + Date.now();
+      } else {
+        // Extract YouTube video ID
+        videoId = extractYouTubeID(formData.url);
+        if (!videoId) {
+          alert('Invalid YouTube URL');
+          return;
+        }
       }
 
       // Simulate upload process
@@ -669,6 +729,10 @@
       setTimeout(() => {
         // Save video to localStorage
         const videos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
+        
+        // Get channel data
+        const channelData = JSON.parse(localStorage.getItem('channelData') || '{}');
+        const channelName = channelData.name || 'Your Channel';
 
         const newVideo = {
           id: Date.now().toString(),
@@ -677,17 +741,24 @@
           description: formData.description,
           category: formData.category,
           visibility: formData.visibility,
-          channel: 'Your Channel', // Default channel name
+          channel: channelName,
           views: '0 views',
           uploadTime: 'just now',
           createdAt: new Date().toISOString(),
           likes: 0,
           dislikes: 0,
-          comments: []
+          comments: [],
+          isRecorded: isRecorded
         };
 
         videos.unshift(newVideo); // Add to beginning of array
         localStorage.setItem('jonahtube_videos', JSON.stringify(videos));
+        
+        // Clean up recorded video data
+        if (isRecorded) {
+          localStorage.removeItem('recordedVideo');
+          localStorage.removeItem('recordedVideoBlob');
+        }
 
         statusMessage.className = 'status-message success';
         statusMessage.textContent = `Video "${formData.title}" has been published successfully!`;
@@ -723,6 +794,18 @@
 
     // Initial form validation check
     checkFormValidity();
+    
+    // Set profile button
+    document.addEventListener('DOMContentLoaded', () => {
+      const channelData = JSON.parse(localStorage.getItem('channelData') || '{}');
+      const profileButton = document.getElementById('profile-button');
+      if (channelData.name) {
+        profileButton.textContent = channelData.name.charAt(0).toUpperCase();
+        if (channelData.avatarColor) {
+          profileButton.style.background = channelData.avatarColor;
+        }
+      }
+    });
   </script>
 </body>
 </html>

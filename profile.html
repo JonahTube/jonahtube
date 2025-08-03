@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Channel - JonahTube</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="top-bar">
+    <div class="logo">JonahTube</div>
+    <div class="search-container">
+      <input type="text" placeholder="Search..." class="search-bar" />
+      <button class="search-button">🔍</button>
+    </div>
+    <div class="top-buttons">
+      <div class="icon-button create-button" id="create-button">
+        <span class="button-icon">➕</span>
+        <span class="button-label">Create</span>
+      </div>
+      <div class="create-menu" id="create-menu">
+        <button class="create-menu-item" onclick="showUploadOptions()">
+          <span class="create-menu-icon">📹</span>
+          <span>Upload video</span>
+        </button>
+        <button class="create-menu-item" onclick="showRecordOptions()">
+          <span class="create-menu-icon">🎥</span>
+          <span>Record video</span>
+        </button>
+      </div>
+      <div id="notification-bell" class="icon-button">
+        <span class="button-icon">🔔</span>
+        <span class="button-label">Notifications</span>
+        <span id="notif-dot" class="notif-dot"></span>
+      </div>
+      <a href="profile.html" class="profile-button" id="profile-button">
+        U
+      </a>
+    </div>
+  </header>
+
+  <div class="main-content">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <a href="index.html">
+          <span class="sidebar-icon">🏠</span>
+          <span>Home</span>
+        </a>
+        <a href="shorts.html">
+          <span class="sidebar-icon">🎬</span>
+          <span>Shorts</span>
+        </a>
+        <a href="#" id="subscriptions-link">
+          <span class="sidebar-icon">📺</span>
+          <span>Subscriptions</span>
+        </a>
+      </div>
+      <div class="sidebar-section">
+        <a href="profile.html" class="active">
+          <span class="sidebar-icon">👤</span>
+          <span>Your channel</span>
+        </a>
+        <a href="#">
+          <span class="sidebar-icon">🕓</span>
+          <span>History</span>
+        </a>
+        <a href="#">
+          <span class="sidebar-icon">📤</span>
+          <span>Your videos</span>
+        </a>
+        <a href="#">
+          <span class="sidebar-icon">👍</span>
+          <span>Liked videos</span>
+        </a>
+      </div>
+      <div class="sidebar-section">
+        <a href="#">
+          <span class="sidebar-icon">⚙️</span>
+          <span>Settings</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Channel Content -->
+    <main style="margin-left: 240px; background: var(--yt-spec-general-background-a);">
+      <!-- Channel Header -->
+      <div class="channel-header">
+        <div class="channel-banner" id="channel-banner"></div>
+        <div class="channel-info-container">
+          <div class="channel-avatar-large" id="channel-avatar-large">U</div>
+          <div class="channel-details">
+            <h1 class="channel-name" id="channel-name">Your Channel</h1>
+            <div class="channel-handle" id="channel-handle">@yourchannel</div>
+            <div class="channel-stats">
+              <span id="subscriber-count">0 subscribers</span>
+              <span id="video-count">0 videos</span>
+              <span id="view-count">0 views</span>
+            </div>
+          </div>
+          <div class="channel-actions">
+            <button class="customize-button" onclick="openCustomizeModal()">
+              <span>⚙️</span>
+              <span>Customize channel</span>
+            </button>
+            <button class="customize-button" onclick="showUploadOptions()">
+              <span>📹</span>
+              <span>Create</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Channel Navigation -->
+      <nav class="channel-nav">
+        <ul class="channel-nav-list">
+          <li class="channel-nav-item active" data-tab="videos">Videos</li>
+          <li class="channel-nav-item" data-tab="shorts">Shorts</li>
+          <li class="channel-nav-item" data-tab="playlists">Playlists</li>
+          <li class="channel-nav-item" data-tab="community">Community</li>
+          <li class="channel-nav-item" data-tab="about">About</li>
+        </ul>
+      </nav>
+
+      <!-- Channel Content Tabs -->
+      <div style="padding: 24px;">
+        <!-- Videos Tab -->
+        <div id="videos-tab" class="tab-content">
+          <div class="video-grid" id="channel-videos">
+            <!-- Videos will be loaded here -->
+          </div>
+          <div class="empty-state" id="videos-empty" style="display: none;">
+            <div class="empty-icon">📹</div>
+            <h3>No videos yet</h3>
+            <p>Upload your first video to get started!</p>
+            <button class="upload-button" onclick="showUploadOptions()">Upload video</button>
+          </div>
+        </div>
+
+        <!-- Shorts Tab -->
+        <div id="shorts-tab" class="tab-content" style="display: none;">
+          <div class="shorts-grid" id="channel-shorts">
+            <!-- Shorts will be loaded here -->
+          </div>
+          <div class="empty-state" id="shorts-empty" style="display: none;">
+            <div class="empty-icon">🎬</div>
+            <h3>No Shorts yet</h3>
+            <p>Create your first Short to get started!</p>
+            <button class="upload-button" onclick="showUploadOptions()">Create Short</button>
+          </div>
+        </div>
+
+        <!-- About Tab -->
+        <div id="about-tab" class="tab-content" style="display: none;">
+          <div style="background: var(--yt-spec-brand-background-solid); padding: 24px; border-radius: 12px;">
+            <h3 style="margin-bottom: 16px;">About</h3>
+            <div id="channel-description" style="color: var(--yt-spec-text-secondary); line-height: 1.6; margin-bottom: 24px;">
+              Welcome to my channel! Add a description to tell viewers about your content.
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; font-size: 14px;">
+              <div>
+                <strong>Joined:</strong> <span id="join-date">Today</span>
+              </div>
+              <div>
+                <strong>Total views:</strong> <span id="total-views">0</span>
+              </div>
+              <div>
+                <strong>Country:</strong> <span id="channel-country">Not specified</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Other tabs (placeholder) -->
+        <div id="playlists-tab" class="tab-content" style="display: none;">
+          <div class="empty-state">
+            <div class="empty-icon">📋</div>
+            <h3>No playlists yet</h3>
+            <p>Create playlists to organize your videos</p>
+          </div>
+        </div>
+
+        <div id="community-tab" class="tab-content" style="display: none;">
+          <div class="empty-state">
+            <div class="empty-icon">💬</div>
+            <h3>No community posts yet</h3>
+            <p>Share updates with your subscribers</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Customize Channel Modal -->
+  <div class="modal-overlay" id="customize-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Customize channel</h2>
+        <button class="modal-close" onclick="closeCustomizeModal()">✕</button>
+      </div>
+      <div class="modal-content">
+        <form id="customize-form">
+          <div class="form-group">
+            <label class="form-label" for="edit-channel-name">Channel name</label>
+            <input type="text" id="edit-channel-name" class="form-input" maxlength="100" required>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="edit-channel-handle">Handle</label>
+            <input type="text" id="edit-channel-handle" class="form-input" placeholder="@yourchannel" maxlength="30">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="edit-channel-description">Description</label>
+            <textarea id="edit-channel-description" class="form-textarea" placeholder="Tell viewers about your channel" maxlength="1000"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="edit-channel-country">Country</label>
+            <select id="edit-channel-country" class="form-input">
+              <option value="">Select country</option>
+              <option value="US">United States</option>
+              <option value="CA">Canada</option>
+              <option value="GB">United Kingdom</option>
+              <option value="AU">Australia</option>
+              <option value="DE">Germany</option>
+              <option value="FR">France</option>
+              <option value="JP">Japan</option>
+              <option value="KR">South Korea</option>
+              <option value="IN">India</option>
+              <option value="BR">Brazil</option>
+              <option value="MX">Mexico</option>
+              <option value="ES">Spain</option>
+              <option value="IT">Italy</option>
+              <option value="NL">Netherlands</option>
+              <option value="SE">Sweden</option>
+              <option value="NO">Norway</option>
+              <option value="DK">Denmark</option>
+              <option value="FI">Finland</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Channel avatar color</label>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button type="button" class="color-option" data-color="#065fd4" style="background: #065fd4;"></button>
+              <button type="button" class="color-option" data-color="#cc0000" style="background: #cc0000;"></button>
+              <button type="button" class="color-option" data-color="#00a86b" style="background: #00a86b;"></button>
+              <button type="button" class="color-option" data-color="#ff6b35" style="background: #ff6b35;"></button>
+              <button type="button" class="color-option" data-color="#9c27b0" style="background: #9c27b0;"></button>
+              <button type="button" class="color-option" data-color="#ff9800" style="background: #ff9800;"></button>
+              <button type="button" class="color-option" data-color="#607d8b" style="background: #607d8b;"></button>
+              <button type="button" class="color-option" data-color="#795548" style="background: #795548;"></button>
+            </div>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="closeCustomizeModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload Options Modal -->
+  <div class="modal-overlay" id="upload-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Create</h2>
+        <button class="modal-close" onclick="closeUploadModal()">✕</button>
+      </div>
+      <div class="modal-content">
+        <div class="upload-options">
+          <button class="upload-option" onclick="window.location.href='add-video.html'">
+            <div class="upload-option-icon">📹</div>
+            <div class="upload-option-content">
+              <h3>Upload video</h3>
+              <p>Select or drag and drop video files</p>
+            </div>
+          </button>
+          <button class="upload-option" onclick="startRecording()">
+            <div class="upload-option-icon">🎥</div>
+            <div class="upload-option-content">
+              <h3>Record video</h3>
+              <p>Use your camera to record a new video</p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Channel data management
+    let channelData = {
+      name: 'Your Channel',
+      handle: '@yourchannel',
+      description: 'Welcome to my channel! Add a description to tell viewers about your content.',
+      country: '',
+      avatarColor: '#065fd4',
+      joinDate: new Date().toLocaleDateString(),
+      subscribers: 0,
+      totalViews: 0
+    };
+
+    // Load channel data from localStorage
+    function loadChannelData() {
+      const saved = localStorage.getItem('channelData');
+      if (saved) {
+        channelData = { ...channelData, ...JSON.parse(saved) };
+      }
+      updateChannelDisplay();
+    }
+
+    // Save channel data to localStorage
+    function saveChannelData() {
+      localStorage.setItem('channelData', JSON.stringify(channelData));
+    }
+
+    // Update channel display
+    function updateChannelDisplay() {
+      document.getElementById('channel-name').textContent = channelData.name;
+      document.getElementById('channel-handle').textContent = channelData.handle;
+      document.getElementById('channel-description').textContent = channelData.description;
+      document.getElementById('channel-country').textContent = channelData.country || 'Not specified';
+      document.getElementById('join-date').textContent = channelData.joinDate;
+      document.getElementById('subscriber-count').textContent = `${formatNumber(channelData.subscribers)} subscribers`;
+      document.getElementById('total-views').textContent = formatNumber(channelData.totalViews);
+      
+      // Update avatars
+      const avatarLetter = channelData.name.charAt(0).toUpperCase();
+      document.getElementById('channel-avatar-large').textContent = avatarLetter;
+      document.getElementById('channel-avatar-large').style.background = channelData.avatarColor;
+      document.getElementById('profile-button').textContent = avatarLetter;
+      document.getElementById('profile-button').style.background = channelData.avatarColor;
+      
+      // Update video count
+      const videos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
+      document.getElementById('video-count').textContent = `${videos.length} videos`;
+    }
+
+    // Format numbers
+    function formatNumber(num) {
+      if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+      if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+      return num.toString();
+    }
+
+    // Tab functionality
+    document.querySelectorAll('.channel-nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const tabName = item.dataset.tab;
+        
+        // Update active tab
+        document.querySelectorAll('.channel-nav-item').forEach(t => t.classList.remove('active'));
+        item.classList.add('active');
+        
+        // Show corresponding content
+        document.querySelectorAll('.tab-content').forEach(content => {
+          content.style.display = 'none';
+        });
+        document.getElementById(`${tabName}-tab`).style.display = 'block';
+        
+        // Load content for specific tabs
+        if (tabName === 'videos') {
+          loadChannelVideos();
+        } else if (tabName === 'shorts') {
+          loadChannelShorts();
+        }
+      });
+    });
+
+    // Load channel videos
+    function loadChannelVideos() {
+      const videos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
+      const videosContainer = document.getElementById('channel-videos');
+      const emptyState = document.getElementById('videos-empty');
+      
+      if (videos.length === 0) {
+        videosContainer.style.display = 'none';
+        emptyState.style.display = 'block';
+        return;
+      }
+      
+      videosContainer.style.display = 'grid';
+      emptyState.style.display = 'none';
+      videosContainer.innerHTML = '';
+      
+      videos.forEach(video => {
+        const videoCard = createVideoCard(video);
+        videosContainer.appendChild(videoCard);
+      });
+    }
+
+    // Load channel shorts
+    function loadChannelShorts() {
+      const videos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
+      const shorts = videos.filter(video => 
+        video.category === 'shorts' || 
+        video.title.toLowerCase().includes('short')
+      );
+      const shortsContainer = document.getElementById('channel-shorts');
+      const emptyState = document.getElementById('shorts-empty');
+      
+      if (shorts.length === 0) {
+        shortsContainer.style.display = 'none';
+        emptyState.style.display = 'block';
+        return;
+      }
+      
+      shortsContainer.style.display = 'flex';
+      emptyState.style.display = 'none';
+      shortsContainer.innerHTML = '';
+      
+      shorts.forEach(short => {
+        const shortItem = createShortItem(short);
+        shortsContainer.appendChild(shortItem);
+      });
+    }
+
+    // Create video card
+    function createVideoCard(video) {
+      const card = document.createElement('div');
+      card.className = 'video-card';
+      card.onclick = () => openVideo(video);
+      
+      const timeAgo = getTimeAgo(new Date(video.createdAt));
+      
+      card.innerHTML = `
+        <div class="video-thumbnail">
+          <iframe src="https://www.youtube.com/embed/${video.videoId}" allowfullscreen></iframe>
+          <div class="video-duration">10:24</div>
+        </div>
+        <div class="video-info">
+          <div class="channel-avatar">${channelData.name.charAt(0).toUpperCase()}</div>
+          <div class="video-details">
+            <h4>${video.title}</h4>
+            <div class="video-metadata">
+              <a href="#" class="channel-name">${channelData.name}</a><br>
+              ${video.views || '0 views'} • ${timeAgo}
+            </div>
+          </div>
+        </div>
+      `;
+      
+      return card;
+    }
+
+    // Create short item
+    function createShortItem(short) {
+      const item = document.createElement('div');
+      item.className = 'short-item';
+      item.onclick = () => window.location.href = `shorts.html?v=${short.videoId}`;
+      
+      item.innerHTML = `
+        <iframe src="https://www.youtube.com/embed/${short.videoId}"></iframe>
+        <div class="short-overlay">
+          <div style="font-weight: 500;">${short.title}</div>
+        </div>
+      `;
+      
+      return item;
+    }
+
+    // Open video
+    function openVideo(video) {
+      const url = `watch.html?v=${video.videoId}&title=${encodeURIComponent(video.title)}&channel=${encodeURIComponent(channelData.name)}&views=${encodeURIComponent(video.views || '0 views')}&time=${encodeURIComponent(getTimeAgo(new Date(video.createdAt)))}&description=${encodeURIComponent(video.description || '')}&category=${encodeURIComponent(video.category || '')}`;
+      window.location.href = url;
+    }
+
+    // Time ago utility
+    function getTimeAgo(date) {
+      const now = new Date();
+      const diffMs = now - date;
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffHours = Math.floor(diffMs / 3600000);
+      const diffDays = Math.floor(diffMs / 86400000);
+      
+      if (diffMins < 1) return 'just now';
+      if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+      if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+      return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+    }
+
+    // Modal functions
+    function openCustomizeModal() {
+      document.getElementById('edit-channel-name').value = channelData.name;
+      document.getElementById('edit-channel-handle').value = channelData.handle;
+      document.getElementById('edit-channel-description').value = channelData.description;
+      document.getElementById('edit-channel-country').value = channelData.country;
+      
+      // Set active color
+      document.querySelectorAll('.color-option').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.color === channelData.avatarColor) {
+          btn.classList.add('active');
+        }
+      });
+      
+      document.getElementById('customize-modal').classList.add('show');
+    }
+
+    function closeCustomizeModal() {
+      document.getElementById('customize-modal').classList.remove('show');
+    }
+
+    function showUploadOptions() {
+      document.getElementById('upload-modal').classList.add('show');
+      document.getElementById('create-menu').classList.remove('show');
+    }
+
+    function showRecordOptions() {
+      showUploadOptions();
+    }
+
+    function closeUploadModal() {
+      document.getElementById('upload-modal').classList.remove('show');
+    }
+
+    function startRecording() {
+      window.location.href = 'record.html';
+    }
+
+    // Color selection
+    document.querySelectorAll('.color-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.color-option').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        channelData.avatarColor = btn.dataset.color;
+      });
+    });
+
+    // Form submission
+    document.getElementById('customize-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      channelData.name = document.getElementById('edit-channel-name').value;
+      channelData.handle = document.getElementById('edit-channel-handle').value;
+      channelData.description = document.getElementById('edit-channel-description').value;
+      channelData.country = document.getElementById('edit-channel-country').value;
+      
+      saveChannelData();
+      updateChannelDisplay();
+      closeCustomizeModal();
+    });
+
+    // Create menu functionality
+    const createButton = document.getElementById('create-button');
+    const createMenu = document.getElementById('create-menu');
+    
+    createButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      createMenu.classList.toggle('show');
+    });
+    
+    document.addEventListener('click', () => {
+      createMenu.classList.remove('show');
+    });
+    
+    createMenu.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+
+    // Notification functionality
+    const notifBell = document.getElementById("notification-bell");
+    const notifDot = document.getElementById("notif-dot");
+    const hasRead = localStorage.getItem("readGuidelines");
+
+    if (hasRead === "true") {
+      notifDot.style.display = "none";
+    }
+
+    notifBell.addEventListener("click", () => {
+      window.location.href = "guidelines.html";
+    });
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', () => {
+      loadChannelData();
+      loadChannelVideos(); // Load videos by default
+    });
+  </script>
+
+  <style>
+    .color-option {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+    
+    .color-option:hover {
+      transform: scale(1.1);
+    }
+    
+    .color-option.active {
+      border-color: var(--yt-spec-text-primary);
+      box-shadow: 0 0 0 2px var(--yt-spec-brand-background-solid);
+    }
+    
+    .upload-options {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .upload-option {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      border: 1px solid var(--yt-spec-outline);
+      border-radius: 8px;
+      background: none;
+      cursor: pointer;
+      transition: all 0.1s;
+      text-align: left;
+      width: 100%;
+    }
+    
+    .upload-option:hover {
+      background: var(--yt-spec-button-chip-background-hover);
+      border-color: var(--yt-spec-call-to-action);
+    }
+    
+    .upload-option-icon {
+      font-size: 32px;
+      width: 48px;
+      text-align: center;
+    }
+    
+    .upload-option-content h3 {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: var(--yt-spec-text-primary);
+    }
+    
+    .upload-option-content p {
+      font-size: 14px;
+      color: var(--yt-spec-text-secondary);
+      margin: 0;
+    }
+
+    @media (max-width: 1312px) {
+      main {
+        margin-left: 72px !important;
+      }
+    }
+
+    @media (max-width: 792px) {
+      main {
+        margin-left: 0 !important;
+      }
+      
+      .channel-info-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+      }
+      
+      .channel-actions {
+        justify-content: center;
+      }
+      
+      .channel-nav-list {
+        gap: 16px;
+        overflow-x: auto;
+      }
+    }
+  </style>
+</body>
+</html>

@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Record Video - JonahTube</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .record-container {
+      margin-left: 240px;
+      padding: 24px;
+      background-color: var(--yt-spec-general-background-a);
+      min-height: calc(100vh - 56px);
+      max-width: 1200px;
+    }
+
+    .record-header {
+      margin-bottom: 32px;
+    }
+
+    .record-title {
+      font-size: 24px;
+      font-weight: 400;
+      color: var(--yt-spec-text-primary);
+      margin-bottom: 8px;
+    }
+
+    .record-subtitle {
+      font-size: 14px;
+      color: var(--yt-spec-text-secondary);
+    }
+
+    .record-card {
+      background: var(--yt-spec-brand-background-solid);
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .camera-container {
+      position: relative;
+      background: #000;
+      border-radius: 12px 12px 0 0;
+      overflow: hidden;
+      aspect-ratio: 16/9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .camera-preview {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .camera-placeholder {
+      color: #fff;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .camera-placeholder-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+      opacity: 0.6;
+    }
+
+    .recording-indicator {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: rgba(255, 0, 0, 0.9);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .recording-indicator.active {
+      display: flex;
+    }
+
+    .recording-dot {
+      width: 8px;
+      height: 8px;
+      background: white;
+      border-radius: 50%;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .timer {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: monospace;
+    }
+
+    .record-controls {
+      padding: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      background: var(--yt-spec-brand-background-solid);
+    }
+
+    .record-button {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 4px solid #ff0000;
+      background: #ff0000;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .record-button:hover {
+      transform: scale(1.05);
+    }
+
+    .record-button.recording {
+      background: #ff0000;
+      animation: recordPulse 2s infinite;
+    }
+
+    .record-button.recording::after {
+      content: '';
+      width: 24px;
+      height: 24px;
+      background: white;
+      border-radius: 4px;
+    }
+
+    .record-button:not(.recording)::after {
+      content: '';
+      width: 24px;
+      height: 24px;
+      background: white;
+      border-radius: 50%;
+    }
+
+    @keyframes recordPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
+      50% { box-shadow: 0 0 0 20px rgba(255, 0, 0, 0); }
+    }
+
+    .control-button {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: none;
+      background: var(--yt-spec-general-background-b);
+      color: var(--yt-spec-text-primary);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .control-button:hover {
+      background: var(--yt-spec-button-chip-background-hover);
+      transform: scale(1.05);
+    }
+
+    .control-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .record-settings {
+      background: var(--yt-spec-brand-background-solid);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .setting-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .setting-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--yt-spec-text-primary);
+    }
+
+    .setting-select {
+      padding: 8px 12px;
+      border: 1px solid var(--yt-spec-outline);
+      border-radius: 4px;
+      background: var(--yt-spec-brand-background-solid);
+      color: var(--yt-spec-text-primary);
+      font-size: 14px;
+    }
+
+    .record-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+    }
+
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--yt-spec-text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      padding: 8px 16px;
+      border-radius: 18px;
+      transition: all 0.1s;
+    }
+
+    .back-button:hover {
+      background: var(--yt-spec-button-chip-background-hover);
+      color: var(--yt-spec-text-primary);
+    }
+
+    .next-button {
+      background: var(--yt-spec-call-to-action);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 18px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: none;
+    }
+
+    .next-button:hover {
+      background: #0550c7;
+    }
+
+    .next-button.show {
+      display: inline-block;
+    }
+
+    .status-message {
+      margin-top: 16px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .status-message.success {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+      display: block;
+    }
+
+    .status-message.error {
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+      display: block;
+    }
+
+    @media (max-width: 1312px) {
+      .record-container {
+        margin-left: 72px;
+      }
+    }
+
+    @media (max-width: 792px) {
+      .record-container {
+        margin-left: 0;
+        padding: 16px;
+      }
+      
+      .record-controls {
+        padding: 16px;
+      }
+      
+      .record-button {
+        width: 64px;
+        height: 64px;
+      }
+      
+      .control-button {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="top-bar">
+    <div class="logo">JonahTube</div>
+    <div class="search-container">
+      <input type="text" placeholder="Search..." class="search-bar" />
+      <button class="search-button">🔍</button>
+    </div>
+    <div class="top-buttons">
+      <div class="icon-button create-button" id="create-button">
+        <span class="button-icon">➕</span>
+        <span class="button-label">Create</span>
+      </div>
+      <div id="notification-bell" class="icon-button">
+        <span class="button-icon">🔔</span>
+        <span class="button-label">Notifications</span>
+        <span id="notif-dot" class="notif-dot"></span>
+      </div>
+      <a href="profile.html" class="profile-button" id="profile-button">
+        U
+      </a>
+    </div>
+  </header>
+
+  <div class="main-content">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <a href="index.html">
+          <span class="sidebar-icon">🏠</span>
+          <span>Home</span>
+        </a>
+        <a href="shorts.html">
+          <span class="sidebar-icon">🎬</span>
+          <span>Shorts</span>
+        </a>
+        <a href="#" id="subscriptions-link">
+          <span class="sidebar-icon">📺</span>
+          <span>Subscriptions</span>
+        </a>
+      </div>
+      <div class="sidebar-section">
+        <a href="profile.html">
+          <span class="sidebar-icon">👤</span>
+          <span>Your channel</span>
+        </a>
+        <a href="#">
+          <span class="sidebar-icon">🕓</span>
+          <span>History</span>
+        </a>
+        <a href="#">
+          <span class="sidebar-icon">📤</span>
+          <span>Your videos</span>
+        </a>
+        <a href="#">
+          <span class="sidebar-icon">👍</span>
+          <span>Liked videos</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Record Container -->
+    <main class="record-container">
+      <div class="record-header">
+        <h1 class="record-title">Record video</h1>
+        <p class="record-subtitle">Use your camera to record a new video</p>
+      </div>
+
+      <!-- Camera Settings -->
+      <div class="record-settings">
+        <div class="settings-grid">
+          <div class="setting-group">
+            <label class="setting-label" for="camera-select">Camera</label>
+            <select id="camera-select" class="setting-select">
+              <option value="">Select camera...</option>
+            </select>
+          </div>
+          <div class="setting-group">
+            <label class="setting-label" for="microphone-select">Microphone</label>
+            <select id="microphone-select" class="setting-select">
+              <option value="">Select microphone...</option>
+            </select>
+          </div>
+          <div class="setting-group">
+            <label class="setting-label" for="quality-select">Quality</label>
+            <select id="quality-select" class="setting-select">
+              <option value="720p">720p HD</option>
+              <option value="1080p" selected>1080p Full HD</option>
+              <option value="4k">4K Ultra HD</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Camera Preview -->
+      <div class="record-card">
+        <div class="camera-container">
+          <video id="camera-preview" class="camera-preview" autoplay muted playsinline style="display: none;"></video>
+          <div id="camera-placeholder" class="camera-placeholder">
+            <div class="camera-placeholder-icon">📹</div>
+            <h3>Camera not started</h3>
+            <p>Click "Start Camera" to begin</p>
+          </div>
+          <div id="recording-indicator" class="recording-indicator">
+            <div class="recording-dot"></div>
+            <span>REC</span>
+          </div>
+          <div id="timer" class="timer">00:00</div>
+        </div>
+
+        <div class="record-controls">
+          <button id="start-camera" class="control-button" title="Start Camera">
+            📹
+          </button>
+          <button id="record-button" class="record-button" disabled title="Start Recording"></button>
+          <button id="stop-recording" class="control-button" disabled title="Stop Recording">
+            ⏹️
+          </button>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="record-actions">
+        <a href="index.html" class="back-button">
+          ← Back to Home
+        </a>
+        <button id="next-button" class="next-button">
+          Continue to Upload
+        </button>
+      </div>
+
+      <div id="status-message" class="status-message"></div>
+    </main>
+  </div>
+
+  <script>
+    let mediaRecorder;
+    let recordedChunks = [];
+    let stream;
+    let isRecording = false;
+    let recordingStartTime;
+    let timerInterval;
+
+    const cameraPreview = document.getElementById('camera-preview');
+    const cameraPlaceholder = document.getElementById('camera-placeholder');
+    const startCameraBtn = document.getElementById('start-camera');
+    const recordButton = document.getElementById('record-button');
+    const stopRecordingBtn = document.getElementById('stop-recording');
+    const recordingIndicator = document.getElementById('recording-indicator');
+    const timer = document.getElementById('timer');
+    const nextButton = document.getElementById('next-button');
+    const statusMessage = document.getElementById('status-message');
+    const cameraSelect = document.getElementById('camera-select');
+    const microphoneSelect = document.getElementById('microphone-select');
+
+    // Get available devices
+    async function getDevices() {
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        
+        // Populate camera options
+        const cameras = devices.filter(device => device.kind === 'videoinput');
+        cameraSelect.innerHTML = '<option value="">Select camera...</option>';
+        cameras.forEach(camera => {
+          const option = document.createElement('option');
+          option.value = camera.deviceId;
+          option.textContent = camera.label || `Camera ${cameras.indexOf(camera) + 1}`;
+          cameraSelect.appendChild(option);
+        });
+
+        // Populate microphone options
+        const microphones = devices.filter(device => device.kind === 'audioinput');
+        microphoneSelect.innerHTML = '<option value="">Select microphone...</option>';
+        microphones.forEach(mic => {
+          const option = document.createElement('option');
+          option.value = mic.deviceId;
+          option.textContent = mic.label || `Microphone ${microphones.indexOf(mic) + 1}`;
+          microphoneSelect.appendChild(option);
+        });
+
+        // Auto-select first available devices
+        if (cameras.length > 0) {
+          cameraSelect.value = cameras[0].deviceId;
+        }
+        if (microphones.length > 0) {
+          microphoneSelect.value = microphones[0].deviceId;
+        }
+      } catch (error) {
+        console.error('Error getting devices:', error);
+        showStatus('Error accessing media devices', 'error');
+      }
+    }
+
+    // Start camera
+    async function startCamera() {
+      try {
+        const constraints = {
+          video: {
+            deviceId: cameraSelect.value ? { exact: cameraSelect.value } : undefined,
+            width: { ideal: 1920 },
+            height: { ideal: 1080 }
+          },
+          audio: {
+            deviceId: microphoneSelect.value ? { exact: microphoneSelect.value } : undefined
+          }
+        };
+
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
+        cameraPreview.srcObject = stream;
+        cameraPreview.style.display = 'block';
+        cameraPlaceholder.style.display = 'none';
+        
+        recordButton.disabled = false;
+        startCameraBtn.textContent = '🔄';
+        startCameraBtn.title = 'Restart Camera';
+        
+        showStatus('Camera started successfully', 'success');
+        setTimeout(() => hideStatus(), 3000);
+      } catch (error) {
+        console.error('Error starting camera:', error);
+        showStatus('Error starting camera. Please check permissions.', 'error');
+      }
+    }
+
+    // Start recording
+    function startRecording() {
+      if (!stream) {
+        showStatus('Please start camera first', 'error');
+        return;
+      }
+
+      try {
+        recordedChunks = [];
+        mediaRecorder = new MediaRecorder(stream, {
+          mimeType: 'video/webm;codecs=vp9'
+        });
+
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            recordedChunks.push(event.data);
+          }
+        };
+
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(recordedChunks, { type: 'video/webm' });
+          const url = URL.createObjectURL(blob);
+          
+          // Store the recorded video for upload
+          localStorage.setItem('recordedVideo', url);
+          localStorage.setItem('recordedVideoBlob', JSON.stringify({
+            size: blob.size,
+            type: blob.type,
+            timestamp: Date.now()
+          }));
+          
+          nextButton.classList.add('show');
+          showStatus('Recording saved! Click "Continue to Upload" to add details.', 'success');
+        };
+
+        mediaRecorder.start();
+        isRecording = true;
+        recordingStartTime = Date.now();
+        
+        recordButton.classList.add('recording');
+        recordingIndicator.classList.add('active');
+        stopRecordingBtn.disabled = false;
+        startCameraBtn.disabled = true;
+        
+        startTimer();
+        showStatus('Recording started', 'success');
+        setTimeout(() => hideStatus(), 2000);
+      } catch (error) {
+        console.error('Error starting recording:', error);
+        showStatus('Error starting recording', 'error');
+      }
+    }
+
+    // Stop recording
+    function stopRecording() {
+      if (mediaRecorder && isRecording) {
+        mediaRecorder.stop();
+        isRecording = false;
+        
+        recordButton.classList.remove('recording');
+        recordingIndicator.classList.remove('active');
+        stopRecordingBtn.disabled = true;
+        startCameraBtn.disabled = false;
+        
+        stopTimer();
+        showStatus('Recording stopped', 'success');
+        setTimeout(() => hideStatus(), 2000);
+      }
+    }
+
+    // Timer functions
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        const elapsed = Date.now() - recordingStartTime;
+        const minutes = Math.floor(elapsed / 60000);
+        const seconds = Math.floor((elapsed % 60000) / 1000);
+        timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    // Status message functions
+    function showStatus(message, type) {
+      statusMessage.textContent = message;
+      statusMessage.className = `status-message ${type}`;
+    }
+
+    function hideStatus() {
+      statusMessage.style.display = 'none';
+    }
+
+    // Event listeners
+    startCameraBtn.addEventListener('click', startCamera);
+    recordButton.addEventListener('click', () => {
+      if (isRecording) {
+        stopRecording();
+      } else {
+        startRecording();
+      }
+    });
+    stopRecordingBtn.addEventListener('click', stopRecording);
+
+    nextButton.addEventListener('click', () => {
+      window.location.href = 'add-video.html?recorded=true';
+    });
+
+    // Device change handlers
+    cameraSelect.addEventListener('change', () => {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        startCamera();
+      }
+    });
+
+    microphoneSelect.addEventListener('change', () => {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        startCamera();
+      }
+    });
+
+    // Notification bell functionality
+    const notifBell = document.getElementById("notification-bell");
+    const notifDot = document.getElementById("notif-dot");
+    const hasRead = localStorage.getItem("readGuidelines");
+
+    if (hasRead === "true") {
+      notifDot.style.display = "none";
+    }
+
+    notifBell.addEventListener("click", () => {
+      window.location.href = "guidelines.html";
+    });
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      getDevices();
+      
+      // Set profile button
+      const channelData = JSON.parse(localStorage.getItem('channelData') || '{}');
+      const profileButton = document.getElementById('profile-button');
+      if (channelData.name) {
+        profileButton.textContent = channelData.name.charAt(0).toUpperCase();
+        if (channelData.avatarColor) {
+          profileButton.style.background = channelData.avatarColor;
+        }
+      }
+    });
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+      if (timerInterval) {
+        clearInterval(timerInterval);
+      }
+    });
+  </script>
+</body>
+</html>
