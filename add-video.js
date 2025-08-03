@@ -355,9 +355,10 @@ class JonahTubeCreator {
   setupCharacterCounter(inputId, countId, maxLength) {
     const input = document.getElementById(inputId);
     const counter = document.getElementById(countId);
-    
+
     input?.addEventListener('input', () => {
       this.updateCharacterCount(inputId, countId, maxLength);
+      this.validateContent(inputId);
       this.checkFormValidity();
     });
   }
@@ -546,11 +547,11 @@ class JonahTubeCreator {
   checkFormValidity() {
     const uploadButton = document.getElementById('upload-button');
     if (!uploadButton) return;
-    
+
     const selectedMethod = document.querySelector('[data-method].selected')?.dataset.method;
     const title = document.getElementById('video-title')?.value;
     let isValid = false;
-    
+
     if (selectedMethod === 'url') {
       const url = document.getElementById('video-url')?.value;
       isValid = url && title && this.isValidYouTubeUrl(url);
@@ -558,36 +559,57 @@ class JonahTubeCreator {
       const fileInput = document.getElementById('video-file');
       isValid = fileInput?.files?.length > 0 && title;
     }
-    
+
+    // Also check content appropriateness
+    if (isValid && title.length > 0) {
+      const titleResult = window.ContentModeration.checkContent(title, 'video-title');
+      const description = document.getElementById('video-description')?.value || '';
+      const descriptionResult = window.ContentModeration.checkContent(description, 'video-description');
+
+      isValid = titleResult.isAppropriate && descriptionResult.isAppropriate;
+    }
+
     uploadButton.disabled = !isValid;
   }
 
-  moderateContent(title, description) {
-    const content = `${title} ${description}`.toLowerCase();
-    const violations = [];
-    
-    // Check for severe violations
-    for (const word of this.moderationRules.severe) {
-      if (content.includes(word)) {
-        violations.push({ type: 'severe', word });
-      }
+  checkContentBeforeSubmission(title, description) {
+    // Check title
+    const titleResult = window.ContentModeration.checkContent(title, 'video-title');
+    if (!titleResult.isAppropriate) {
+      return {
+        allowed: false,
+        field: 'title',
+        message: 'Title is not appropriate: ' + titleResult.issues.join(', '),
+        suggestions: titleResult.suggestions
+      };
     }
-    
-    // Check for moderate violations
-    for (const word of this.moderationRules.moderate) {
-      if (content.includes(word)) {
-        violations.push({ type: 'moderate', word });
-      }
+
+    // Check description
+    const descriptionResult = window.ContentModeration.checkContent(description, 'video-description');
+    if (!descriptionResult.isAppropriate) {
+      return {
+        allowed: false,
+        field: 'description',
+        message: 'Description is not appropriate: ' + descriptionResult.issues.join(', '),
+        suggestions: descriptionResult.suggestions
+      };
     }
-    
-    // Check for mild violations
-    for (const word of this.moderationRules.mild) {
-      if (content.includes(word)) {
-        violations.push({ type: 'mild', word });
-      }
+
+    // Check overall content safety score
+    const titleScore = window.ContentModeration.getContentSafetyScore(title);
+    const descriptionScore = window.ContentModeration.getContentSafetyScore(description);
+    const overallScore = (titleScore + descriptionScore) / 2;
+
+    if (overallScore < 60) {
+      return {
+        allowed: false,
+        field: 'overall',
+        message: 'Content safety score too low (' + Math.round(overallScore) + '/100). Please make your content more positive and family-friendly.',
+        suggestions: ['Use more positive language', 'Avoid potentially offensive terms', 'Focus on educational or entertaining content']
+      };
     }
-    
-    return violations;
+
+    return { allowed: true, score: overallScore };
   }
 
   handleViolations(violations) {
