@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create Account - JonahTube</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .auth-container {
+      width: 100%;
+      max-width: 450px;
+      background: var(--background-secondary);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .auth-logo {
+      font-size: 32px;
+      font-weight: 700;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .auth-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .auth-subtitle {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .input-group {
+      position: relative;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 16px 20px;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      font-size: 16px;
+      background: var(--background-primary);
+      color: var(--text-primary);
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .form-input:focus {
+      border-color: var(--focus-color);
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+      outline: none;
+    }
+
+    .form-input.error {
+      border-color: var(--danger-color);
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+    }
+
+    .form-input.success {
+      border-color: var(--success-color);
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
+    }
+
+    .form-input::placeholder {
+      color: var(--text-tertiary);
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-tertiary);
+      font-size: 18px;
+    }
+
+    .form-input.with-icon {
+      padding-left: 50px;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      font-size: 18px;
+      padding: 4px;
+    }
+
+    .field-validation {
+      font-size: 12px;
+      margin-top: 4px;
+      min-height: 16px;
+    }
+
+    .field-validation.error {
+      color: var(--danger-color);
+    }
+
+    .field-validation.success {
+      color: var(--success-color);
+    }
+
+    .password-strength {
+      margin-top: 8px;
+    }
+
+    .strength-bar {
+      height: 4px;
+      background: var(--border-color);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .strength-fill {
+      height: 100%;
+      transition: all 0.3s ease;
+      border-radius: 2px;
+    }
+
+    .strength-weak { background: var(--danger-color); width: 25%; }
+    .strength-fair { background: var(--warning-color); width: 50%; }
+    .strength-good { background: var(--success-color); width: 75%; }
+    .strength-strong { background: var(--success-color); width: 100%; }
+
+    .strength-text {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin: 8px 0;
+    }
+
+    .custom-checkbox {
+      position: relative;
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+    }
+
+    .custom-checkbox input {
+      opacity: 0;
+      position: absolute;
+    }
+
+    .checkmark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 20px;
+      width: 20px;
+      background: var(--background-primary);
+      border: 2px solid var(--border-color);
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .custom-checkbox:hover input ~ .checkmark {
+      border-color: var(--focus-color);
+    }
+
+    .custom-checkbox input:checked ~ .checkmark {
+      background: var(--primary-gradient);
+      border-color: var(--focus-color);
+    }
+
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+      left: 6px;
+      top: 2px;
+      width: 6px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    .custom-checkbox input:checked ~ .checkmark:after {
+      display: block;
+    }
+
+    .checkbox-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    .checkbox-label a {
+      color: var(--focus-color);
+      text-decoration: none;
+    }
+
+    .checkbox-label a:hover {
+      text-decoration: underline;
+    }
+
+    .auth-button {
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .auth-button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .auth-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 24px 0;
+      color: var(--text-tertiary);
+      font-size: 14px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border-color);
+    }
+
+    .divider span {
+      padding: 0 16px;
+    }
+
+    .social-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .social-button {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      background: var(--background-secondary);
+      color: var(--text-primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .social-button:hover {
+      border-color: var(--focus-color);
+      transform: translateY(-2px);
+    }
+
+    .auth-footer {
+      text-align: center;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .auth-footer p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .auth-footer a {
+      color: var(--focus-color);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .auth-footer a:hover {
+      text-decoration: underline;
+    }
+
+    .back-to-home {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 12px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .back-to-home:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .error-message {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid var(--danger-color);
+      color: var(--danger-color);
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .success-message {
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid var(--success-color);
+      color: var(--success-color);
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    @media (max-width: 480px) {
+      .auth-container {
+        padding: 30px 20px;
+        margin: 0 10px;
+      }
+      
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+      
+      .back-to-home {
+        position: relative;
+        top: 0;
+        left: 0;
+        margin-bottom: 20px;
+        display: inline-flex;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back-to-home">
+    <span>←</span>
+    <span>Back to Home</span>
+  </a>
+
+  <div class="auth-container">
+    <div class="auth-header">
+      <div class="auth-logo">JonahTube</div>
+      <h1 class="auth-title">Create Your Account</h1>
+      <p class="auth-subtitle">Join our creative community today</p>
+    </div>
+
+    <div class="error-message" id="error-message"></div>
+    <div class="success-message" id="success-message"></div>
+
+    <form class="auth-form" id="signup-form">
+      <div class="form-row">
+        <div class="input-group">
+          <span class="input-icon">👤</span>
+          <input
+            type="text"
+            class="form-input with-icon"
+            placeholder="First name"
+            required
+            id="firstName"
+            autocomplete="given-name"
+          />
+          <div class="field-validation" id="firstName-validation"></div>
+        </div>
+
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-input"
+            placeholder="Last name"
+            required
+            id="lastName"
+            autocomplete="family-name"
+          />
+          <div class="field-validation" id="lastName-validation"></div>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <span class="input-icon">@</span>
+        <input
+          type="email"
+          class="form-input with-icon"
+          placeholder="Email address"
+          required
+          id="email"
+          autocomplete="email"
+        />
+        <div class="field-validation" id="email-validation"></div>
+      </div>
+
+      <div class="input-group">
+        <span class="input-icon">📺</span>
+        <input
+          type="text"
+          class="form-input with-icon"
+          placeholder="Channel name"
+          required
+          id="channelName"
+        />
+        <div class="field-validation" id="channelName-validation"></div>
+      </div>
+
+      <div class="input-group">
+        <span class="input-icon">🔒</span>
+        <input
+          type="password"
+          class="form-input with-icon"
+          placeholder="Password"
+          required
+          id="password"
+          autocomplete="new-password"
+        />
+        <button type="button" class="password-toggle" id="password-toggle">
+          ���️
+        </button>
+        <div class="field-validation" id="password-validation"></div>
+        <div class="password-strength" id="password-strength" style="display: none;">
+          <div class="strength-bar">
+            <div class="strength-fill" id="strength-fill"></div>
+          </div>
+          <div class="strength-text" id="strength-text"></div>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <span class="input-icon">🔒</span>
+        <input
+          type="password"
+          class="form-input with-icon"
+          placeholder="Confirm password"
+          required
+          id="confirmPassword"
+          autocomplete="new-password"
+        />
+        <div class="field-validation" id="confirmPassword-validation"></div>
+      </div>
+
+      <div class="checkbox-group">
+        <label class="custom-checkbox">
+          <input type="checkbox" id="agreeTerms" required>
+          <span class="checkmark"></span>
+        </label>
+        <label class="checkbox-label" for="agreeTerms">
+          I agree to the <a href="guidelines.html">Terms of Service</a> and <a href="guidelines.html">Community Guidelines</a>
+        </label>
+      </div>
+
+      <div class="checkbox-group">
+        <label class="custom-checkbox">
+          <input type="checkbox" id="agreeMarketing">
+          <span class="checkmark"></span>
+        </label>
+        <label class="checkbox-label" for="agreeMarketing">
+          I'd like to receive updates and promotional emails
+        </label>
+      </div>
+
+      <button type="submit" class="auth-button" id="signup-button" disabled>
+        Create Account
+      </button>
+    </form>
+
+    <div class="divider">
+      <span>or sign up with</span>
+    </div>
+
+    <div class="social-buttons">
+      <button class="social-button" id="google-signup">
+        G Google
+      </button>
+      <button class="social-button" id="github-signup">
+        ⚡ GitHub
+      </button>
+    </div>
+
+    <div class="auth-footer">
+      <p>Already have an account?</p>
+      <a href="login.html">Sign in instead</a>
+    </div>
+  </div>
+
+  <script>
+    class SignupManager {
+      constructor() {
+        this.validationRules = {
+          firstName: { min: 2, pattern: /^[a-zA-Z\s]+$/ },
+          lastName: { min: 2, pattern: /^[a-zA-Z\s]+$/ },
+          email: { pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ },
+          channelName: { min: 3, max: 30, pattern: /^[a-zA-Z0-9\s_-]+$/ },
+          password: { min: 8 }
+        };
+        
+        this.init();
+      }
+
+      init() {
+        this.setupEventListeners();
+        this.setupTheme();
+      }
+
+      setupEventListeners() {
+        // Form submission
+        document.getElementById('signup-form').addEventListener('submit', (e) => {
+          e.preventDefault();
+          this.handleSignup();
+        });
+
+        // Real-time validation
+        ['firstName', 'lastName', 'email', 'channelName', 'password', 'confirmPassword'].forEach(fieldId => {
+          document.getElementById(fieldId).addEventListener('input', () => {
+            this.validateField(fieldId);
+            this.updateSubmitButton();
+          });
+          
+          document.getElementById(fieldId).addEventListener('blur', () => {
+            this.validateField(fieldId);
+          });
+        });
+
+        // Password strength
+        document.getElementById('password').addEventListener('input', () => {
+          this.updatePasswordStrength();
+        });
+
+        // Password toggle
+        document.getElementById('password-toggle').addEventListener('click', () => {
+          this.togglePassword();
+        });
+
+        // Terms checkbox
+        document.getElementById('agreeTerms').addEventListener('change', () => {
+          this.updateSubmitButton();
+        });
+
+        // Social signups
+        document.getElementById('google-signup').addEventListener('click', () => {
+          this.handleSocialSignup('google');
+        });
+
+        document.getElementById('github-signup').addEventListener('click', () => {
+          this.handleSocialSignup('github');
+        });
+      }
+
+      setupTheme() {
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      }
+
+      validateField(fieldId) {
+        const field = document.getElementById(fieldId);
+        const validation = document.getElementById(`${fieldId}-validation`);
+        const value = field.value.trim();
+        
+        let isValid = true;
+        let message = '';
+
+        switch (fieldId) {
+          case 'firstName':
+          case 'lastName':
+            if (!value) {
+              isValid = false;
+              message = `${fieldId === 'firstName' ? 'First' : 'Last'} name is required`;
+            } else if (value.length < this.validationRules[fieldId].min) {
+              isValid = false;
+              message = `Must be at least ${this.validationRules[fieldId].min} characters`;
+            } else if (!this.validationRules[fieldId].pattern.test(value)) {
+              isValid = false;
+              message = 'Only letters and spaces allowed';
+            } else {
+              message = '✓ Looks good';
+            }
+            break;
+
+          case 'email':
+            if (!value) {
+              isValid = false;
+              message = 'Email is required';
+            } else if (!this.validationRules.email.pattern.test(value)) {
+              isValid = false;
+              message = 'Please enter a valid email address';
+            } else if (this.isEmailTaken(value)) {
+              isValid = false;
+              message = 'This email is already registered';
+            } else {
+              message = '✓ Email available';
+            }
+            break;
+
+          case 'channelName':
+            if (!value) {
+              isValid = false;
+              message = 'Channel name is required';
+            } else if (value.length < this.validationRules.channelName.min) {
+              isValid = false;
+              message = `Must be at least ${this.validationRules.channelName.min} characters`;
+            } else if (value.length > this.validationRules.channelName.max) {
+              isValid = false;
+              message = `Must be less than ${this.validationRules.channelName.max} characters`;
+            } else if (!this.validationRules.channelName.pattern.test(value)) {
+              isValid = false;
+              message = 'Only letters, numbers, spaces, hyphens and underscores allowed';
+            } else if (this.isChannelNameTaken(value)) {
+              isValid = false;
+              message = 'This channel name is already taken';
+            } else {
+              message = '✓ Channel name available';
+            }
+            break;
+
+          case 'password':
+            if (!value) {
+              isValid = false;
+              message = 'Password is required';
+            } else if (value.length < this.validationRules.password.min) {
+              isValid = false;
+              message = `Must be at least ${this.validationRules.password.min} characters`;
+            } else {
+              const strength = this.getPasswordStrength(value);
+              if (strength < 2) {
+                isValid = false;
+                message = 'Password is too weak';
+              } else {
+                message = '✓ Password strength is good';
+              }
+            }
+            break;
+
+          case 'confirmPassword':
+            const password = document.getElementById('password').value;
+            if (!value) {
+              isValid = false;
+              message = 'Please confirm your password';
+            } else if (value !== password) {
+              isValid = false;
+              message = 'Passwords do not match';
+            } else {
+              message = '✓ Passwords match';
+            }
+            break;
+        }
+
+        // Update field styling and validation message
+        field.classList.remove('error', 'success');
+        field.classList.add(isValid ? 'success' : 'error');
+        
+        validation.textContent = message;
+        validation.className = `field-validation ${isValid ? 'success' : 'error'}`;
+
+        return isValid;
+      }
+
+      updatePasswordStrength() {
+        const password = document.getElementById('password').value;
+        const strengthContainer = document.getElementById('password-strength');
+        const strengthFill = document.getElementById('strength-fill');
+        const strengthText = document.getElementById('strength-text');
+
+        if (!password) {
+          strengthContainer.style.display = 'none';
+          return;
+        }
+
+        strengthContainer.style.display = 'block';
+        const strength = this.getPasswordStrength(password);
+
+        // Remove all strength classes
+        strengthFill.className = 'strength-fill';
+
+        switch (strength) {
+          case 0:
+            strengthFill.classList.add('strength-weak');
+            strengthText.textContent = 'Weak - Add more characters and variety';
+            break;
+          case 1:
+            strengthFill.classList.add('strength-fair');
+            strengthText.textContent = 'Fair - Add numbers or special characters';
+            break;
+          case 2:
+            strengthFill.classList.add('strength-good');
+            strengthText.textContent = 'Good - Strong password';
+            break;
+          case 3:
+            strengthFill.classList.add('strength-strong');
+            strengthText.textContent = 'Excellent - Very strong password';
+            break;
+        }
+      }
+
+      getPasswordStrength(password) {
+        let score = 0;
+        
+        // Length check
+        if (password.length >= 8) score++;
+        if (password.length >= 12) score++;
+        
+        // Character variety
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+        if (/\d/.test(password)) score++;
+        if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) score++;
+        
+        return Math.min(3, Math.floor(score / 2));
+      }
+
+      togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const toggleButton = document.getElementById('password-toggle');
+
+        if (passwordInput.type === 'password') {
+          passwordInput.type = 'text';
+          toggleButton.textContent = '🙈';
+        } else {
+          passwordInput.type = 'password';
+          toggleButton.textContent = '👁️';
+        }
+      }
+
+      updateSubmitButton() {
+        const button = document.getElementById('signup-button');
+        const agreeTerms = document.getElementById('agreeTerms').checked;
+        
+        const fields = ['firstName', 'lastName', 'email', 'channelName', 'password', 'confirmPassword'];
+        const allValid = fields.every(fieldId => {
+          const field = document.getElementById(fieldId);
+          return field.classList.contains('success') && field.value.trim();
+        });
+
+        button.disabled = !(allValid && agreeTerms);
+      }
+
+      isEmailTaken(email) {
+        const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+        return users.some(user => user.email.toLowerCase() === email.toLowerCase());
+      }
+
+      isChannelNameTaken(channelName) {
+        const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+        return users.some(user => user.channelName.toLowerCase() === channelName.toLowerCase());
+      }
+
+      async handleSignup() {
+        const button = document.getElementById('signup-button');
+        
+        // Final validation
+        const fields = ['firstName', 'lastName', 'email', 'channelName', 'password', 'confirmPassword'];
+        const allValid = fields.every(fieldId => this.validateField(fieldId));
+        
+        if (!allValid) {
+          this.showError('Please fix the errors in the form');
+          return;
+        }
+
+        // Disable button and show loading
+        button.disabled = true;
+        button.textContent = 'Creating Account...';
+
+        try {
+          // Simulate API call
+          await new Promise(resolve => setTimeout(resolve, 2000));
+
+          // Create user object
+          const userData = {
+            id: Date.now().toString(),
+            firstName: document.getElementById('firstName').value.trim(),
+            lastName: document.getElementById('lastName').value.trim(),
+            email: document.getElementById('email').value.trim(),
+            channelName: document.getElementById('channelName').value.trim(),
+            password: document.getElementById('password').value,
+            agreeMarketing: document.getElementById('agreeMarketing').checked,
+            createdAt: new Date().toISOString(),
+            displayName: document.getElementById('firstName').value.trim() + ' ' + document.getElementById('lastName').value.trim()
+          };
+
+          // Save to registered users
+          const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+          users.push(userData);
+          localStorage.setItem('registeredUsers', JSON.stringify(users));
+
+          // Auto-login the user
+          const currentUser = {
+            id: userData.id,
+            email: userData.email,
+            displayName: userData.displayName,
+            channelName: userData.channelName,
+            photoURL: null,
+            loginTime: new Date().toISOString()
+          };
+
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
+          localStorage.setItem('isLoggedIn', 'true');
+
+          // Save channel data
+          const channelData = {
+            name: userData.channelName,
+            handle: '@' + userData.channelName.toLowerCase().replace(/\s+/g, ''),
+            description: '',
+            category: '',
+            avatar: userData.firstName.charAt(0).toUpperCase()
+          };
+          localStorage.setItem('channelData', JSON.stringify(channelData));
+
+          this.showSuccess('Account created successfully! Redirecting...');
+
+          // Redirect to home page
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 1500);
+
+        } catch (error) {
+          this.showError('Failed to create account. Please try again.');
+        } finally {
+          button.disabled = false;
+          button.textContent = 'Create Account';
+        }
+      }
+
+      async handleSocialSignup(provider) {
+        this.showError(''); // Clear any existing errors
+        
+        try {
+          // Simulate social signup
+          await new Promise(resolve => setTimeout(resolve, 1000));
+
+          const mockUser = {
+            id: Date.now().toString(),
+            email: `user@${provider}.com`,
+            displayName: `${provider.charAt(0).toUpperCase() + provider.slice(1)} User`,
+            channelName: `${provider}User${Date.now()}`,
+            photoURL: null,
+            provider: provider,
+            createdAt: new Date().toISOString(),
+            loginTime: new Date().toISOString()
+          };
+
+          localStorage.setItem('currentUser', JSON.stringify(mockUser));
+          localStorage.setItem('isLoggedIn', 'true');
+
+          // Save to registered users
+          const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+          users.push(mockUser);
+          localStorage.setItem('registeredUsers', JSON.stringify(users));
+
+          this.showSuccess(`Account created with ${provider}! Redirecting...`);
+
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 1000);
+
+        } catch (error) {
+          this.showError(`Failed to sign up with ${provider}`);
+        }
+      }
+
+      showError(message) {
+        const errorElement = document.getElementById('error-message');
+        const successElement = document.getElementById('success-message');
+        
+        successElement.style.display = 'none';
+        
+        if (message) {
+          errorElement.textContent = message;
+          errorElement.style.display = 'block';
+        } else {
+          errorElement.style.display = 'none';
+        }
+      }
+
+      showSuccess(message) {
+        const errorElement = document.getElementById('error-message');
+        const successElement = document.getElementById('success-message');
+        
+        errorElement.style.display = 'none';
+        
+        if (message) {
+          successElement.textContent = message;
+          successElement.style.display = 'block';
+        } else {
+          successElement.style.display = 'none';
+        }
+      }
+    }
+
+    // Initialize signup manager
+    document.addEventListener('DOMContentLoaded', () => {
+      new SignupManager();
+    });
+  </script>
+</body>
+</html>
