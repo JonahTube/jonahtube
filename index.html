@@ -731,16 +731,14 @@
       loadVideos() {
         const videos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
         const videoGrid = document.getElementById('video-grid');
-        const emptyState = document.getElementById('empty-state');
 
         if (videos.length === 0) {
           videoGrid.style.display = 'none';
-          emptyState.style.display = 'block';
+          this.showWelcomeHomepage();
           return;
         }
 
         videoGrid.style.display = 'grid';
-        emptyState.style.display = 'none';
         videoGrid.innerHTML = '';
 
         videos.forEach(video => {
@@ -749,6 +747,7 @@
         });
 
         this.loadShorts();
+        this.setupHomepage(); // Refresh homepage sections
       }
 
       // Create video card element
