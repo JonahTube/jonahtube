@@ -10,24 +10,24 @@
   <header class="top-bar">
     <div class="logo" onclick="window.location.href='index.html'">JonahTube</div>
     <div class="search-container">
-      <input type="text" placeholder="Search..." class="search-bar" />
-      <div class="search-button">🔍</div>
+      <input type="text" placeholder="Search videos, channels..." class="search-bar" id="search-input" />
+      <div class="search-button" id="search-button">⌕</div>
+      <div class="search-suggestions" id="search-suggestions"></div>
     </div>
     <div class="top-buttons">
-      <button class="theme-toggle" id="theme-toggle">🌙</button>
-      <a href="add-video.html" class="icon-button has-label">
-        <span class="button-icon">➕</span>
+      <a href="add-video.html" class="icon-button primary">
+        <span class="button-icon">+</span>
         <span class="button-label">Create</span>
       </a>
       <div id="notification-bell" class="icon-button">
-        <span class="button-icon">🔔</span>
+        <span class="button-icon">⚈</span>
         <span class="button-label">Notifications</span>
         <span id="notif-dot" class="notif-dot"></span>
       </div>
-      <a href="account.html" class="icon-button">
+      <div class="icon-button" id="user-menu">
         <span class="button-icon">👤</span>
-        <span class="button-label">Profile</span>
-      </a>
+        <span class="button-label" id="user-display">Sign In</span>
+      </div>
     </div>
   </header>
 
@@ -35,228 +35,521 @@
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-section">
-        <a href="index.html" class="active">🏠 Home</a>
-        <a href="shorts.html">🎬 Shorts</a>
-        <a href="#" id="subscriptions-link">📺 Subscriptions</a>
+        <a href="index.html" class="active">⌂ Home</a>
+        <a href="shorts.html">⧉ Shorts</a>
+        <a href="#" id="subscriptions-link">⊞ Subscriptions</a>
       </div>
       <div class="sidebar-section">
-        <a href="#">🕓 History</a>
-        <a href="account.html">📤 Your Channel</a>
-        <a href="#">👍 Liked Videos</a>
+        <a href="#">⟲ History</a>
+        <a href="account.html" id="your-channel-link">📤 Your Channel</a>
+        <a href="#">♡ Liked Videos</a>
         <a href="gamezone.html">🎮 GameZone</a>
         <a href="my-story.html">📖 My Story</a>
       </div>
       <div class="sidebar-section">
-        <a href="#">⚙️ Settings</a>
+        <a href="#" id="settings-link">⚙ Settings</a>
         <a href="guidelines.html">📋 Guidelines</a>
       </div>
     </aside>
 
     <!-- Videos Grid -->
     <main class="videos-grid">
-      <h2>JonahTube</h2>
-      <p>Your community's videos will appear here!</p>
-
-      <div class="video-grid" id="video-grid">
-        <!-- Videos will be dynamically loaded from localStorage -->
+      <div id="search-results" style="display: none;">
+        <h2>Search Results</h2>
+        <div class="video-grid" id="search-results-grid"></div>
+        <button class="btn btn-secondary" id="clear-search" style="margin-top: 24px;">← Back to Home</button>
       </div>
 
-      <!-- Empty State -->
-      <div class="empty-state" id="empty-state">
-        <div class="empty-icon">📹</div>
-        <h3>No videos yet!</h3>
-        <p>Be the first to upload a video to JonahTube.</p>
-        <a href="add-video.html" class="upload-button">Upload Your First Video</a>
-      </div>
+      <div id="home-content">
+        <h2>Welcome to JonahTube</h2>
+        <p>Discover amazing content from our creative community!</p>
 
-      <!-- Shorts Section -->
-      <div class="shorts-section" id="shorts-section" style="display: none;">
-        <h3>🎬 Shorts</h3>
-        <div class="shorts-grid" id="shorts-grid">
-          <!-- Shorts will be dynamically loaded -->
+        <div class="video-grid" id="video-grid">
+          <!-- Videos will be dynamically loaded from localStorage -->
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="empty-state">
+          <div class="empty-icon">▶</div>
+          <h3>No videos yet!</h3>
+          <p>Be the first to upload a video to JonahTube.</p>
+          <a href="add-video.html" class="upload-button">Upload Your First Video</a>
+        </div>
+
+        <!-- Shorts Section -->
+        <div class="shorts-section" id="shorts-section" style="display: none;">
+          <h3>⧉ Shorts</h3>
+          <div class="shorts-grid" id="shorts-grid">
+            <!-- Shorts will be dynamically loaded -->
+          </div>
         </div>
       </div>
     </main>
   </div>
 
+  <!-- User Menu Dropdown -->
+  <div id="user-dropdown" style="display: none; position: absolute; top: 60px; right: 20px; background: var(--background-secondary); border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); min-width: 200px; z-index: 1000;">
+    <div style="padding: 16px;">
+      <div id="user-info" style="display: none;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);">
+          <div style="width: 40px; height: 40px; background: var(--primary-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;" id="user-avatar">A</div>
+          <div>
+            <div style="font-weight: 600; color: var(--text-primary);" id="user-name"></div>
+            <div style="font-size: 14px; color: var(--text-secondary);" id="user-email"></div>
+          </div>
+        </div>
+        <a href="account.html" style="display: block; padding: 8px 0; color: var(--text-primary); text-decoration: none; font-size: 14px;">⚡ Creator Studio</a>
+        <a href="#" style="display: block; padding: 8px 0; color: var(--text-primary); text-decoration: none; font-size: 14px;" id="settings-menu">⚙ Settings</a>
+        <a href="#" style="display: block; padding: 8px 0; color: var(--text-primary); text-decoration: none; font-size: 14px;" id="logout-menu">↗ Sign Out</a>
+      </div>
+      <div id="auth-links">
+        <a href="login.html" style="display: block; padding: 8px 0; color: var(--focus-color); text-decoration: none; font-size: 14px; font-weight: 500;">→ Sign In</a>
+        <a href="signup.html" style="display: block; padding: 8px 0; color: var(--focus-color); text-decoration: none; font-size: 14px; font-weight: 500;">+ Create Account</a>
+      </div>
+    </div>
+  </div>
+
   <script>
-    const notifBell = document.getElementById("notification-bell");
-    const notifDot = document.getElementById("notif-dot");
-    const hasRead = localStorage.getItem("readGuidelines");
-
-    // Show red dot only if not read yet
-    if (hasRead === "true") {
-      notifDot.style.display = "none";
-    }
-
-    notifBell.addEventListener("click", () => {
-      // Navigate to guidelines page
-      window.location.href = "guidelines.html";
-    });
-
-    // Function to open video in watch page
-    function openVideo(videoId, title, channel, views, time, description, category) {
-      const url = `watch.html?v=${videoId}&title=${encodeURIComponent(title)}&channel=${encodeURIComponent(channel)}&views=${encodeURIComponent(views)}&time=${encodeURIComponent(time)}&description=${encodeURIComponent(description || '')}&category=${encodeURIComponent(category || '')}`;
-      window.location.href = url;
-    }
-
-    // Load videos from localStorage
-    function loadVideos() {
-      const videos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
-      const videoGrid = document.getElementById('video-grid');
-      const emptyState = document.getElementById('empty-state');
-
-      if (videos.length === 0) {
-        videoGrid.style.display = 'none';
-        emptyState.style.display = 'block';
-        return;
+    class JonahTubeManager {
+      constructor() {
+        this.currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+        this.isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        this.init();
       }
 
-      videoGrid.style.display = 'grid';
-      emptyState.style.display = 'none';
-      videoGrid.innerHTML = '';
-
-      videos.forEach(video => {
-        const videoCard = createVideoCard(video);
-        videoGrid.appendChild(videoCard);
-      });
-
-      loadShorts();
-    }
-
-    // Create video card element
-    function createVideoCard(video) {
-      const card = document.createElement('div');
-      card.className = 'video-card';
-      card.onclick = () => openVideo(
-        video.videoId,
-        video.title,
-        video.channel,
-        video.views || '0 views',
-        video.uploadTime || 'Just now',
-        video.description,
-        video.category
-      );
-
-      const timeAgo = getTimeAgo(new Date(video.createdAt));
-
-      card.innerHTML = `
-        <iframe src="https://www.youtube.com/embed/${video.videoId}" allowfullscreen></iframe>
-        <h4>${video.title}</h4>
-        <p>${video.channel} • ${video.views || '0 views'} • ${timeAgo}</p>
-      `;
-
-      return card;
-    }
-
-    // Load shorts from uploaded videos that are short-form
-    function loadShorts() {
-      const videos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
-      const shorts = videos.filter(video => video.category === 'shorts' || video.title.toLowerCase().includes('short'));
-      const shortsGrid = document.getElementById('shorts-grid');
-      const shortsSection = document.getElementById('shorts-section');
-
-      if (shorts.length === 0) {
-        shortsSection.style.display = 'none';
-        return;
+      init() {
+        this.setupTheme();
+        this.setupEventListeners();
+        this.setupSearch();
+        this.updateUserInterface();
+        this.loadVideos();
+        this.updateSubscriptionsList();
+        this.handleUrlSearch();
       }
 
-      shortsSection.style.display = 'block';
-      shortsGrid.innerHTML = '';
+      setupTheme() {
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+      }
 
-      shorts.slice(0, 6).forEach(short => {
-        const shortItem = document.createElement('div');
-        shortItem.className = 'short-item';
-        shortItem.onclick = () => openShort(short.videoId);
+      setupEventListeners() {
+        // Notification bell
+        const notifBell = document.getElementById("notification-bell");
+        notifBell?.addEventListener("click", () => {
+          window.location.href = "guidelines.html";
+        });
 
-        shortItem.innerHTML = `
-          <iframe src="https://www.youtube.com/embed/${short.videoId}" allowfullscreen></iframe>
+        // User menu toggle
+        const userMenu = document.getElementById('user-menu');
+        const userDropdown = document.getElementById('user-dropdown');
+        
+        userMenu?.addEventListener('click', (e) => {
+          e.stopPropagation();
+          userDropdown.style.display = userDropdown.style.display === 'none' ? 'block' : 'none';
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', () => {
+          userDropdown.style.display = 'none';
+        });
+
+        // Auth menu actions
+        document.getElementById('logout-menu')?.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.logout();
+        });
+
+        document.getElementById('settings-menu')?.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.openSettings();
+        });
+
+        // Clear search
+        document.getElementById('clear-search')?.addEventListener('click', () => {
+          this.clearSearch();
+        });
+
+        // Settings link in sidebar
+        document.getElementById('settings-link')?.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.openSettings();
+        });
+
+        // Your Channel link - requires login
+        document.getElementById('your-channel-link')?.addEventListener('click', (e) => {
+          if (!this.isLoggedIn) {
+            e.preventDefault();
+            this.showNotification('Please sign in to access your channel', 'warning');
+            setTimeout(() => {
+              window.location.href = 'login.html';
+            }, 1000);
+          }
+        });
+      }
+
+      setupSearch() {
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
+        const searchSuggestions = document.getElementById('search-suggestions');
+
+        const performSearch = () => {
+          const query = searchInput.value.trim();
+          if (query) {
+            this.searchVideos(query);
+          }
+        };
+
+        searchButton.addEventListener('click', performSearch);
+        searchInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            performSearch();
+          }
+        });
+
+        // Search suggestions
+        searchInput.addEventListener('input', () => {
+          const query = searchInput.value.trim();
+          if (query.length > 2) {
+            this.showSearchSuggestions(query);
+          } else {
+            searchSuggestions.style.display = 'none';
+          }
+        });
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('.search-container')) {
+            searchSuggestions.style.display = 'none';
+          }
+        });
+      }
+
+      updateUserInterface() {
+        const userDisplay = document.getElementById('user-display');
+        const userInfo = document.getElementById('user-info');
+        const authLinks = document.getElementById('auth-links');
+        const notifDot = document.getElementById('notif-dot');
+
+        if (this.isLoggedIn && this.currentUser) {
+          // Update header
+          userDisplay.textContent = this.currentUser.displayName?.split(' ')[0] || 'Profile';
+          
+          // Update dropdown
+          userInfo.style.display = 'block';
+          authLinks.style.display = 'none';
+          
+          // Update user info in dropdown
+          document.getElementById('user-name').textContent = this.currentUser.displayName || 'User';
+          document.getElementById('user-email').textContent = this.currentUser.email || '';
+          
+          // Update avatar
+          const avatar = this.currentUser.displayName?.charAt(0).toUpperCase() || 'U';
+          document.getElementById('user-avatar').textContent = avatar;
+
+          // Update sidebar link
+          const channelLink = document.getElementById('your-channel-link');
+          if (channelLink) {
+            channelLink.innerHTML = '⚡ Creator Studio';
+          }
+        } else {
+          // Not logged in
+          userDisplay.textContent = 'Sign In';
+          userInfo.style.display = 'none';
+          authLinks.style.display = 'block';
+        }
+
+        // Handle notifications
+        const hasRead = localStorage.getItem("readGuidelines");
+        if (hasRead === "true" && notifDot) {
+          notifDot.style.display = "none";
+        }
+      }
+
+      handleUrlSearch() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchQuery = urlParams.get('search');
+        
+        if (searchQuery) {
+          document.getElementById('search-input').value = searchQuery;
+          this.searchVideos(searchQuery);
+        }
+      }
+
+      searchVideos(query) {
+        const videos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
+        const results = videos.filter(video => 
+          video.title.toLowerCase().includes(query.toLowerCase()) ||
+          video.channel.toLowerCase().includes(query.toLowerCase()) ||
+          (video.description && video.description.toLowerCase().includes(query.toLowerCase())) ||
+          (video.category && video.category.toLowerCase().includes(query.toLowerCase()))
+        );
+
+        this.displaySearchResults(results, query);
+      }
+
+      displaySearchResults(results, query) {
+        const homeContent = document.getElementById('home-content');
+        const searchResults = document.getElementById('search-results');
+        const searchResultsGrid = document.getElementById('search-results-grid');
+
+        homeContent.style.display = 'none';
+        searchResults.style.display = 'block';
+
+        const searchTitle = searchResults.querySelector('h2');
+        searchTitle.textContent = `Search Results for "${query}" (${results.length} found)`;
+
+        searchResultsGrid.innerHTML = '';
+
+        if (results.length === 0) {
+          searchResultsGrid.innerHTML = `
+            <div class="empty-state" style="display: block; grid-column: 1 / -1;">
+              <div class="empty-icon">⌕</div>
+              <h3>No results found</h3>
+              <p>Try different keywords or check your spelling</p>
+            </div>
+          `;
+          return;
+        }
+
+        results.forEach(video => {
+          const videoCard = this.createVideoCard(video);
+          searchResultsGrid.appendChild(videoCard);
+        });
+
+        // Update URL without reloading
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.set('search', query);
+        window.history.pushState({}, '', newUrl);
+      }
+
+      showSearchSuggestions(query) {
+        const videos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
+        const suggestions = videos
+          .filter(video => 
+            video.title.toLowerCase().includes(query.toLowerCase()) ||
+            video.channel.toLowerCase().includes(query.toLowerCase())
+          )
+          .slice(0, 5);
+
+        const suggestionsEl = document.getElementById('search-suggestions');
+        
+        if (suggestions.length === 0) {
+          suggestionsEl.style.display = 'none';
+          return;
+        }
+
+        suggestionsEl.innerHTML = suggestions
+          .map(video => `
+            <div class="search-suggestion" onclick="window.jonahTube.openVideo('${video.videoId}', '${video.title.replace(/'/g, "\\'")}', '${video.channel}', '${video.views}', '${video.uploadTime}', '${(video.description || '').replace(/'/g, "\\'")}', '${video.category || ''}')">
+              ${video.title} - ${video.channel}
+            </div>
+          `).join('');
+
+        suggestionsEl.style.display = 'block';
+      }
+
+      clearSearch() {
+        document.getElementById('home-content').style.display = 'block';
+        document.getElementById('search-results').style.display = 'none';
+        document.getElementById('search-input').value = '';
+        
+        // Update URL
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.delete('search');
+        window.history.pushState({}, '', newUrl);
+      }
+
+      openSettings() {
+        if (!this.isLoggedIn) {
+          this.showNotification('Please sign in to access settings', 'warning');
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 1000);
+          return;
+        }
+        
+        // Open account page with settings tab
+        window.location.href = 'account.html#settings';
+      }
+
+      logout() {
+        if (confirm('Are you sure you want to sign out?')) {
+          localStorage.removeItem('currentUser');
+          localStorage.removeItem('isLoggedIn');
+          this.currentUser = null;
+          this.isLoggedIn = false;
+          this.updateUserInterface();
+          this.showNotification('Signed out successfully', 'success');
+        }
+      }
+
+      // Function to open video in watch page
+      openVideo(videoId, title, channel, views, time, description, category) {
+        const url = `watch.html?v=${videoId}&title=${encodeURIComponent(title)}&channel=${encodeURIComponent(channel)}&views=${encodeURIComponent(views)}&time=${encodeURIComponent(time)}&description=${encodeURIComponent(description || '')}&category=${encodeURIComponent(category || '')}`;
+        window.location.href = url;
+      }
+
+      // Load videos from localStorage
+      loadVideos() {
+        const videos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
+        const videoGrid = document.getElementById('video-grid');
+        const emptyState = document.getElementById('empty-state');
+
+        if (videos.length === 0) {
+          videoGrid.style.display = 'none';
+          emptyState.style.display = 'block';
+          return;
+        }
+
+        videoGrid.style.display = 'grid';
+        emptyState.style.display = 'none';
+        videoGrid.innerHTML = '';
+
+        videos.forEach(video => {
+          const videoCard = this.createVideoCard(video);
+          videoGrid.appendChild(videoCard);
+        });
+
+        this.loadShorts();
+      }
+
+      // Create video card element
+      createVideoCard(video) {
+        const card = document.createElement('div');
+        card.className = 'video-card';
+        card.onclick = () => this.openVideo(
+          video.videoId,
+          video.title,
+          video.channel,
+          video.views || '0 views',
+          video.uploadTime || 'Just now',
+          video.description,
+          video.category
+        );
+
+        const timeAgo = this.getTimeAgo(new Date(video.createdAt));
+        const channelAvatar = video.channelAvatar || video.channel.charAt(0).toUpperCase();
+
+        card.innerHTML = `
+          <div class="video-thumbnail">
+            <iframe src="https://www.youtube.com/embed/${video.videoId}" allowfullscreen></iframe>
+            <div class="video-duration">${video.duration || '3:45'}</div>
+          </div>
+          <div class="video-info">
+            <h4>${video.title}</h4>
+            <div class="video-meta">
+              <div class="channel-avatar">${channelAvatar}</div>
+              <div class="video-stats">${video.channel} • ${video.views || '0 views'} • ${timeAgo}</div>
+            </div>
+          </div>
         `;
 
-        shortsGrid.appendChild(shortItem);
-      });
-    }
-
-    // Function to open shorts
-    function openShort(videoId) {
-      window.location.href = `shorts.html?v=${videoId}`;
-    }
-
-    // Utility function to calculate time ago
-    function getTimeAgo(date) {
-      const now = new Date();
-      const diffMs = now - date;
-      const diffMins = Math.floor(diffMs / 60000);
-      const diffHours = Math.floor(diffMs / 3600000);
-      const diffDays = Math.floor(diffMs / 86400000);
-      const diffWeeks = Math.floor(diffDays / 7);
-      const diffMonths = Math.floor(diffDays / 30);
-      const diffYears = Math.floor(diffDays / 365);
-
-      if (diffMins < 1) return 'just now';
-      if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
-      if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-      if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-      if (diffWeeks < 4) return `${diffWeeks} week${diffWeeks > 1 ? 's' : ''} ago`;
-      if (diffMonths < 12) return `${diffMonths} month${diffMonths > 1 ? 's' : ''} ago`;
-      return `${diffYears} year${diffYears > 1 ? 's' : ''} ago`;
-    }
-
-    // Update subscriptions in sidebar
-    function updateSubscriptionsList() {
-      const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '[]');
-      const subscriptionsLink = document.querySelector('#subscriptions-link');
-
-      // Create or update subscriptions display
-      let subscriptionsList = document.querySelector('#subscriptions-list');
-      if (!subscriptionsList) {
-        subscriptionsList = document.createElement('div');
-        subscriptionsList.id = 'subscriptions-list';
-        subscriptionsList.style.cssText = 'padding-left: 20px; margin-top: 8px;';
-        subscriptionsLink.parentNode.insertBefore(subscriptionsList, subscriptionsLink.nextSibling);
+        return card;
       }
 
-      if (subscriptions.length > 0) {
-        subscriptionsList.innerHTML = '';
-        subscriptions.forEach(sub => {
-          const subEl = document.createElement('a');
-          subEl.href = '#';
-          subEl.style.cssText = 'display: block; padding: 8px 0; color: #606060; text-decoration: none; font-size: 12px;';
-          subEl.innerHTML = `${sub.avatar} ${sub.channel}`;
-          subscriptionsList.appendChild(subEl);
+      // Load shorts from uploaded videos that are short-form
+      loadShorts() {
+        const videos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
+        const shorts = videos.filter(video => video.category === 'shorts' || video.title.toLowerCase().includes('short'));
+        const shortsGrid = document.getElementById('shorts-grid');
+        const shortsSection = document.getElementById('shorts-section');
+
+        if (shorts.length === 0) {
+          shortsSection.style.display = 'none';
+          return;
+        }
+
+        shortsSection.style.display = 'block';
+        shortsGrid.innerHTML = '';
+
+        shorts.slice(0, 6).forEach(short => {
+          const shortItem = document.createElement('div');
+          shortItem.className = 'short-item';
+          shortItem.onclick = () => this.openShort(short.videoId);
+
+          shortItem.innerHTML = `
+            <iframe src="https://www.youtube.com/embed/${short.videoId}" allowfullscreen></iframe>
+          `;
+
+          shortsGrid.appendChild(shortItem);
         });
-        subscriptionsList.style.display = 'block';
-      } else {
-        subscriptionsList.style.display = 'none';
+      }
+
+      // Function to open shorts
+      openShort(videoId) {
+        window.location.href = `shorts.html?v=${videoId}`;
+      }
+
+      // Utility function to calculate time ago
+      getTimeAgo(date) {
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / 3600000);
+        const diffDays = Math.floor(diffMs / 86400000);
+        const diffWeeks = Math.floor(diffDays / 7);
+        const diffMonths = Math.floor(diffDays / 30);
+        const diffYears = Math.floor(diffDays / 365);
+
+        if (diffMins < 1) return 'just now';
+        if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+        if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+        if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+        if (diffWeeks < 4) return `${diffWeeks} week${diffWeeks > 1 ? 's' : ''} ago`;
+        if (diffMonths < 12) return `${diffMonths} month${diffMonths > 1 ? 's' : ''} ago`;
+        return `${diffYears} year${diffYears > 1 ? 's' : ''} ago`;
+      }
+
+      // Update subscriptions in sidebar
+      updateSubscriptionsList() {
+        const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '[]');
+        const subscriptionsLink = document.querySelector('#subscriptions-link');
+
+        // Create or update subscriptions display
+        let subscriptionsList = document.querySelector('#subscriptions-list');
+        if (!subscriptionsList) {
+          subscriptionsList = document.createElement('div');
+          subscriptionsList.id = 'subscriptions-list';
+          subscriptionsList.style.cssText = 'padding-left: 20px; margin-top: 8px;';
+          subscriptionsLink.parentNode.insertBefore(subscriptionsList, subscriptionsLink.nextSibling);
+        }
+
+        if (subscriptions.length > 0) {
+          subscriptionsList.innerHTML = '';
+          subscriptions.forEach(sub => {
+            const subEl = document.createElement('a');
+            subEl.href = '#';
+            subEl.style.cssText = 'display: block; padding: 8px 0; color: var(--text-secondary); text-decoration: none; font-size: 12px;';
+            subEl.innerHTML = `${sub.avatar} ${sub.channel}`;
+            subscriptionsList.appendChild(subEl);
+          });
+          subscriptionsList.style.display = 'block';
+        } else {
+          subscriptionsList.style.display = 'none';
+        }
+      }
+
+      showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type} show`;
+        notification.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span>${type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : 'ℹ️'}</span>
+            <span>${message}</span>
+          </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+          notification.classList.remove('show');
+          setTimeout(() => notification.remove(), 300);
+        }, 3000);
       }
     }
 
-    // Theme toggle functionality
-    function setupThemeToggle() {
-      const themeToggle = document.getElementById('theme-toggle');
-      const currentTheme = localStorage.getItem('theme') || 'light';
-
-      if (currentTheme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        themeToggle.textContent = '☀️';
-      }
-
-      themeToggle.addEventListener('click', () => {
-        const current = document.documentElement.getAttribute('data-theme');
-        const newTheme = current === 'dark' ? 'light' : 'dark';
-
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
-      });
-    }
-
-    // Initialize page
-    document.addEventListener('DOMContentLoaded', () => {
-      setupThemeToggle();
-      updateSubscriptionsList();
-      loadVideos();
-    });
+    // Make manager globally accessible for inline handlers
+    window.jonahTube = new JonahTubeManager();
   </script>
 </body>
 </html>
