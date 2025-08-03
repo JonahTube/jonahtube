@@ -1175,8 +1175,19 @@
       updateDescriptionCounter() {
         const description = document.getElementById('channelDescription').value;
         const validation = document.getElementById('description-validation');
+
+        // Content moderation check for description
+        if (description.length > 0) {
+          const moderationResult = window.ContentModeration.checkContent(description, 'general');
+          if (!moderationResult.isAppropriate) {
+            validation.textContent = '❌ Description not allowed: ' + moderationResult.issues[0];
+            validation.className = 'field-validation error';
+            return;
+          }
+        }
+
         validation.textContent = `${description.length} / 150`;
-        
+
         if (description.length > 140) {
           validation.className = 'field-validation error';
         } else if (description.length > 120) {
