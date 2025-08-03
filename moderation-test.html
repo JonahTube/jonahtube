@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JonahTube Content Moderation Test</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .test-container {
+      margin-left: var(--sidebar-width);
+      padding: 32px;
+      background: var(--background-primary);
+      min-height: calc(100vh - var(--header-height));
+    }
+
+    .test-section {
+      background: var(--background-secondary);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border-color);
+    }
+
+    .test-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .test-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 14px;
+      background: var(--background-tertiary);
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .test-input:focus {
+      border-color: var(--focus-color);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 0, 80, 0.1);
+    }
+
+    .test-result {
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 12px;
+      border: 1px solid;
+    }
+
+    .test-result.safe {
+      background: rgba(76, 175, 80, 0.1);
+      border-color: var(--success-color);
+      color: var(--success-color);
+    }
+
+    .test-result.blocked {
+      background: rgba(244, 67, 54, 0.1);
+      border-color: var(--danger-color);
+      color: var(--danger-color);
+    }
+
+    .test-result.warning {
+      background: rgba(255, 152, 0, 0.1);
+      border-color: var(--warning-color);
+      color: var(--warning-color);
+    }
+
+    .test-samples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .sample-test {
+      background: var(--background-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .sample-test:hover {
+      border-color: var(--focus-color);
+      background: var(--background-secondary);
+    }
+
+    .sample-text {
+      font-size: 13px;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .sample-category {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: var(--background-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--focus-color);
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .btn {
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-right: 12px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255, 0, 80, 0.4);
+    }
+
+    .btn-secondary {
+      background: var(--background-tertiary);
+      color: var(--text-primary);
+      border: 2px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background: var(--hover-background);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (max-width: 1312px) {
+      .test-container {
+        margin-left: var(--sidebar-collapsed-width);
+      }
+    }
+
+    @media (max-width: 792px) {
+      .test-container {
+        margin-left: 0;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="top-bar">
+    <div class="logo" onclick="window.location.href='index.html'">JonahTube</div>
+    <div class="search-container">
+      <input type="text" placeholder="Search..." class="search-bar" />
+      <div class="search-button">⌕</div>
+    </div>
+    <div class="top-buttons">
+      <a href="add-video.html" class="icon-button primary">
+        <span class="button-icon">+</span>
+        <span class="button-label">Create</span>
+      </a>
+      <div class="icon-button">
+        <span class="button-icon">👤</span>
+        <span class="button-label">Profile</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="main-content">
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <a href="index.html">⌂ Home</a>
+        <a href="shorts.html">⧉ Shorts</a>
+        <a href="#">⊞ Subscriptions</a>
+      </div>
+      <div class="sidebar-section">
+        <a href="#">⟲ History</a>
+        <a href="account.html">⚡ Creator Studio</a>
+        <a href="#">♡ Liked Videos</a>
+        <a href="gamezone.html">🎮 GameZone</a>
+        <a href="my-story.html">📖 My Story</a>
+      </div>
+      <div class="sidebar-section">
+        <a href="#">⚙ Settings</a>
+        <a href="guidelines.html">📋 Guidelines</a>
+        <a href="moderation-test.html" class="active">🛡️ Moderation Test</a>
+      </div>
+    </aside>
+
+    <main class="test-container">
+      <div class="test-section">
+        <h1 style="font-size: 28px; font-weight: 800; color: var(--text-primary); margin-bottom: 8px;">🛡️ Content Moderation System Test</h1>
+        <p style="color: var(--text-secondary); font-size: 16px; margin-bottom: 24px;">Test the content safety and moderation features to ensure all inappropriate content is blocked.</p>
+        
+        <div class="stats-grid" id="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number" id="tests-run">0</div>
+            <div class="stat-label">Tests Run</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="blocked-count">0</div>
+            <div class="stat-label">Blocked</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="approved-count">0</div>
+            <div class="stat-label">Approved</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="avg-score">100</div>
+            <div class="stat-label">Avg Safety Score</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="test-section">
+        <h2 class="test-title">Manual Testing</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 16px;">Enter text to test the content moderation system:</p>
+        
+        <input type="text" class="test-input" id="manual-test-input" placeholder="Enter text to test moderation...">
+        <select class="test-input" id="content-type-select">
+          <option value="general">General Content</option>
+          <option value="video-title">Video Title</option>
+          <option value="video-description">Video Description</option>
+          <option value="channel-name">Channel Name</option>
+          <option value="channel-handle">Channel Handle</option>
+          <option value="search">Search Query</option>
+        </select>
+        
+        <button class="btn" onclick="testContent()">🔍 Test Content</button>
+        <button class="btn btn-secondary" onclick="clearTest()">Clear</button>
+        
+        <div id="manual-test-result"></div>
+      </div>
+
+      <div class="test-section">
+        <h2 class="test-title">Automated Tests</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 16px;">Run comprehensive tests with sample content:</p>
+        
+        <button class="btn" onclick="runAllTests()">🚀 Run All Tests</button>
+        <button class="btn btn-secondary" onclick="runSafeContentTests()">✅ Test Safe Content</button>
+        <button class="btn btn-secondary" onclick="runBlockedContentTests()">❌ Test Blocked Content</button>
+        <button class="btn btn-secondary" onclick="viewModerationLog()">📊 View Moderation Log</button>
+        
+        <div class="test-samples" id="test-samples">
+          <!-- Sample tests will be populated here -->
+        </div>
+      </div>
+
+      <div class="test-section">
+        <h2 class="test-title">Sample Test Cases</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 16px;">Click any sample to test it:</p>
+        
+        <div class="test-samples">
+          <div class="sample-test" onclick="testSample('My Amazing Gaming Channel', 'safe')">
+            <div class="sample-text">My Amazing Gaming Channel</div>
+            <div class="sample-category">Safe - Channel Name</div>
+          </div>
+          
+          <div class="sample-test" onclick="testSample('Learn coding with fun tutorials!', 'safe')">
+            <div class="sample-text">Learn coding with fun tutorials!</div>
+            <div class="sample-category">Safe - Video Description</div>
+          </div>
+          
+          <div class="sample-test" onclick="testSample('stupid content', 'blocked')">
+            <div class="sample-text">stupid content</div>
+            <div class="sample-category">Blocked - Inappropriate</div>
+          </div>
+          
+          <div class="sample-test" onclick="testSample('hate violence', 'blocked')">
+            <div class="sample-text">hate violence</div>
+            <div class="sample-category">Blocked - Severe</div>
+          </div>
+          
+          <div class="sample-test" onclick="testSample('Amazing programming tutorial', 'safe')">
+            <div class="sample-text">Amazing programming tutorial</div>
+            <div class="sample-category">Safe - Positive</div>
+          </div>
+          
+          <div class="sample-test" onclick="testSample('AWESOME VIDEO!!!!!!', 'warning')">
+            <div class="sample-text">AWESOME VIDEO!!!!!!</div>
+            <div class="sample-category">Warning - Excessive Caps</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="test-section" id="log-section" style="display: none;">
+        <h2 class="test-title">Moderation Log</h2>
+        <div id="moderation-log-content"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="content-moderation.js"></script>
+  <script>
+    let testStats = {
+      testsRun: 0,
+      blocked: 0,
+      approved: 0,
+      totalScore: 0
+    };
+
+    function updateStats() {
+      document.getElementById('tests-run').textContent = testStats.testsRun;
+      document.getElementById('blocked-count').textContent = testStats.blocked;
+      document.getElementById('approved-count').textContent = testStats.approved;
+      
+      const avgScore = testStats.testsRun > 0 ? Math.round(testStats.totalScore / testStats.testsRun) : 100;
+      document.getElementById('avg-score').textContent = avgScore;
+    }
+
+    function testContent() {
+      const input = document.getElementById('manual-test-input');
+      const contentType = document.getElementById('content-type-select').value;
+      const resultDiv = document.getElementById('manual-test-result');
+      
+      const content = input.value.trim();
+      if (!content) {
+        resultDiv.innerHTML = '<div class="test-result warning">Please enter some text to test.</div>';
+        return;
+      }
+
+      // Test the content
+      const result = window.ContentModeration.checkContent(content, contentType);
+      const score = window.ContentModeration.getContentSafetyScore(content);
+      
+      // Update stats
+      testStats.testsRun++;
+      testStats.totalScore += score;
+      if (result.isAppropriate) {
+        testStats.approved++;
+      } else {
+        testStats.blocked++;
+      }
+      updateStats();
+
+      // Display result
+      let resultClass = result.isAppropriate ? 'safe' : 'blocked';
+      if (result.issues.length > 0 && result.isAppropriate) {
+        resultClass = 'warning';
+      }
+
+      let resultHTML = `
+        <div class="test-result ${resultClass}">
+          <strong>Result:</strong> ${result.isAppropriate ? '✅ APPROVED' : '❌ BLOCKED'}<br>
+          <strong>Safety Score:</strong> ${score}/100<br>
+          <strong>Content Type:</strong> ${contentType}
+      `;
+
+      if (result.issues.length > 0) {
+        resultHTML += `<br><strong>Issues:</strong> ${result.issues.join(', ')}`;
+      }
+
+      if (result.blockedWords.length > 0) {
+        resultHTML += `<br><strong>Blocked Words:</strong> ${result.blockedWords.join(', ')}`;
+      }
+
+      if (result.suggestions.length > 0) {
+        resultHTML += `<br><strong>Suggestions:</strong> ${result.suggestions.join(', ')}`;
+      }
+
+      // Show clean content suggestion
+      if (!result.isAppropriate) {
+        const cleanContent = window.ContentModeration.suggestCleanContent(content);
+        if (cleanContent !== content) {
+          resultHTML += `<br><strong>Suggested Alternative:</strong> "${cleanContent}"`;
+        }
+      }
+
+      resultHTML += '</div>';
+      resultDiv.innerHTML = resultHTML;
+    }
+
+    function clearTest() {
+      document.getElementById('manual-test-input').value = '';
+      document.getElementById('manual-test-result').innerHTML = '';
+    }
+
+    function testSample(text, expectedResult) {
+      document.getElementById('manual-test-input').value = text;
+      testContent();
+    }
+
+    function runAllTests() {
+      const testCases = [
+        // Safe content
+        { text: "Amazing programming tutorial", type: "video-title", expected: "safe" },
+        { text: "Learn to code with Python", type: "video-description", expected: "safe" },
+        { text: "TechTutorials", type: "channel-name", expected: "safe" },
+        { text: "codingtips", type: "channel-handle", expected: "safe" },
+        { text: "javascript tutorial", type: "search", expected: "safe" },
+        
+        // Blocked content
+        { text: "stupid video", type: "video-title", expected: "blocked" },
+        { text: "hate this content", type: "video-description", expected: "blocked" },
+        { text: "violence channel", type: "channel-name", expected: "blocked" },
+        { text: "badstuff", type: "channel-handle", expected: "blocked" },
+        { text: "inappropriate search", type: "search", expected: "blocked" },
+        
+        // Warning content
+        { text: "AWESOME VIDEO!!!!!!", type: "video-title", expected: "warning" },
+        { text: ".", type: "video-description", expected: "warning" },
+        { text: "ab", type: "channel-name", expected: "warning" }
+      ];
+
+      const samplesDiv = document.getElementById('test-samples');
+      samplesDiv.innerHTML = '';
+
+      testCases.forEach((testCase, index) => {
+        setTimeout(() => {
+          const result = window.ContentModeration.checkContent(testCase.text, testCase.type);
+          const score = window.ContentModeration.getContentSafetyScore(testCase.text);
+          
+          // Update stats
+          testStats.testsRun++;
+          testStats.totalScore += score;
+          if (result.isAppropriate) {
+            testStats.approved++;
+          } else {
+            testStats.blocked++;
+          }
+          
+          let resultClass = result.isAppropriate ? 'safe' : 'blocked';
+          if (result.issues.length > 0 && result.isAppropriate) {
+            resultClass = 'warning';
+          }
+
+          const testDiv = document.createElement('div');
+          testDiv.className = `sample-test test-result ${resultClass}`;
+          testDiv.innerHTML = `
+            <div class="sample-text">"${testCase.text}"</div>
+            <div class="sample-category">${testCase.type}</div>
+            <div style="margin-top: 8px; font-size: 12px;">
+              <strong>Result:</strong> ${result.isAppropriate ? 'APPROVED' : 'BLOCKED'}<br>
+              <strong>Score:</strong> ${score}/100
+              ${result.issues.length > 0 ? `<br><strong>Issues:</strong> ${result.issues.join(', ')}` : ''}
+            </div>
+          `;
+          
+          samplesDiv.appendChild(testDiv);
+          updateStats();
+        }, index * 100);
+      });
+    }
+
+    function runSafeContentTests() {
+      const safeContent = [
+        "Amazing programming tutorial",
+        "Learn to code with Python", 
+        "TechTutorials",
+        "Beautiful nature video",
+        "Cooking delicious meals",
+        "Inspiring story",
+        "Educational content",
+        "Family friendly fun",
+        "Creative art project",
+        "Positive motivation"
+      ];
+
+      testBatch(safeContent, "general");
+    }
+
+    function runBlockedContentTests() {
+      const blockedContent = [
+        "stupid content",
+        "hate this",
+        "violence here",
+        "inappropriate stuff",
+        "bad language test",
+        "harmful content",
+        "threatening message",
+        "bullying behavior",
+        "negative attack",
+        "offensive material"
+      ];
+
+      testBatch(blockedContent, "general");
+    }
+
+    function testBatch(contentArray, type) {
+      const samplesDiv = document.getElementById('test-samples');
+      samplesDiv.innerHTML = '';
+
+      contentArray.forEach((content, index) => {
+        setTimeout(() => {
+          const result = window.ContentModeration.checkContent(content, type);
+          const score = window.ContentModeration.getContentSafetyScore(content);
+          
+          testStats.testsRun++;
+          testStats.totalScore += score;
+          if (result.isAppropriate) {
+            testStats.approved++;
+          } else {
+            testStats.blocked++;
+          }
+          
+          let resultClass = result.isAppropriate ? 'safe' : 'blocked';
+          if (result.issues.length > 0 && result.isAppropriate) {
+            resultClass = 'warning';
+          }
+
+          const testDiv = document.createElement('div');
+          testDiv.className = `sample-test test-result ${resultClass}`;
+          testDiv.innerHTML = `
+            <div class="sample-text">"${content}"</div>
+            <div style="margin-top: 8px; font-size: 12px;">
+              <strong>Result:</strong> ${result.isAppropriate ? 'APPROVED' : 'BLOCKED'}<br>
+              <strong>Score:</strong> ${score}/100
+              ${result.issues.length > 0 ? `<br><strong>Issues:</strong> ${result.issues.join(', ')}` : ''}
+            </div>
+          `;
+          
+          samplesDiv.appendChild(testDiv);
+          updateStats();
+        }, index * 100);
+      });
+    }
+
+    function viewModerationLog() {
+      const logSection = document.getElementById('log-section');
+      const logContent = document.getElementById('moderation-log-content');
+      
+      const stats = window.ContentModeration.getModerationStats();
+      
+      let logHTML = `
+        <div class="stats-grid" style="margin-bottom: 24px;">
+          <div class="stat-card">
+            <div class="stat-number">${stats.totalChecks}</div>
+            <div class="stat-label">Total Checks</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">${stats.blocked}</div>
+            <div class="stat-label">Blocked</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">${stats.approved}</div>
+            <div class="stat-label">Approved</div>
+          </div>
+        </div>
+        
+        <h3 style="color: var(--text-primary); margin-bottom: 16px;">Recent Activity</h3>
+      `;
+      
+      stats.recentActivity.forEach(log => {
+        const status = log.result.isAppropriate ? 'APPROVED' : 'BLOCKED';
+        const statusClass = log.result.isAppropriate ? 'safe' : 'blocked';
+        
+        logHTML += `
+          <div class="test-result ${statusClass}" style="margin-bottom: 12px;">
+            <strong>Content:</strong> "${log.content}"<br>
+            <strong>Type:</strong> ${log.type}<br>
+            <strong>Status:</strong> ${status}<br>
+            <strong>Time:</strong> ${new Date(log.timestamp).toLocaleString()}
+            ${log.result.issues.length > 0 ? `<br><strong>Issues:</strong> ${log.result.issues.join(', ')}` : ''}
+          </div>
+        `;
+      });
+      
+      logContent.innerHTML = logHTML;
+      logSection.style.display = 'block';
+      logSection.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Initialize
+    updateStats();
+  </script>
+</body>
+</html>
