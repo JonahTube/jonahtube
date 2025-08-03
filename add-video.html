@@ -587,6 +587,94 @@
       color: var(--danger-color);
     }
 
+    .content-validation {
+      margin-top: 8px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      display: none;
+    }
+
+    .content-validation.show {
+      display: block;
+    }
+
+    .content-validation.error {
+      background: rgba(244, 67, 54, 0.1);
+      color: var(--danger-color);
+      border: 1px solid rgba(244, 67, 54, 0.3);
+    }
+
+    .content-validation.warning {
+      background: rgba(255, 152, 0, 0.1);
+      color: var(--warning-color);
+      border: 1px solid rgba(255, 152, 0, 0.3);
+    }
+
+    .content-validation.success {
+      background: rgba(76, 175, 80, 0.1);
+      color: var(--success-color);
+      border: 1px solid rgba(76, 175, 80, 0.3);
+    }
+
+    .content-safety-score {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .safety-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .safety-indicator.safe {
+      background: var(--success-color);
+    }
+
+    .safety-indicator.warning {
+      background: var(--warning-color);
+    }
+
+    .safety-indicator.danger {
+      background: var(--danger-color);
+    }
+
+    .moderation-suggestions {
+      margin-top: 8px;
+      padding: 8px;
+      background: rgba(33, 150, 243, 0.1);
+      border: 1px solid rgba(33, 150, 243, 0.3);
+      border-radius: 6px;
+      font-size: 12px;
+      color: #1976d2;
+      display: none;
+    }
+
+    .moderation-suggestions.show {
+      display: block;
+    }
+
+    .moderation-suggestions ul {
+      margin: 4px 0 0 16px;
+      padding: 0;
+    }
+
+    .blocked-content {
+      background: rgba(244, 67, 54, 0.1);
+      border: 2px solid var(--danger-color) !important;
+    }
+
+    .blocked-content::placeholder {
+      color: var(--danger-color) !important;
+    }
+
     .back-button {
       display: inline-flex;
       align-items: center;
@@ -767,26 +855,28 @@
 
                   <div class="form-group">
                     <label class="form-label" for="video-title">Title *</label>
-                    <input 
-                      type="text" 
-                      id="video-title" 
-                      class="form-input" 
+                    <input
+                      type="text"
+                      id="video-title"
+                      class="form-input"
                       placeholder="Add a title that describes your video"
                       maxlength="100"
-                      required 
+                      required
                     />
                     <div class="character-count" id="title-count">0 / 100</div>
+                    <div class="content-validation" id="title-validation"></div>
                   </div>
 
                   <div class="form-group">
                     <label class="form-label" for="video-description">Description</label>
-                    <textarea 
-                      id="video-description" 
-                      class="form-textarea" 
+                    <textarea
+                      id="video-description"
+                      class="form-textarea"
                       placeholder="Tell viewers about your video"
                       maxlength="5000"
                     ></textarea>
                     <div class="character-count" id="description-count">0 / 5000</div>
+                    <div class="content-validation" id="description-validation"></div>
                   </div>
 
                   <div class="form-group">
@@ -896,24 +986,26 @@
               <label class="form-label" for="record-title">Title *</label>
               <input 
                 type="text" 
-                id="record-title" 
-                class="form-input" 
+                id="record-title"
+                class="form-input"
                 placeholder="Add a title for your recorded video"
                 maxlength="100"
-                required 
+                required
               />
               <div class="character-count" id="record-title-count">0 / 100</div>
+              <div class="content-validation" id="record-title-validation"></div>
             </div>
 
             <div class="form-group">
               <label class="form-label" for="record-description">Description</label>
               <textarea 
-                id="record-description" 
-                class="form-textarea" 
+                id="record-description"
+                class="form-textarea"
                 placeholder="Tell viewers about your video"
                 maxlength="5000"
               ></textarea>
               <div class="character-count" id="record-description-count">0 / 5000</div>
+              <div class="content-validation" id="record-description-validation"></div>
             </div>
 
             <div class="form-group">
@@ -947,6 +1039,7 @@
     </main>
   </div>
 
+  <script src="content-moderation.js"></script>
   <script src="add-video.js"></script>
 </body>
 </html>
