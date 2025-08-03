@@ -867,6 +867,211 @@
         }
       }
 
+      setupHomepage() {
+        const videos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
+        const hasContent = videos.length > 0;
+
+        // Show different content based on whether we have videos
+        if (hasContent) {
+          this.showRegularHomepage();
+        } else {
+          this.showWelcomeHomepage();
+        }
+
+        this.updateContestProgress();
+        this.populateFeaturedCreators();
+        this.populateTrendingVideos();
+      }
+
+      showWelcomeHomepage() {
+        // Show welcome sections for new visitors
+        document.getElementById('hero-section').style.display = 'block';
+        document.getElementById('contest-banner').style.display = 'block';
+        document.getElementById('featured-creators').style.display = 'block';
+        document.getElementById('trending-section').style.display = 'block';
+        document.getElementById('empty-state').style.display = 'block';
+        document.getElementById('regular-content').style.display = 'none';
+      }
+
+      showRegularHomepage() {
+        // Show regular content for returning users
+        document.getElementById('hero-section').style.display = 'none';
+        document.getElementById('contest-banner').style.display = 'block'; // Keep contest visible
+        document.getElementById('featured-creators').style.display = 'block';
+        document.getElementById('trending-section').style.display = 'block';
+        document.getElementById('empty-state').style.display = 'none';
+        document.getElementById('regular-content').style.display = 'block';
+      }
+
+      updateContestProgress() {
+        const videos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
+        const uniqueCreators = [...new Set(videos.map(v => v.channel))];
+        const creatorCount = Math.min(uniqueCreators.length, 10);
+
+        document.getElementById('creators-count').textContent = creatorCount;
+        const progressFill = document.getElementById('contest-progress-fill');
+        progressFill.style.width = `${(creatorCount / 10) * 100}%`;
+
+        // Hide contest if we have 10 creators
+        if (creatorCount >= 10) {
+          document.getElementById('contest-banner').style.display = 'none';
+        }
+      }
+
+      populateFeaturedCreators() {
+        const videos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
+        const creatorsGrid = document.getElementById('creators-grid');
+
+        // Get unique creators with their stats
+        const creatorStats = {};
+        videos.forEach(video => {
+          if (!creatorStats[video.channel]) {
+            creatorStats[video.channel] = {
+              name: video.channel,
+              handle: '@' + (video.channel.toLowerCase().replace(/\s+/g, '') || 'creator'),
+              videos: 0,
+              views: 0,
+              avatar: video.channelAvatar || video.channel.charAt(0).toUpperCase()
+            };
+          }
+          creatorStats[video.channel].videos++;
+          creatorStats[video.channel].views += parseInt(video.views?.replace(/[^\d]/g, '') || 0);
+        });
+
+        // Convert to array and sort by video count
+        const creators = Object.values(creatorStats)
+          .sort((a, b) => b.videos - a.videos)
+          .slice(0, 6); // Show top 6 creators
+
+        // Add some sample creators if we don't have enough
+        const sampleCreators = [
+          { name: "Faith & Gaming", handle: "@faithgaming", videos: 25, views: 15000, avatar: "F", badge: "Contest Winner" },
+          { name: "Positive Vibes", handle: "@positivevibes", videos: 18, views: 12000, avatar: "P", badge: "Top Creator" },
+          { name: "Learn Together", handle: "@learntogether", videos: 22, views: 18000, avatar: "L", badge: "Educator" },
+          { name: "Creative Corner", handle: "@creativecorner", videos: 16, views: 9000, avatar: "C", badge: "Artist" },
+          { name: "Tech & Faith", handle: "@techfaith", videos: 20, views: 14000, avatar: "T", badge: "Innovator" },
+          { name: "Music Ministry", handle: "@musicministry", videos: 30, views: 25000, avatar: "M", badge: "Top Creator" }
+        ];
+
+        // Combine real and sample creators
+        const allCreators = [...creators];
+        sampleCreators.forEach(sample => {
+          if (allCreators.length < 6 && !allCreators.find(c => c.name === sample.name)) {
+            allCreators.push(sample);
+          }
+        });
+
+        creatorsGrid.innerHTML = '';
+        allCreators.slice(0, 6).forEach(creator => {
+          const creatorCard = document.createElement('div');
+          creatorCard.className = 'creator-card';
+          creatorCard.innerHTML = `
+            <div class="creator-avatar">${creator.avatar}</div>
+            <div class="creator-name">${creator.name}</div>
+            <div class="creator-handle">${creator.handle}</div>
+            <div class="creator-stats">
+              <div class="creator-stat">
+                <div class="creator-stat-number">${creator.videos}</div>
+                <div class="creator-stat-label">Videos</div>
+              </div>
+              <div class="creator-stat">
+                <div class="creator-stat-number">${this.formatNumber(creator.views)}</div>
+                <div class="creator-stat-label">Views</div>
+              </div>
+            </div>
+            <div class="creator-badge">${creator.badge || 'Creator'}</div>
+          `;
+          creatorsGrid.appendChild(creatorCard);
+        });
+      }
+
+      populateTrendingVideos() {
+        const videos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
+        const trendingGrid = document.getElementById('trending-grid');
+
+        // Sort by views and recency for trending
+        const trending = videos
+          .sort((a, b) => {
+            const aViews = parseInt(a.views?.replace(/[^\d]/g, '') || 0);
+            const bViews = parseInt(b.views?.replace(/[^\d]/g, '') || 0);
+            const aDate = new Date(a.createdAt);
+            const bDate = new Date(b.createdAt);
+
+            // Weight recent videos higher
+            const aScore = aViews + (Date.now() - aDate.getTime() < 86400000 ? 1000 : 0);
+            const bScore = bViews + (Date.now() - bDate.getTime() < 86400000 ? 1000 : 0);
+
+            return bScore - aScore;
+          })
+          .slice(0, 8);
+
+        // Add sample trending videos if needed
+        const sampleVideos = [
+          {
+            videoId: "sample1",
+            title: "Amazing Faith Journey - My Story",
+            channel: "Faith Walker",
+            channelAvatar: "F",
+            views: "5.2K views",
+            uploadTime: "2 hours ago",
+            category: "lifestyle",
+            createdAt: new Date().toISOString()
+          },
+          {
+            videoId: "sample2",
+            title: "How to Code with Purpose",
+            channel: "Tech & Faith",
+            channelAvatar: "T",
+            views: "8.1K views",
+            uploadTime: "5 hours ago",
+            category: "education",
+            createdAt: new Date().toISOString()
+          },
+          {
+            videoId: "sample3",
+            title: "Funny Family Moments Compilation",
+            channel: "Happy Family",
+            channelAvatar: "H",
+            views: "12.3K views",
+            uploadTime: "1 day ago",
+            category: "comedy",
+            createdAt: new Date().toISOString()
+          },
+          {
+            videoId: "sample4",
+            title: "Beautiful Worship Song Cover",
+            channel: "Music Ministry",
+            channelAvatar: "M",
+            views: "15.7K views",
+            uploadTime: "3 days ago",
+            category: "music",
+            createdAt: new Date().toISOString()
+          }
+        ];
+
+        const allTrending = [...trending];
+        sampleVideos.forEach(sample => {
+          if (allTrending.length < 8) {
+            allTrending.push(sample);
+          }
+        });
+
+        trendingGrid.innerHTML = '';
+        allTrending.slice(0, 8).forEach(video => {
+          const videoCard = this.createVideoCard(video);
+          trendingGrid.appendChild(videoCard);
+        });
+      }
+
+      formatNumber(num) {
+        if (num >= 1000000) {
+          return (num / 1000000).toFixed(1) + 'M';
+        } else if (num >= 1000) {
+          return (num / 1000).toFixed(1) + 'K';
+        }
+        return num.toString();
+      }
+
       showNotification(message, type = 'info') {
         const notification = document.createElement('div');
         notification.className = `notification ${type} show`;
@@ -876,9 +1081,9 @@
             <span>${message}</span>
           </div>
         `;
-        
+
         document.body.appendChild(notification);
-        
+
         setTimeout(() => {
           notification.classList.remove('show');
           setTimeout(() => notification.remove(), 300);
