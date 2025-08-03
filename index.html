@@ -61,14 +61,109 @@
       </div>
 
       <div id="home-content">
-        <h2>Discover Amazing Content</h2>
-        <p>Join the community and explore incredible videos from creators around the world!</p>
-
-        <div class="video-grid" id="video-grid">
-          <!-- Videos will be dynamically loaded from localStorage -->
+        <!-- What is JonahTube Section -->
+        <div class="hero-section" id="hero-section" style="display: none;">
+          <div class="hero-banner">
+            <div class="hero-content">
+              <h1 class="hero-title">What is JonahTube?</h1>
+              <p class="hero-subtitle">The creative platform where faith meets fun! Share your story, inspire others, and build a community around positivity and purpose.</p>
+              <div class="hero-stats">
+                <div class="stat-item">
+                  <div class="stat-number">10K+</div>
+                  <div class="stat-label">Creators</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-number">50K+</div>
+                  <div class="stat-label">Videos</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-number">100%</div>
+                  <div class="stat-label">Family Safe</div>
+                </div>
+              </div>
+              <div class="hero-actions">
+                <a href="signup.html" class="btn-hero primary">🚀 Start Creating</a>
+                <a href="#featured-creators" class="btn-hero secondary">👀 See What's Trending</a>
+              </div>
+            </div>
+            <div class="hero-visual">
+              <div class="floating-video-cards">
+                <div class="video-card-mini">
+                  <div class="video-thumbnail-mini">🎬</div>
+                  <div class="video-title-mini">Amazing Tutorial</div>
+                </div>
+                <div class="video-card-mini">
+                  <div class="video-thumbnail-mini">🎵</div>
+                  <div class="video-title-mini">Inspiring Music</div>
+                </div>
+                <div class="video-card-mini">
+                  <div class="video-thumbnail-mini">📚</div>
+                  <div class="video-title-mini">Learn & Grow</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- Empty State -->
+        <!-- Contest Banner -->
+        <div class="contest-banner" id="contest-banner" style="display: none;">
+          <div class="contest-content">
+            <div class="contest-icon">🏆</div>
+            <div class="contest-info">
+              <h3 class="contest-title">🎉 Launch Contest: First 10 Creators Win!</h3>
+              <p class="contest-description">Be among the first 10 creators to upload a video and get featured on our homepage! Plus, the funniest meme video wins a special shoutout!</p>
+              <div class="contest-progress">
+                <div class="progress-bar">
+                  <div class="progress-fill" id="contest-progress-fill"></div>
+                </div>
+                <div class="progress-text">
+                  <span id="creators-count">0</span> / 10 creators joined!
+                </div>
+              </div>
+            </div>
+            <div class="contest-action">
+              <a href="add-video.html" class="btn-contest">🎬 Join Contest</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Featured Creators Section -->
+        <div class="featured-section" id="featured-creators" style="display: none;">
+          <h2 class="section-title">⭐ Featured Creators</h2>
+          <p class="section-subtitle">Meet the amazing creators making JonahTube awesome!</p>
+
+          <div class="creators-grid" id="creators-grid">
+            <!-- Featured creators will be populated here -->
+          </div>
+
+          <div class="featured-cta">
+            <h3>Want to be featured?</h3>
+            <p>Create amazing content and you could be next!</p>
+            <a href="signup.html" class="upload-button">Join JonahTube</a>
+          </div>
+        </div>
+
+        <!-- Trending Videos Section -->
+        <div class="trending-section" id="trending-section" style="display: none;">
+          <h2 class="section-title">🔥 Trending Now</h2>
+          <p class="section-subtitle">Check out what's hot on JonahTube!</p>
+
+          <div class="video-grid" id="trending-grid">
+            <!-- Trending videos will be populated here -->
+          </div>
+        </div>
+
+        <!-- Regular Content for Logged In Users -->
+        <div id="regular-content" style="display: none;">
+          <h2>Discover Amazing Content</h2>
+          <p>Join the community and explore incredible videos from creators around the world!</p>
+
+          <div class="video-grid" id="video-grid">
+            <!-- Videos will be dynamically loaded from localStorage -->
+          </div>
+        </div>
+
+        <!-- Empty State for New Visitors -->
         <div class="empty-state" id="empty-state">
           <div class="empty-icon">▶</div>
           <h3>Welcome to JonahTube!</h3>
