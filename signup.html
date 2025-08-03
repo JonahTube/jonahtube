@@ -1005,7 +1005,14 @@
               isValid = false;
               message = 'Only letters and spaces allowed';
             } else {
-              message = '✓ Looks good';
+              // Content moderation check for names
+              const moderationResult = window.ContentModeration.checkContent(value, 'general');
+              if (!moderationResult.isAppropriate) {
+                isValid = false;
+                message = '❌ Name not allowed: ' + moderationResult.issues.join(', ');
+              } else {
+                message = '✓ Looks good';
+              }
             }
             break;
 
