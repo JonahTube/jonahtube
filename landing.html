@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Welcome to JonahTube - Create Your Story</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #000000 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #e94560 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: white;
+    }
+
+    .floating-shapes {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .shape {
+      position: absolute;
+      background: linear-gradient(45deg, #ff0050, #ff4081, #00bcd4, #4caf50);
+      border-radius: 50%;
+      opacity: 0.1;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .shape:nth-child(1) {
+      width: 80px;
+      height: 80px;
+      top: 10%;
+      left: 10%;
+      animation-delay: 0s;
+    }
+
+    .shape:nth-child(2) {
+      width: 120px;
+      height: 120px;
+      top: 20%;
+      right: 10%;
+      animation-delay: 2s;
+    }
+
+    .shape:nth-child(3) {
+      width: 60px;
+      height: 60px;
+      bottom: 30%;
+      left: 20%;
+      animation-delay: 4s;
+    }
+
+    .shape:nth-child(4) {
+      width: 100px;
+      height: 100px;
+      bottom: 20%;
+      right: 20%;
+      animation-delay: 1s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+    }
+
+    .landing-container {
+      position: relative;
+      z-index: 2;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ff0050, #ff4081, #00bcd4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { filter: drop-shadow(0 0 5px rgba(255, 0, 80, 0.5)); }
+      to { filter: drop-shadow(0 0 20px rgba(255, 64, 129, 0.8)); }
+    }
+
+    .header-buttons {
+      display: flex;
+      gap: 16px;
+    }
+
+    .header-btn {
+      padding: 12px 24px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 25px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .header-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(255, 0, 80, 0.3);
+    }
+
+    .header-btn.primary {
+      background: linear-gradient(135deg, #ff0050, #ff4081);
+      border-color: transparent;
+    }
+
+    .header-btn.primary:hover {
+      background: linear-gradient(135deg, #ff1744, #ff6ec7);
+      box-shadow: 0 10px 30px rgba(255, 0, 80, 0.5);
+    }
+
+    .hero-section {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 40px;
+      text-align: center;
+    }
+
+    .hero-content {
+      max-width: 800px;
+      animation: fadeInUp 1s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50px;
+      padding: 8px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 30px;
+      animation: slideInDown 1s ease-out 0.5s both;
+    }
+
+    @keyframes slideInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-title {
+      font-size: clamp(36px, 6vw, 72px);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, #ffffff, #ff4081, #00bcd4, #4caf50);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: slideInLeft 1s ease-out 0.7s both;
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .hero-subtitle {
+      font-size: clamp(18px, 3vw, 24px);
+      font-weight: 400;
+      opacity: 0.9;
+      margin-bottom: 40px;
+      line-height: 1.6;
+      animation: slideInRight 1s ease-out 0.9s both;
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeInUp 1s ease-out 1.1s both;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 36px;
+      border-radius: 50px;
+      font-size: 18px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .cta-button:hover::before {
+      left: 100%;
+    }
+
+    .cta-primary {
+      background: linear-gradient(135deg, #ff0050, #ff4081, #e91e63);
+      color: white;
+      border: none;
+      box-shadow: 0 10px 30px rgba(255, 0, 80, 0.4);
+    }
+
+    .cta-primary:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 20px 40px rgba(255, 0, 80, 0.6);
+    }
+
+    .cta-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    .cta-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(255, 255, 255, 0.1);
+    }
+
+    .features-section {
+      padding: 80px 40px;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    .features-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .features-title {
+      text-align: center;
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 60px;
+      background: linear-gradient(135deg, #ffffff, #ff4081);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 40px;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.6s ease-out both;
+    }
+
+    .feature-card:nth-child(1) { animation-delay: 0.2s; }
+    .feature-card:nth-child(2) { animation-delay: 0.4s; }
+    .feature-card:nth-child(3) { animation-delay: 0.6s; }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 64, 129, 0.3);
+      box-shadow: 0 20px 40px rgba(255, 0, 80, 0.2);
+    }
+
+    .feature-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #ff0050, #00bcd4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .feature-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: white;
+    }
+
+    .feature-description {
+      font-size: 16px;
+      opacity: 0.8;
+      line-height: 1.6;
+    }
+
+    .psalm-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #000000, #1a1a2e, #e94560);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .psalm-content {
+      text-align: center;
+      max-width: 600px;
+      padding: 40px;
+      animation: psalmAnimation 3s ease-in-out;
+    }
+
+    @keyframes psalmAnimation {
+      0% {
+        opacity: 0;
+        transform: scale(0.8) translateY(20px);
+      }
+      20% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+      80% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.1) translateY(-20px);
+      }
+    }
+
+    .psalm-text {
+      font-size: 24px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: white;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+
+    .psalm-verse {
+      font-size: 16px;
+      opacity: 0.8;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 16px 20px;
+      }
+
+      .header-buttons {
+        gap: 8px;
+      }
+
+      .header-btn {
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+
+      .hero-section {
+        padding: 40px 20px;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .cta-button {
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+      }
+
+      .features-section {
+        padding: 60px 20px;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .psalm-content {
+        padding: 20px;
+      }
+
+      .psalm-text {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="floating-shapes">
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+  </div>
+
+  <div class="landing-container">
+    <header class="header">
+      <div class="logo">JonahTube</div>
+      <div class="header-buttons">
+        <a href="login.html" class="header-btn">Sign In</a>
+        <a href="signup.html" class="header-btn primary">Join Now</a>
+      </div>
+    </header>
+
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="hero-badge">✨ The Future of Creative Expression</div>
+        <h1 class="hero-title">Create Your Story.<br>Share Your World.</h1>
+        <p class="hero-subtitle">
+          Join millions of creators sharing their passion, creativity, and authentic stories. 
+          Build your community and inspire the world with JonahTube.
+        </p>
+        <div class="hero-buttons">
+          <button class="cta-button cta-primary" id="get-started-btn">
+            <span>🚀</span>
+            <span>Get Started</span>
+          </button>
+          <a href="#features" class="cta-button cta-secondary">
+            <span>📱</span>
+            <span>Learn More</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="features-section" id="features">
+      <div class="features-container">
+        <h2 class="features-title">Why Choose JonahTube?</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🎬</div>
+            <h3 class="feature-title">Create Amazing Content</h3>
+            <p class="feature-description">
+              Upload videos, record content, and share your creativity with powerful tools designed for creators.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🌟</div>
+            <h3 class="feature-title">Build Your Community</h3>
+            <p class="feature-description">
+              Connect with like-minded creators and build a loyal following that supports your creative journey.
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📈</div>
+            <h3 class="feature-title">Grow Your Influence</h3>
+            <p class="feature-description">
+              Track your performance with detailed analytics and grow your reach across the platform.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Psalm Overlay -->
+  <div class="psalm-overlay" id="psalm-overlay">
+    <div class="psalm-content">
+      <p class="psalm-text" id="psalm-text"></p>
+      <p class="psalm-verse" id="psalm-verse"></p>
+    </div>
+  </div>
+
+  <script>
+    class LandingPageManager {
+      constructor() {
+        this.psalms = [
+          {
+            text: "The Lord is my shepherd; I shall not want. He makes me lie down in green pastures. He leads me beside still waters.",
+            verse: "Psalm 23:1-2"
+          },
+          {
+            text: "Trust in the Lord with all your heart, and do not lean on your own understanding. In all your ways acknowledge him, and he will make straight your paths.",
+            verse: "Proverbs 3:5-6"
+          },
+          {
+            text: "For I know the plans I have for you, declares the Lord, plans for welfare and not for evil, to give you a future and a hope.",
+            verse: "Jeremiah 29:11"
+          },
+          {
+            text: "Be strong and courageous. Do not fear or be in dread of them, for it is the Lord your God who goes with you.",
+            verse: "Deuteronomy 31:6"
+          },
+          {
+            text: "The Lord your God is with you, the Mighty Warrior who saves. He will take great delight in you; in his love he will no longer rebuke you, but will rejoice over you with singing.",
+            verse: "Zephaniah 3:17"
+          },
+          {
+            text: "And we know that in all things God works for the good of those who love him, who have been called according to his purpose.",
+            verse: "Romans 8:28"
+          },
+          {
+            text: "Cast all your anxiety on him because he cares for you.",
+            verse: "1 Peter 5:7"
+          },
+          {
+            text: "The Lord bless you and keep you; the Lord make his face shine on you and be gracious to you.",
+            verse: "Numbers 6:24-25"
+          }
+        ];
+        
+        this.init();
+      }
+
+      init() {
+        this.setupEventListeners();
+        this.animateOnLoad();
+        this.setupScrollAnimations();
+      }
+
+      setupEventListeners() {
+        const getStartedBtn = document.getElementById('get-started-btn');
+        getStartedBtn.addEventListener('click', () => {
+          this.showPsalmAndRedirect();
+        });
+
+        // Smooth scrolling for learn more button
+        const learnMoreBtn = document.querySelector('a[href="#features"]');
+        learnMoreBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          document.getElementById('features').scrollIntoView({
+            behavior: 'smooth'
+          });
+        });
+      }
+
+      animateOnLoad() {
+        // Add entrance animations with delays
+        const elements = document.querySelectorAll('.hero-content > *');
+        elements.forEach((element, index) => {
+          element.style.animationDelay = `${index * 0.2}s`;
+        });
+      }
+
+      setupScrollAnimations() {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.style.animationPlayState = 'running';
+            }
+          });
+        }, {
+          threshold: 0.1
+        });
+
+        document.querySelectorAll('.feature-card').forEach(card => {
+          observer.observe(card);
+        });
+      }
+
+      showPsalmAndRedirect() {
+        // Get a random psalm
+        const randomPsalm = this.psalms[Math.floor(Math.random() * this.psalms.length)];
+        
+        // Update psalm content
+        document.getElementById('psalm-text').textContent = randomPsalm.text;
+        document.getElementById('psalm-verse').textContent = randomPsalm.verse;
+        
+        // Show psalm overlay
+        const overlay = document.getElementById('psalm-overlay');
+        overlay.style.display = 'flex';
+        
+        // Hide after 3 seconds and redirect
+        setTimeout(() => {
+          overlay.style.opacity = '0';
+          setTimeout(() => {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            if (isLoggedIn) {
+              window.location.href = 'index.html';
+            } else {
+              window.location.href = 'signup.html';
+            }
+          }, 500);
+        }, 3000);
+      }
+
+      // Add sparkle effect on mouse move
+      addSparkleEffect() {
+        document.addEventListener('mousemove', (e) => {
+          if (Math.random() > 0.9) {
+            this.createSparkle(e.clientX, e.clientY);
+          }
+        });
+      }
+
+      createSparkle(x, y) {
+        const sparkle = document.createElement('div');
+        sparkle.style.cssText = `
+          position: fixed;
+          left: ${x}px;
+          top: ${y}px;
+          width: 4px;
+          height: 4px;
+          background: linear-gradient(45deg, #ff0050, #00bcd4);
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 1000;
+          animation: sparkleAnim 1s ease-out forwards;
+        `;
+        
+        document.body.appendChild(sparkle);
+        
+        setTimeout(() => sparkle.remove(), 1000);
+      }
+    }
+
+    // Add sparkle animation CSS
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes sparkleAnim {
+        0% {
+          opacity: 1;
+          transform: scale(0) rotate(0deg);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1) rotate(180deg);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(0) rotate(360deg);
+        }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Initialize landing page
+    document.addEventListener('DOMContentLoaded', () => {
+      const landingManager = new LandingPageManager();
+      landingManager.addSparkleEffect();
+    });
+  </script>
+</body>
+</html>
