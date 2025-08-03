@@ -3,151 +3,74 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Your Channel - JonahTube</title>
+  <title>Creator Studio - JonahTube</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    .channel-container {
-      margin-left: var(--sidebar-width);
-      background-color: var(--background-primary);
+    .studio-container {
+      background: var(--background-primary);
       min-height: calc(100vh - var(--header-height));
-      transition: margin-left 0.2s ease;
+      margin-top: var(--header-height);
     }
 
-    .channel-header {
-      background: linear-gradient(135deg, var(--focus-color), #4285f4);
+    .studio-header {
+      background: var(--primary-gradient);
       color: white;
-      padding: 0;
+      padding: 40px 32px;
       position: relative;
       overflow: hidden;
     }
 
-    .channel-cover {
-      height: 200px;
-      background: linear-gradient(135deg, rgba(6, 95, 212, 0.8), rgba(66, 133, 244, 0.8)), 
-                  url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
-      background-size: cover, 20px 20px;
-      display: flex;
-      align-items: flex-end;
-      padding: 24px;
-      position: relative;
+    .studio-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.05"><circle cx="30" cy="30" r="2"/></g></svg>');
+      opacity: 0.1;
     }
 
-    .channel-info {
-      display: flex;
-      align-items: flex-end;
-      gap: 24px;
-      width: 100%;
+    .studio-header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
       z-index: 2;
     }
 
-    .channel-avatar {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      background: var(--background-secondary);
-      border: 4px solid white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 48px;
-      color: var(--text-primary);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      position: relative;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-
-    .channel-avatar:hover {
-      transform: scale(1.05);
-    }
-
-    .avatar-upload {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      width: 32px;
-      height: 32px;
-      background: var(--focus-color);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 14px;
-      cursor: pointer;
-      border: 2px solid white;
-    }
-
-    .channel-details {
-      flex: 1;
-      color: white;
-    }
-
-    .channel-name {
-      font-size: 36px;
-      font-weight: 500;
+    .studio-title {
+      font-size: 32px;
+      font-weight: 700;
       margin-bottom: 8px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 16px;
     }
 
-    .channel-name.editing input {
-      background: rgba(255, 255, 255, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      border-radius: 8px;
-      padding: 8px 12px;
-      color: white;
-      font-size: 36px;
-      font-weight: 500;
-      width: 400px;
-    }
-
-    .channel-name.editing input::placeholder {
-      color: rgba(255, 255, 255, 0.7);
-    }
-
-    .edit-name-btn {
-      background: rgba(255, 255, 255, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: white;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .edit-name-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
-
-    .channel-handle {
-      font-size: 18px;
-      opacity: 0.9;
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .channel-stats {
-      display: flex;
-      gap: 24px;
+    .studio-subtitle {
       font-size: 16px;
       opacity: 0.9;
+      margin-bottom: 24px;
     }
 
-    .stat-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
+    .studio-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 24px;
+      max-width: 600px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .stat-value {
-      font-size: 24px;
-      font-weight: 600;
+      font-size: 28px;
+      font-weight: 700;
       margin-bottom: 4px;
     }
 
@@ -156,59 +79,33 @@
       opacity: 0.8;
     }
 
-    .channel-actions {
-      display: flex;
-      gap: 12px;
-      margin-top: 16px;
-    }
-
-    .action-btn {
-      background: rgba(255, 255, 255, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .action-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: translateY(-2px);
-    }
-
-    .action-btn.primary {
-      background: var(--success-color);
-      border-color: var(--success-color);
-    }
-
-    .action-btn.primary:hover {
-      background: #1a7f37;
-    }
-
-    .channel-navigation {
+    .studio-navigation {
       background: var(--background-secondary);
       border-bottom: 1px solid var(--border-color);
-      padding: 0 24px;
+      padding: 0 32px;
+      overflow-x: auto;
+    }
+
+    .studio-nav-content {
+      max-width: 1200px;
+      margin: 0 auto;
       display: flex;
       gap: 0;
     }
 
     .nav-tab {
-      padding: 16px 24px;
+      padding: 20px 24px;
       color: var(--text-secondary);
       text-decoration: none;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 500;
       border-bottom: 3px solid transparent;
-      transition: all 0.2s;
+      transition: all 0.3s ease;
       cursor: pointer;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .nav-tab:hover {
@@ -219,10 +116,13 @@
     .nav-tab.active {
       color: var(--focus-color);
       border-bottom-color: var(--focus-color);
+      background: var(--background-tertiary);
     }
 
-    .channel-content {
-      padding: 24px;
+    .studio-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px;
     }
 
     .content-section {
@@ -236,41 +136,110 @@
     .section-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
+      align-items: flex-start;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
     }
 
-    .section-title {
-      font-size: 20px;
-      font-weight: 500;
+    .section-info h2 {
+      font-size: 24px;
+      font-weight: 600;
       color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .section-info p {
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+
+    .section-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .analytics-card {
+      background: var(--background-secondary);
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+    }
+
+    .analytics-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .analytics-header {
+      display: flex;
+      justify-content: between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .analytics-title {
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .analytics-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .analytics-change {
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .analytics-change.positive {
+      color: var(--success-color);
+    }
+
+    .analytics-change.negative {
+      color: var(--danger-color);
     }
 
     .videos-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 20px;
+      gap: 24px;
     }
 
-    .video-item {
+    .studio-video-card {
       background: var(--background-secondary);
-      border-radius: 12px;
+      border-radius: 16px;
       overflow: hidden;
-      transition: all 0.2s;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
     }
 
-    .video-item:hover {
+    .studio-video-card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     }
 
     .video-thumbnail {
       position: relative;
       width: 100%;
       height: 180px;
-      background: var(--background-tertiary);
       overflow: hidden;
     }
 
@@ -280,28 +249,55 @@
       border: none;
     }
 
+    .video-status {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-public {
+      background: var(--success-color);
+      color: white;
+    }
+
+    .status-private {
+      background: var(--danger-color);
+      color: white;
+    }
+
+    .status-unlisted {
+      background: var(--warning-color);
+      color: white;
+    }
+
     .video-duration {
       position: absolute;
       bottom: 8px;
       right: 8px;
       background: rgba(0, 0, 0, 0.8);
       color: white;
-      padding: 2px 6px;
-      border-radius: 4px;
+      padding: 4px 8px;
+      border-radius: 6px;
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 600;
     }
 
     .video-info {
-      padding: 16px;
+      padding: 20px;
     }
 
     .video-title {
       font-size: 16px;
-      font-weight: 500;
+      font-weight: 600;
       color: var(--text-primary);
       margin-bottom: 8px;
-      line-height: 1.3;
+      line-height: 1.4;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
@@ -311,16 +307,38 @@
     .video-meta {
       color: var(--text-secondary);
       font-size: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
+      margin-bottom: 16px;
     }
 
     .video-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .video-stat {
+      text-align: center;
+      padding: 8px;
+      background: var(--background-tertiary);
+      border-radius: 8px;
+    }
+
+    .video-stat-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .video-stat-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .video-actions {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 8px;
     }
 
     .video-controls {
@@ -328,262 +346,170 @@
       gap: 8px;
     }
 
-    .control-icon {
-      padding: 6px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.2s;
+    .control-btn {
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--background-primary);
       color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 14px;
+      text-decoration: none;
     }
 
-    .control-icon:hover {
+    .control-btn:hover {
       background: var(--background-tertiary);
       color: var(--text-primary);
+      transform: translateY(-2px);
+    }
+
+    .control-btn.danger:hover {
+      background: var(--danger-color);
+      color: white;
+      border-color: var(--danger-color);
     }
 
     .empty-state {
       text-align: center;
-      padding: 60px 20px;
+      padding: 80px 20px;
       color: var(--text-secondary);
+      background: var(--background-secondary);
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
     }
 
     .empty-icon {
       font-size: 64px;
-      margin-bottom: 16px;
+      margin-bottom: 24px;
       opacity: 0.6;
     }
 
     .empty-title {
-      font-size: 20px;
+      font-size: 24px;
       color: var(--text-primary);
-      margin-bottom: 8px;
+      margin-bottom: 12px;
+      font-weight: 600;
     }
 
     .empty-description {
-      font-size: 14px;
-      margin-bottom: 24px;
-    }
-
-    .analytics-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
+      font-size: 16px;
       margin-bottom: 32px;
+      line-height: 1.6;
     }
 
-    .analytics-card {
-      background: var(--background-secondary);
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .analytics-title {
-      font-size: 14px;
-      color: var(--text-secondary);
-      margin-bottom: 8px;
-    }
-
-    .analytics-value {
-      font-size: 28px;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 4px;
-    }
-
-    .analytics-change {
-      font-size: 12px;
-      color: var(--success-color);
-    }
-
-    .analytics-change.negative {
-      color: var(--danger-color);
-    }
-
-    .customization-grid {
+    .profile-section {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 32px;
     }
 
-    .customization-section {
+    .profile-card {
       background: var(--background-secondary);
-      border-radius: 12px;
+      border-radius: 16px;
       padding: 24px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--border-color);
     }
 
-    .customization-title {
+    .profile-card h3 {
       font-size: 18px;
-      font-weight: 500;
+      font-weight: 600;
       color: var(--text-primary);
-      margin-bottom: 16px;
-    }
-
-    .form-group {
       margin-bottom: 20px;
     }
 
-    .form-label {
-      display: block;
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text-primary);
-      margin-bottom: 8px;
-    }
-
-    .form-input, .form-textarea, .form-select {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      font-size: 14px;
-      background: var(--background-primary);
-      color: var(--text-primary);
-      transition: border-color 0.2s;
-    }
-
-    .form-input:focus, .form-textarea:focus, .form-select:focus {
-      outline: none;
-      border-color: var(--focus-color);
-    }
-
-    .form-textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-
-    .color-picker {
-      display: flex;
-      gap: 12px;
-      margin-top: 8px;
-    }
-
-    .color-option {
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
-      cursor: pointer;
-      border: 3px solid transparent;
-      transition: all 0.2s;
-    }
-
-    .color-option.selected {
-      border-color: var(--focus-color);
-      transform: scale(1.1);
-    }
-
-    .save-btn {
-      background: var(--focus-color);
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    .save-btn:hover {
-      background: #0550c7;
-    }
-
-    .followers-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 16px;
-    }
-
-    .follower-card {
-      background: var(--background-secondary);
-      border-radius: 8px;
-      padding: 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .follower-avatar {
-      width: 40px;
-      height: 40px;
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
-      background: var(--background-tertiary);
+      background: var(--primary-gradient);
+      color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
+      font-size: 32px;
+      font-weight: 600;
+      margin: 0 auto 16px;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.3s ease;
     }
 
-    .follower-info {
-      flex: 1;
+    .profile-avatar:hover {
+      transform: scale(1.05);
     }
 
-    .follower-name {
+    .avatar-upload {
+      position: absolute;
+      bottom: -4px;
+      right: -4px;
+      width: 28px;
+      height: 28px;
+      background: var(--focus-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
       font-size: 14px;
-      font-weight: 500;
+      cursor: pointer;
+      border: 2px solid var(--background-secondary);
+    }
+
+    .back-to-home {
+      position: fixed;
+      top: 80px;
+      left: 24px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--background-secondary);
       color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 12px 20px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
-    .follower-since {
-      font-size: 12px;
-      color: var(--text-secondary);
+    .back-to-home:hover {
+      background: var(--background-tertiary);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
     }
 
-    @media (max-width: 1312px) {
-      .channel-container {
-        margin-left: var(--sidebar-collapsed-width);
-      }
-    }
-
-    @media (max-width: 792px) {
-      .channel-container {
-        margin-left: 0;
+    @media (max-width: 768px) {
+      .studio-header {
+        padding: 24px 16px;
       }
       
-      .channel-cover {
-        height: 150px;
-        padding: 16px;
+      .studio-navigation {
+        padding: 0 16px;
       }
       
-      .channel-info {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 16px;
+      .studio-content {
+        padding: 20px 16px;
       }
       
-      .channel-avatar {
-        width: 80px;
-        height: 80px;
-        font-size: 32px;
-      }
-      
-      .channel-name {
-        font-size: 24px;
-      }
-      
-      .customization-grid {
+      .profile-section {
         grid-template-columns: 1fr;
       }
       
-      .videos-grid {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
       }
-    }
-
-    .badge {
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 500;
-    }
-
-    .verification-badge {
-      color: #4CAF50;
-      font-size: 18px;
+      
+      .back-to-home {
+        position: relative;
+        top: 0;
+        left: 0;
+        margin: 16px;
+        display: inline-flex;
+      }
     }
   </style>
 </head>
@@ -591,235 +517,343 @@
   <header class="top-bar">
     <div class="logo" onclick="window.location.href='index.html'">JonahTube</div>
     <div class="search-container">
-      <input type="text" placeholder="Search..." class="search-bar" />
-      <div class="search-button">🔍</div>
+      <input type="text" placeholder="Search..." class="search-bar" id="search-input" />
+      <div class="search-button" id="search-button">⌕</div>
+      <div class="search-suggestions" id="search-suggestions"></div>
     </div>
     <div class="top-buttons">
-      <button class="theme-toggle" id="theme-toggle">🌙</button>
-      <a href="add-video.html" class="icon-button has-label">
-        <span class="button-icon">➕</span>
+      <a href="add-video.html" class="icon-button primary">
+        <span class="button-icon">+</span>
         <span class="button-label">Create</span>
       </a>
       <div id="notification-bell" class="icon-button">
-        <span class="button-icon">🔔</span>
+        <span class="button-icon">⚈</span>
         <span class="button-label">Notifications</span>
         <span id="notif-dot" class="notif-dot"></span>
       </div>
-      <a href="account.html" class="icon-button active">
+      <div class="icon-button" id="user-menu">
         <span class="button-icon">👤</span>
-        <span class="button-label">Profile</span>
-      </a>
+        <span class="button-label" id="user-name">Profile</span>
+      </div>
     </div>
   </header>
 
-  <div class="main-content">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-section">
-        <a href="index.html">🏠 Home</a>
-        <a href="shorts.html">🎬 Shorts</a>
-        <a href="#" id="subscriptions-link">📺 Subscriptions</a>
-      </div>
-      <div class="sidebar-section">
-        <a href="#">🕓 History</a>
-        <a href="#" class="active">📤 Your Channel</a>
-        <a href="#">👍 Liked Videos</a>
-        <a href="gamezone.html">🎮 GameZone</a>
-        <a href="my-story.html">📖 My Story</a>
-      </div>
-      <div class="sidebar-section">
-        <a href="#">⚙️ Settings</a>
-        <a href="guidelines.html">📋 Guidelines</a>
-      </div>
-    </aside>
+  <a href="index.html" class="back-to-home">
+    <span>←</span>
+    <span>Back to Home</span>
+  </a>
 
-    <!-- Channel Container -->
-    <main class="channel-container">
-      <!-- Channel Header -->
-      <div class="channel-header">
-        <div class="channel-cover">
-          <div class="channel-info">
-            <div class="channel-avatar" id="channel-avatar">
-              👤
-              <div class="avatar-upload" title="Change avatar">📷</div>
+  <div class="studio-container">
+    <!-- Studio Header -->
+    <div class="studio-header">
+      <div class="studio-header-content">
+        <h1 class="studio-title">
+          <span>⚡</span>
+          Creator Studio
+        </h1>
+        <p class="studio-subtitle">Manage your channel, analyze performance, and grow your audience</p>
+        
+        <div class="studio-stats">
+          <div class="stat-card">
+            <div class="stat-value" id="total-videos">0</div>
+            <div class="stat-label">Total Videos</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="total-views">0</div>
+            <div class="stat-label">Total Views</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="total-subscribers">0</div>
+            <div class="stat-label">Subscribers</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="total-likes">0</div>
+            <div class="stat-label">Total Likes</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Studio Navigation -->
+    <nav class="studio-navigation">
+      <div class="studio-nav-content">
+        <div class="nav-tab active" data-tab="dashboard">
+          <span>📊</span>
+          <span>Dashboard</span>
+        </div>
+        <div class="nav-tab" data-tab="videos">
+          <span>▶</span>
+          <span>Videos</span>
+        </div>
+        <div class="nav-tab" data-tab="analytics">
+          <span>📈</span>
+          <span>Analytics</span>
+        </div>
+        <div class="nav-tab" data-tab="profile">
+          <span>👤</span>
+          <span>Channel</span>
+        </div>
+        <div class="nav-tab" data-tab="settings">
+          <span>⚙</span>
+          <span>Settings</span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Studio Content -->
+    <div class="studio-content">
+      <!-- Dashboard Section -->
+      <div class="content-section active" id="dashboard-section">
+        <div class="section-header">
+          <div class="section-info">
+            <h2>Dashboard Overview</h2>
+            <p>Get insights into your channel's performance and recent activity</p>
+          </div>
+          <div class="section-actions">
+            <a href="add-video.html" class="btn btn-primary">+ Upload Video</a>
+          </div>
+        </div>
+
+        <div class="analytics-grid">
+          <div class="analytics-card">
+            <div class="analytics-header">
+              <div class="analytics-title">Views (Last 30 Days)</div>
             </div>
-            <div class="channel-details">
-              <div class="channel-name" id="channel-name-display">
-                <span id="channel-name-text">Your Channel</span>
-                <span class="verification-badge" title="Verified">✓</span>
-                <button class="edit-name-btn" id="edit-name-btn">✏️ Edit</button>
-              </div>
-              <div class="channel-handle">@yourchannel</div>
-              <div class="channel-stats">
-                <div class="stat-item">
-                  <div class="stat-value" id="videos-count">0</div>
-                  <div class="stat-label">Videos</div>
-                </div>
-                <div class="stat-item">
-                  <div class="stat-value" id="followers-count">0</div>
-                  <div class="stat-label">Followers</div>
-                </div>
-                <div class="stat-item">
-                  <div class="stat-value" id="total-views">0</div>
-                  <div class="stat-label">Total Views</div>
-                </div>
-              </div>
-              <div class="channel-actions">
-                <a href="add-video.html" class="action-btn primary">
-                  ➕ Upload Video
-                </a>
-                <button class="action-btn" id="customize-btn">
-                  🎨 Customize Channel
-                </button>
-                <button class="action-btn" id="share-channel-btn">
-                  📤 Share Channel
-                </button>
-              </div>
+            <div class="analytics-value" id="recent-views">0</div>
+            <div class="analytics-change positive">
+              <span>↗</span>
+              <span>+0% from last month</span>
+            </div>
+          </div>
+
+          <div class="analytics-card">
+            <div class="analytics-header">
+              <div class="analytics-title">New Subscribers</div>
+            </div>
+            <div class="analytics-value" id="new-subscribers">0</div>
+            <div class="analytics-change positive">
+              <span>↗</span>
+              <span>+0% from last month</span>
+            </div>
+          </div>
+
+          <div class="analytics-card">
+            <div class="analytics-header">
+              <div class="analytics-title">Engagement Rate</div>
+            </div>
+            <div class="analytics-value">0%</div>
+            <div class="analytics-change positive">
+              <span>↗</span>
+              <span>+0% from last month</span>
+            </div>
+          </div>
+
+          <div class="analytics-card">
+            <div class="analytics-header">
+              <div class="analytics-title">Revenue</div>
+            </div>
+            <div class="analytics-value">$0</div>
+            <div class="analytics-change positive">
+              <span>↗</span>
+              <span>+0% from last month</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Channel Navigation -->
-      <nav class="channel-navigation">
-        <div class="nav-tab active" data-tab="videos">📹 Videos</div>
-        <div class="nav-tab" data-tab="analytics">📊 Analytics</div>
-        <div class="nav-tab" data-tab="customize">🎨 Customize</div>
-        <div class="nav-tab" data-tab="followers">👥 Followers</div>
-      </nav>
+      <!-- Videos Section -->
+      <div class="content-section" id="videos-section">
+        <div class="section-header">
+          <div class="section-info">
+            <h2>Your Videos</h2>
+            <p>Manage and analyze your video content</p>
+          </div>
+          <div class="section-actions">
+            <a href="add-video.html" class="btn btn-primary">+ Upload Video</a>
+            <button class="btn btn-secondary">Bulk Actions</button>
+          </div>
+        </div>
+        
+        <div class="videos-grid" id="user-videos-grid">
+          <!-- Videos will be loaded here -->
+        </div>
+        
+        <div class="empty-state" id="videos-empty" style="display: none;">
+          <div class="empty-icon">▶</div>
+          <div class="empty-title">No videos uploaded yet</div>
+          <div class="empty-description">Start creating content and share your passion with the world!</div>
+          <a href="add-video.html" class="btn btn-primary">Upload Your First Video</a>
+        </div>
+      </div>
 
-      <!-- Channel Content -->
-      <div class="channel-content">
-        <!-- Videos Section -->
-        <div class="content-section active" id="videos-section">
-          <div class="section-header">
-            <h2 class="section-title">Your Videos</h2>
-            <a href="add-video.html" class="action-btn primary">➕ Upload New</a>
+      <!-- Analytics Section -->
+      <div class="content-section" id="analytics-section">
+        <div class="section-header">
+          <div class="section-info">
+            <h2>Channel Analytics</h2>
+            <p>Deep dive into your channel's performance metrics</p>
           </div>
-          <div class="videos-grid" id="user-videos-grid">
-            <!-- Videos will be loaded here -->
-          </div>
-          <div class="empty-state" id="videos-empty" style="display: none;">
-            <div class="empty-icon">📹</div>
-            <div class="empty-title">No videos yet</div>
-            <div class="empty-description">Upload your first video to get started!</div>
-            <a href="add-video.html" class="action-btn primary">📤 Upload Your First Video</a>
+          <div class="section-actions">
+            <button class="btn btn-secondary">Export Data</button>
           </div>
         </div>
 
-        <!-- Analytics Section -->
-        <div class="content-section" id="analytics-section">
-          <div class="section-header">
-            <h2 class="section-title">Channel Analytics</h2>
-            <div class="badge">Last 30 days</div>
+        <div class="analytics-grid">
+          <div class="analytics-card">
+            <div class="analytics-title">Total Watch Time</div>
+            <div class="analytics-value">0h</div>
+            <div class="analytics-change positive">
+              <span>↗</span>
+              <span>+0% from last month</span>
+            </div>
           </div>
-          <div class="analytics-grid">
-            <div class="analytics-card">
-              <div class="analytics-title">Total Views</div>
-              <div class="analytics-value" id="analytics-views">0</div>
-              <div class="analytics-change">+0% from last month</div>
+
+          <div class="analytics-card">
+            <div class="analytics-title">Average View Duration</div>
+            <div class="analytics-value">0:00</div>
+            <div class="analytics-change positive">
+              <span>↗</span>
+              <span>+0% from last month</span>
             </div>
-            <div class="analytics-card">
-              <div class="analytics-title">New Followers</div>
-              <div class="analytics-value" id="analytics-followers">0</div>
-              <div class="analytics-change">+0% from last month</div>
+          </div>
+
+          <div class="analytics-card">
+            <div class="analytics-title">Top Traffic Source</div>
+            <div class="analytics-value">Direct</div>
+            <div class="analytics-change">
+              <span>—</span>
+              <span>No change</span>
             </div>
-            <div class="analytics-card">
-              <div class="analytics-title">Total Likes</div>
-              <div class="analytics-value" id="analytics-likes">0</div>
-              <div class="analytics-change">+0% from last month</div>
-            </div>
-            <div class="analytics-card">
-              <div class="analytics-title">Comments</div>
-              <div class="analytics-value" id="analytics-comments">0</div>
-              <div class="analytics-change">+0% from last month</div>
+          </div>
+
+          <div class="analytics-card">
+            <div class="analytics-title">Demographics</div>
+            <div class="analytics-value">Mixed</div>
+            <div class="analytics-change">
+              <span>ℹ</span>
+              <span>Global audience</span>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Customize Section -->
-        <div class="content-section" id="customize-section">
-          <div class="section-header">
-            <h2 class="section-title">Customize Your Channel</h2>
+      <!-- Profile Section -->
+      <div class="content-section" id="profile-section">
+        <div class="section-header">
+          <div class="section-info">
+            <h2>Channel Settings</h2>
+            <p>Customize your channel appearance and information</p>
           </div>
-          <div class="customization-grid">
-            <div class="customization-section">
-              <h3 class="customization-title">Channel Information</h3>
-              <div class="form-group">
-                <label class="form-label">Channel Name</label>
-                <input type="text" class="form-input" id="channel-name-input" placeholder="Enter channel name">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Channel Handle</label>
-                <input type="text" class="form-input" id="channel-handle-input" placeholder="@yourchannel">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Description</label>
-                <textarea class="form-textarea" id="channel-description" placeholder="Tell people about your channel"></textarea>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Channel Category</label>
-                <select class="form-select" id="channel-category">
-                  <option value="">Select category</option>
-                  <option value="gaming">🎮 Gaming</option>
-                  <option value="sports">⚽ Sports</option>
-                  <option value="music">🎵 Music</option>
-                  <option value="education">📚 Education</option>
-                  <option value="entertainment">🎭 Entertainment</option>
-                  <option value="lifestyle">✨ Lifestyle</option>
-                  <option value="tech">💻 Technology</option>
-                  <option value="other">📂 Other</option>
-                </select>
-              </div>
+          <div class="section-actions">
+            <button class="btn btn-primary" id="save-profile">Save Changes</button>
+          </div>
+        </div>
+
+        <div class="profile-section">
+          <div class="profile-card">
+            <h3>Channel Profile</h3>
+            <div class="profile-avatar" id="profile-avatar">
+              A
+              <div class="avatar-upload">📷</div>
             </div>
             
-            <div class="customization-section">
-              <h3 class="customization-title">Channel Appearance</h3>
-              <div class="form-group">
-                <label class="form-label">Channel Theme</label>
-                <div class="color-picker">
-                  <div class="color-option" style="background: #065fd4;" data-color="#065fd4"></div>
-                  <div class="color-option" style="background: #ff0000;" data-color="#ff0000"></div>
-                  <div class="color-option" style="background: #00ff00;" data-color="#00ff00"></div>
-                  <div class="color-option" style="background: #ff6600;" data-color="#ff6600"></div>
-                  <div class="color-option" style="background: #9c27b0;" data-color="#9c27b0"></div>
-                  <div class="color-option" style="background: #795548;" data-color="#795548"></div>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Channel Banner</label>
-                <input type="file" class="form-input" accept="image/*" id="banner-upload">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Profile Picture</label>
-                <input type="file" class="form-input" accept="image/*" id="avatar-upload">
-              </div>
-              <button class="save-btn" id="save-customization">💾 Save Changes</button>
+            <div class="form-group">
+              <label class="form-label">Channel Name</label>
+              <input type="text" class="form-input" id="channel-name-input" placeholder="Enter your channel name">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Channel Handle</label>
+              <input type="text" class="form-input" id="channel-handle-input" placeholder="@yourchannel">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Channel Description</label>
+              <textarea class="form-textarea" id="channel-description" placeholder="Tell viewers about your channel"></textarea>
+            </div>
+          </div>
+
+          <div class="profile-card">
+            <h3>Channel Branding</h3>
+            
+            <div class="form-group">
+              <label class="form-label">Channel Category</label>
+              <select class="form-select" id="channel-category">
+                <option value="">Select a category</option>
+                <option value="gaming">🎮 Gaming</option>
+                <option value="sports">⚽ Sports</option>
+                <option value="music">🎵 Music</option>
+                <option value="education">📚 Education</option>
+                <option value="entertainment">🎭 Entertainment</option>
+                <option value="lifestyle">✨ Lifestyle</option>
+                <option value="tech">💻 Technology</option>
+                <option value="other">📂 Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Channel Keywords</label>
+              <input type="text" class="form-input" id="channel-keywords" placeholder="gaming, entertainment, fun">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Social Links</label>
+              <input type="url" class="form-input" id="social-link" placeholder="https://twitter.com/yourchannel" style="margin-bottom: 8px;">
+              <input type="url" class="form-input" id="website-link" placeholder="https://yourwebsite.com">
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Followers Section -->
-        <div class="content-section" id="followers-section">
-          <div class="section-header">
-            <h2 class="section-title">Your Followers</h2>
+      <!-- Settings Section -->
+      <div class="content-section" id="settings-section">
+        <div class="section-header">
+          <div class="section-info">
+            <h2>Account Settings</h2>
+            <p>Manage your account preferences and privacy settings</p>
           </div>
-          <div class="followers-list" id="followers-list">
-            <!-- Followers will be loaded here -->
+        </div>
+
+        <div class="profile-section">
+          <div class="profile-card">
+            <h3>Appearance</h3>
+            
+            <div class="form-group">
+              <label class="form-label">Theme</label>
+              <div class="theme-options" style="display: flex; gap: 12px; margin-top: 8px;">
+                <button class="btn btn-secondary theme-btn active" data-theme="light">☀ Light Mode</button>
+                <button class="btn btn-secondary theme-btn" data-theme="dark">🌙 Dark Mode</button>
+              </div>
+            </div>
           </div>
-          <div class="empty-state" id="followers-empty">
-            <div class="empty-icon">👥</div>
-            <div class="empty-title">No followers yet</div>
-            <div class="empty-description">Share your channel to get your first followers!</div>
-            <button class="action-btn primary" id="share-channel-btn-2">📤 Share Channel</button>
+
+          <div class="profile-card">
+            <h3>Privacy & Security</h3>
+            
+            <div class="form-group">
+              <label class="form-label">Default Video Visibility</label>
+              <select class="form-select" id="default-visibility">
+                <option value="public">🌍 Public</option>
+                <option value="unlisted">🔗 Unlisted</option>
+                <option value="private">🔒 Private</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Account Actions</label>
+              <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
+                <button class="btn btn-warning">Change Password</button>
+                <button class="btn btn-danger" id="logout-btn">Sign Out</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </main>
+    </div>
   </div>
 
   <script>
-    class ChannelManager {
+    class StudioManager {
       constructor() {
         this.currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
         this.channelData = JSON.parse(localStorage.getItem('channelData') || '{}');
@@ -829,103 +863,158 @@
       }
 
       init() {
-        this.setupThemeToggle();
-        this.setupNotifications();
-        this.setupNavigation();
-        this.setupChannelInfo();
-        this.setupCustomization();
+        this.checkAuthentication();
+        this.setupEventListeners();
+        this.setupTheme();
+        this.setupSearch();
+        this.loadUserData();
         this.loadContent();
       }
 
-      setupThemeToggle() {
-        const themeToggle = document.getElementById('theme-toggle');
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        
-        if (currentTheme === 'dark') {
-          document.documentElement.setAttribute('data-theme', 'dark');
-          themeToggle.textContent = '☀️';
+      checkAuthentication() {
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        if (!isLoggedIn || !this.currentUser.id) {
+          window.location.href = 'login.html';
+          return;
         }
-
-        themeToggle.addEventListener('click', () => {
-          const current = document.documentElement.getAttribute('data-theme');
-          const newTheme = current === 'dark' ? 'light' : 'dark';
-          
-          document.documentElement.setAttribute('data-theme', newTheme);
-          localStorage.setItem('theme', newTheme);
-          themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
-        });
       }
 
-      setupNotifications() {
-        const notifBell = document.getElementById("notification-bell");
-        const notifDot = document.getElementById("notif-dot");
-        const hasRead = localStorage.getItem("readGuidelines");
-
-        if (hasRead === "true") {
-          notifDot.style.display = "none";
-        }
-
-        notifBell.addEventListener("click", () => {
-          window.location.href = "guidelines.html";
-        });
-      }
-
-      setupNavigation() {
+      setupEventListeners() {
+        // Navigation tabs
         document.querySelectorAll('.nav-tab').forEach(tab => {
           tab.addEventListener('click', () => {
             const tabName = tab.dataset.tab;
             this.switchTab(tabName);
           });
         });
-      }
 
-      setupChannelInfo() {
-        // Channel name editing
-        const editNameBtn = document.getElementById('edit-name-btn');
-        const channelNameDisplay = document.getElementById('channel-name-display');
-        const channelNameText = document.getElementById('channel-name-text');
-
-        editNameBtn.addEventListener('click', () => {
-          this.toggleNameEdit();
-        });
-
-        // Share channel
-        document.getElementById('share-channel-btn')?.addEventListener('click', () => {
-          this.shareChannel();
-        });
-        document.getElementById('share-channel-btn-2')?.addEventListener('click', () => {
-          this.shareChannel();
-        });
-
-        // Customize button
-        document.getElementById('customize-btn')?.addEventListener('click', () => {
-          this.switchTab('customize');
-        });
-      }
-
-      setupCustomization() {
-        // Color picker
-        document.querySelectorAll('.color-option').forEach(option => {
-          option.addEventListener('click', () => {
-            document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
-            option.classList.add('selected');
+        // Theme buttons
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const theme = btn.dataset.theme;
+            this.setTheme(theme);
           });
         });
 
-        // Save customization
-        document.getElementById('save-customization')?.addEventListener('click', () => {
-          this.saveCustomization();
+        // Profile save
+        document.getElementById('save-profile')?.addEventListener('click', () => {
+          this.saveProfile();
         });
 
-        // Avatar upload
-        document.getElementById('avatar-upload')?.addEventListener('change', (e) => {
-          this.handleAvatarUpload(e);
+        // Logout
+        document.getElementById('logout-btn')?.addEventListener('click', () => {
+          this.logout();
         });
 
-        // Banner upload
-        document.getElementById('banner-upload')?.addEventListener('change', (e) => {
-          this.handleBannerUpload(e);
+        // Notifications
+        document.getElementById('notification-bell')?.addEventListener('click', () => {
+          window.location.href = 'guidelines.html';
         });
+      }
+
+      setupTheme() {
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        
+        // Update theme buttons
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.theme === currentTheme);
+        });
+      }
+
+      setupSearch() {
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
+        const searchSuggestions = document.getElementById('search-suggestions');
+
+        const performSearch = () => {
+          const query = searchInput.value.trim();
+          if (query) {
+            this.searchVideos(query);
+          }
+        };
+
+        searchButton.addEventListener('click', performSearch);
+        searchInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            performSearch();
+          }
+        });
+
+        // Search suggestions
+        searchInput.addEventListener('input', () => {
+          const query = searchInput.value.trim();
+          if (query.length > 2) {
+            this.showSearchSuggestions(query);
+          } else {
+            searchSuggestions.style.display = 'none';
+          }
+        });
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('.search-container')) {
+            searchSuggestions.style.display = 'none';
+          }
+        });
+      }
+
+      searchVideos(query) {
+        // Redirect to home page with search query
+        window.location.href = `index.html?search=${encodeURIComponent(query)}`;
+      }
+
+      showSearchSuggestions(query) {
+        const videos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
+        const suggestions = videos
+          .filter(video => 
+            video.title.toLowerCase().includes(query.toLowerCase()) ||
+            video.channel.toLowerCase().includes(query.toLowerCase())
+          )
+          .slice(0, 5);
+
+        const suggestionsEl = document.getElementById('search-suggestions');
+        
+        if (suggestions.length === 0) {
+          suggestionsEl.style.display = 'none';
+          return;
+        }
+
+        suggestionsEl.innerHTML = suggestions
+          .map(video => `
+            <div class="search-suggestion" onclick="window.location.href='watch.html?v=${video.videoId}'">
+              ${video.title} - ${video.channel}
+            </div>
+          `).join('');
+
+        suggestionsEl.style.display = 'block';
+      }
+
+      loadUserData() {
+        // Update user name in header
+        const userNameEl = document.getElementById('user-name');
+        if (userNameEl && this.currentUser.displayName) {
+          userNameEl.textContent = this.currentUser.displayName.split(' ')[0];
+        }
+
+        // Load notification status
+        const hasRead = localStorage.getItem("readGuidelines");
+        const notifDot = document.getElementById("notif-dot");
+        if (hasRead === "true" && notifDot) {
+          notifDot.style.display = "none";
+        }
+      }
+
+      setTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        
+        // Update theme buttons
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.theme === theme);
+        });
+
+        this.showNotification(`Switched to ${theme} mode`, 'success');
       }
 
       switchTab(tabName) {
@@ -942,80 +1031,18 @@
         // Load specific content
         if (tabName === 'videos') {
           this.loadUserVideos();
-        } else if (tabName === 'analytics') {
-          this.loadAnalytics();
-        } else if (tabName === 'followers') {
-          this.loadFollowers();
-        }
-      }
-
-      toggleNameEdit() {
-        const channelNameDisplay = document.getElementById('channel-name-display');
-        const channelNameText = document.getElementById('channel-name-text');
-        const editBtn = document.getElementById('edit-name-btn');
-
-        if (channelNameDisplay.classList.contains('editing')) {
-          // Save the edit
-          const input = channelNameDisplay.querySelector('input');
-          const newName = input.value.trim();
-          if (newName) {
-            channelNameText.textContent = newName;
-            this.channelData.name = newName;
-            localStorage.setItem('channelData', JSON.stringify(this.channelData));
-          }
-          channelNameDisplay.classList.remove('editing');
-          editBtn.textContent = '✏️ Edit';
-        } else {
-          // Start editing
-          const currentName = channelNameText.textContent;
-          channelNameDisplay.classList.add('editing');
-          channelNameDisplay.innerHTML = `
-            <input type="text" value="${currentName}" placeholder="Enter channel name">
-            <span class="verification-badge" title="Verified">✓</span>
-            <button class="edit-name-btn" id="edit-name-btn">💾 Save</button>
-          `;
-          
-          // Re-attach event listener
-          document.getElementById('edit-name-btn').addEventListener('click', () => {
-            this.toggleNameEdit();
-          });
-          
-          const input = channelNameDisplay.querySelector('input');
-          input.focus();
-          input.select();
+        } else if (tabName === 'profile') {
+          this.loadProfileSettings();
         }
       }
 
       loadContent() {
+        this.loadDashboardStats();
         this.loadUserVideos();
-        this.loadChannelStats();
-        this.loadChannelInfo();
+        this.loadProfileSettings();
       }
 
-      loadChannelInfo() {
-        // Load saved channel data
-        const channelName = this.channelData.name || this.currentUser.displayName || 'Your Channel';
-        const channelHandle = this.channelData.handle || '@yourchannel';
-        
-        document.getElementById('channel-name-text').textContent = channelName;
-        document.querySelector('.channel-handle').textContent = channelHandle;
-        
-        // Load customization form
-        document.getElementById('channel-name-input').value = channelName;
-        document.getElementById('channel-handle-input').value = channelHandle;
-        document.getElementById('channel-description').value = this.channelData.description || '';
-        
-        if (this.channelData.category) {
-          document.getElementById('channel-category').value = this.channelData.category;
-        }
-        
-        // Load avatar
-        if (this.channelData.avatar) {
-          document.getElementById('channel-avatar').textContent = this.channelData.avatar;
-        }
-      }
-
-      loadChannelStats() {
+      loadDashboardStats() {
         const videos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
         const userVideos = videos.filter(video => 
           video.channel === (this.channelData.name || this.currentUser.displayName || 'Your Channel')
@@ -1026,11 +1053,18 @@
           return sum + views;
         }, 0);
         
-        const followers = this.userStats.followers || 0;
+        const totalLikes = userVideos.reduce((sum, video) => sum + (video.likes || 0), 0);
+        const subscribers = this.userStats.followers || 0;
         
-        document.getElementById('videos-count').textContent = userVideos.length;
-        document.getElementById('followers-count').textContent = followers;
+        // Update header stats
+        document.getElementById('total-videos').textContent = userVideos.length;
         document.getElementById('total-views').textContent = totalViews.toLocaleString();
+        document.getElementById('total-subscribers').textContent = subscribers.toLocaleString();
+        document.getElementById('total-likes').textContent = totalLikes.toLocaleString();
+        
+        // Update dashboard cards
+        document.getElementById('recent-views').textContent = totalViews.toLocaleString();
+        document.getElementById('new-subscribers').textContent = subscribers.toLocaleString();
       }
 
       loadUserVideos() {
@@ -1053,98 +1087,87 @@
         videosGrid.innerHTML = '';
         
         userVideos.forEach(video => {
-          const videoElement = this.createVideoElement(video);
+          const videoElement = this.createStudioVideoCard(video);
           videosGrid.appendChild(videoElement);
         });
       }
 
-      createVideoElement(video) {
-        const videoDiv = document.createElement('div');
-        videoDiv.className = 'video-item';
-        videoDiv.onclick = () => this.openVideo(video);
+      createStudioVideoCard(video) {
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'studio-video-card';
         
-        videoDiv.innerHTML = `
+        const statusClass = `status-${video.visibility || 'public'}`;
+        const views = parseInt(video.views.replace(/[^\d]/g, '')) || 0;
+        const likes = video.likes || 0;
+        const comments = video.comments?.length || 0;
+        
+        cardDiv.innerHTML = `
           <div class="video-thumbnail">
             <iframe src="https://www.youtube.com/embed/${video.videoId}" allowfullscreen></iframe>
+            <div class="video-status ${statusClass}">${video.visibility || 'Public'}</div>
             <div class="video-duration">${video.duration || '3:45'}</div>
           </div>
           <div class="video-info">
             <div class="video-title">${video.title}</div>
             <div class="video-meta">
-              <div>${video.views} • ${this.getTimeAgo(new Date(video.createdAt))}</div>
-              <div>👁️ ${video.visibility}</div>
+              Uploaded ${this.getTimeAgo(new Date(video.createdAt))} • ${video.category || 'General'}
             </div>
             <div class="video-stats">
-              <div>👍 ${video.likes || 0} | 👎 ${video.dislikes || 0}</div>
+              <div class="video-stat">
+                <div class="video-stat-value">${views.toLocaleString()}</div>
+                <div class="video-stat-label">Views</div>
+              </div>
+              <div class="video-stat">
+                <div class="video-stat-value">${likes}</div>
+                <div class="video-stat-label">Likes</div>
+              </div>
+              <div class="video-stat">
+                <div class="video-stat-value">${comments}</div>
+                <div class="video-stat-label">Comments</div>
+              </div>
+            </div>
+            <div class="video-actions">
               <div class="video-controls">
-                <span class="control-icon" title="Edit">✏️</span>
-                <span class="control-icon" title="Analytics">📊</span>
-                <span class="control-icon" title="Delete" onclick="event.stopPropagation(); this.deleteVideo('${video.id}')">🗑️</span>
+                <a href="watch.html?v=${video.videoId}" class="control-btn">👁 View</a>
+                <button class="control-btn" onclick="event.stopPropagation(); this.editVideo('${video.id}')">✎ Edit</button>
+                <button class="control-btn danger" onclick="event.stopPropagation(); this.deleteVideo('${video.id}')">✕ Delete</button>
               </div>
             </div>
           </div>
         `;
         
-        return videoDiv;
+        return cardDiv;
       }
 
-      loadAnalytics() {
-        const videos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
-        const userVideos = videos.filter(video => 
-          video.channel === (this.channelData.name || this.currentUser.displayName || 'Your Channel')
-        );
+      loadProfileSettings() {
+        // Load current channel data
+        const channelName = this.channelData.name || this.currentUser.displayName || 'Your Channel';
+        const channelHandle = this.channelData.handle || '@yourchannel';
         
-        const totalViews = userVideos.reduce((sum, video) => {
-          const views = parseInt(video.views.replace(/[^\d]/g, '')) || 0;
-          return sum + views;
-        }, 0);
+        document.getElementById('channel-name-input').value = channelName;
+        document.getElementById('channel-handle-input').value = channelHandle;
+        document.getElementById('channel-description').value = this.channelData.description || '';
         
-        const totalLikes = userVideos.reduce((sum, video) => sum + (video.likes || 0), 0);
-        const totalComments = userVideos.reduce((sum, video) => sum + (video.comments?.length || 0), 0);
-        
-        document.getElementById('analytics-views').textContent = totalViews.toLocaleString();
-        document.getElementById('analytics-followers').textContent = this.userStats.followers || 0;
-        document.getElementById('analytics-likes').textContent = totalLikes;
-        document.getElementById('analytics-comments').textContent = totalComments;
-      }
-
-      loadFollowers() {
-        const followersList = document.getElementById('followers-list');
-        const emptyState = document.getElementById('followers-empty');
-        
-        // Simulate some followers
-        const followers = this.userStats.followersList || [];
-        
-        if (followers.length === 0) {
-          followersList.style.display = 'none';
-          emptyState.style.display = 'block';
-          return;
+        if (this.channelData.category) {
+          document.getElementById('channel-category').value = this.channelData.category;
         }
         
-        followersList.style.display = 'grid';
-        emptyState.style.display = 'none';
-        followersList.innerHTML = '';
-        
-        followers.forEach(follower => {
-          const followerDiv = document.createElement('div');
-          followerDiv.className = 'follower-card';
-          followerDiv.innerHTML = `
-            <div class="follower-avatar">${follower.avatar || '👤'}</div>
-            <div class="follower-info">
-              <div class="follower-name">${follower.name}</div>
-              <div class="follower-since">Follower since ${follower.since}</div>
-            </div>
-          `;
-          followersList.appendChild(followerDiv);
-        });
+        // Update profile avatar
+        const avatar = this.channelData.avatar || this.currentUser.displayName?.charAt(0).toUpperCase() || 'A';
+        document.getElementById('profile-avatar').textContent = avatar;
       }
 
-      saveCustomization() {
-        const name = document.getElementById('channel-name-input').value;
-        const handle = document.getElementById('channel-handle-input').value;
-        const description = document.getElementById('channel-description').value;
+      saveProfile() {
+        const name = document.getElementById('channel-name-input').value.trim();
+        const handle = document.getElementById('channel-handle-input').value.trim();
+        const description = document.getElementById('channel-description').value.trim();
         const category = document.getElementById('channel-category').value;
-        const selectedColor = document.querySelector('.color-option.selected')?.dataset.color;
+        const keywords = document.getElementById('channel-keywords').value.trim();
+        
+        if (!name) {
+          this.showNotification('Channel name is required', 'error');
+          return;
+        }
         
         this.channelData = {
           ...this.channelData,
@@ -1152,72 +1175,33 @@
           handle,
           description,
           category,
-          themeColor: selectedColor
+          keywords
         };
         
         localStorage.setItem('channelData', JSON.stringify(this.channelData));
         
-        // Update display
-        document.getElementById('channel-name-text').textContent = name;
-        document.querySelector('.channel-handle').textContent = handle;
-        
-        this.showNotification('Channel updated successfully!', 'success');
-      }
-
-      handleAvatarUpload(event) {
-        const file = event.target.files[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            // For demo purposes, we'll use emojis instead of actual images
-            const avatars = ['👤', '😀', '🎮', '🎵', '⚽', '📚', '🎭', '💻', '🎨', '🚀'];
-            const randomAvatar = avatars[Math.floor(Math.random() * avatars.length)];
-            
-            document.getElementById('channel-avatar').textContent = randomAvatar;
-            this.channelData.avatar = randomAvatar;
-            localStorage.setItem('channelData', JSON.stringify(this.channelData));
-          };
-          reader.readAsDataURL(file);
-        }
-      }
-
-      handleBannerUpload(event) {
-        const file = event.target.files[0];
-        if (file) {
-          this.showNotification('Banner uploaded! (Demo mode)', 'success');
-        }
-      }
-
-      shareChannel() {
-        const channelUrl = `${window.location.origin}/channel/${this.channelData.handle || 'yourchannel'}`;
-        
-        if (navigator.share) {
-          navigator.share({
-            title: `${this.channelData.name || 'My Channel'} on JonahTube`,
-            text: 'Check out my channel on JonahTube!',
-            url: channelUrl
-          });
-        } else {
-          navigator.clipboard.writeText(channelUrl);
-          this.showNotification('Channel URL copied to clipboard!', 'success');
-        }
+        this.showNotification('Profile updated successfully!', 'success');
+        this.loadDashboardStats(); // Refresh stats
       }
 
       deleteVideo(videoId) {
-        if (confirm('Are you sure you want to delete this video?')) {
+        if (confirm('Are you sure you want to delete this video? This action cannot be undone.')) {
           const videos = JSON.parse(localStorage.getItem('jonahtube_videos') || '[]');
           const updatedVideos = videos.filter(v => v.id !== videoId);
           localStorage.setItem('jonahtube_videos', JSON.stringify(updatedVideos));
           
           this.loadUserVideos();
-          this.loadChannelStats();
-          this.showNotification('Video deleted successfully!', 'success');
+          this.loadDashboardStats();
+          this.showNotification('Video deleted successfully', 'success');
         }
       }
 
-      openVideo(video) {
-        const url = `watch.html?v=${video.videoId}&title=${encodeURIComponent(video.title)}&channel=${encodeURIComponent(video.channel)}&views=${encodeURIComponent(video.views)}&time=${encodeURIComponent(video.uploadTime)}&description=${encodeURIComponent(video.description || '')}&category=${encodeURIComponent(video.category || '')}`;
-        window.location.href = url;
+      logout() {
+        if (confirm('Are you sure you want to sign out?')) {
+          localStorage.removeItem('currentUser');
+          localStorage.removeItem('isLoggedIn');
+          window.location.href = 'login.html';
+        }
       }
 
       getTimeAgo(date) {
@@ -1258,9 +1242,9 @@
       }
     }
 
-    // Initialize the channel manager when DOM is loaded
+    // Initialize studio manager
     document.addEventListener('DOMContentLoaded', () => {
-      new ChannelManager();
+      new StudioManager();
     });
   </script>
 </body>
