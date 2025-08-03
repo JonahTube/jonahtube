@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Create Account - JonahTube</title>
+  <title>Join JonahTube - Create Your Story</title>
   <link rel="stylesheet" href="style.css" />
   <style>
     body {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      background: linear-gradient(135deg, #000000 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #e94560 100%);
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -17,13 +17,25 @@
 
     .auth-container {
       width: 100%;
-      max-width: 450px;
+      max-width: 480px;
       background: var(--background-secondary);
-      border-radius: 20px;
+      border-radius: 24px;
       padding: 40px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--primary-gradient);
     }
 
     .auth-header {
@@ -32,37 +44,85 @@
     }
 
     .auth-logo {
-      font-size: 32px;
-      font-weight: 700;
+      font-size: 36px;
+      font-weight: 900;
       background: var(--primary-gradient);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
+      filter: drop-shadow(0 0 10px rgba(255, 0, 80, 0.3));
     }
 
     .auth-title {
-      font-size: 24px;
-      font-weight: 600;
+      font-size: 28px;
+      font-weight: 800;
       color: var(--text-primary);
       margin-bottom: 8px;
     }
 
     .auth-subtitle {
       color: var(--text-secondary);
-      font-size: 14px;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .step-indicator {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .step {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--border-color);
+      transition: all 0.3s ease;
+    }
+
+    .step.active {
+      background: var(--primary-gradient);
+      transform: scale(1.2);
+      box-shadow: 0 0 20px rgba(255, 0, 80, 0.5);
+    }
+
+    .step.completed {
+      background: var(--success-color);
     }
 
     .auth-form {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 24px;
+    }
+
+    .form-step {
+      display: none;
+      animation: slideInRight 0.4s ease-out;
+    }
+
+    .form-step.active {
+      display: block;
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
 
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 16px;
     }
 
     .input-group {
@@ -71,52 +131,56 @@
 
     .form-input {
       width: 100%;
-      padding: 16px 20px;
+      padding: 18px 24px;
       border: 2px solid var(--border-color);
-      border-radius: 12px;
+      border-radius: 16px;
       font-size: 16px;
-      background: var(--background-primary);
+      background: var(--background-tertiary);
       color: var(--text-primary);
       transition: all 0.3s ease;
       box-sizing: border-box;
+      font-weight: 500;
     }
 
     .form-input:focus {
       border-color: var(--focus-color);
-      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+      background: var(--background-secondary);
+      box-shadow: 0 0 0 4px rgba(255, 0, 80, 0.1);
       outline: none;
+      transform: scale(1.02);
     }
 
     .form-input.error {
       border-color: var(--danger-color);
-      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+      box-shadow: 0 0 0 4px rgba(244, 67, 54, 0.1);
     }
 
     .form-input.success {
       border-color: var(--success-color);
-      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
+      box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
     }
 
     .form-input::placeholder {
       color: var(--text-tertiary);
+      font-weight: 400;
     }
 
     .input-icon {
       position: absolute;
-      left: 16px;
+      left: 18px;
       top: 50%;
       transform: translateY(-50%);
       color: var(--text-tertiary);
-      font-size: 18px;
+      font-size: 20px;
     }
 
     .form-input.with-icon {
-      padding-left: 50px;
+      padding-left: 54px;
     }
 
     .password-toggle {
       position: absolute;
-      right: 16px;
+      right: 18px;
       top: 50%;
       transform: translateY(-50%);
       background: none;
@@ -124,13 +188,21 @@
       color: var(--text-tertiary);
       cursor: pointer;
       font-size: 18px;
-      padding: 4px;
+      padding: 6px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .password-toggle:hover {
+      background: var(--hover-background);
+      color: var(--text-primary);
     }
 
     .field-validation {
-      font-size: 12px;
-      margin-top: 4px;
-      min-height: 16px;
+      font-size: 13px;
+      margin-top: 6px;
+      min-height: 18px;
+      font-weight: 500;
     }
 
     .field-validation.error {
@@ -142,13 +214,13 @@
     }
 
     .password-strength {
-      margin-top: 8px;
+      margin-top: 12px;
     }
 
     .strength-bar {
-      height: 4px;
+      height: 6px;
       background: var(--border-color);
-      border-radius: 2px;
+      border-radius: 3px;
       overflow: hidden;
       margin-bottom: 8px;
     }
@@ -156,7 +228,7 @@
     .strength-fill {
       height: 100%;
       transition: all 0.3s ease;
-      border-radius: 2px;
+      border-radius: 3px;
     }
 
     .strength-weak { background: var(--danger-color); width: 25%; }
@@ -165,21 +237,45 @@
     .strength-strong { background: var(--success-color); width: 100%; }
 
     .strength-text {
-      font-size: 12px;
+      font-size: 13px;
       color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .handle-preview {
+      margin-top: 8px;
+      padding: 12px 16px;
+      background: var(--background-tertiary);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .handle-preview.available {
+      border-color: var(--success-color);
+      background: rgba(76, 175, 80, 0.1);
+      color: var(--success-color);
+    }
+
+    .handle-preview.taken {
+      border-color: var(--danger-color);
+      background: rgba(244, 67, 54, 0.1);
+      color: var(--danger-color);
     }
 
     .checkbox-group {
       display: flex;
       align-items: flex-start;
-      gap: 12px;
+      gap: 16px;
       margin: 8px 0;
     }
 
     .custom-checkbox {
       position: relative;
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
       margin-top: 2px;
     }
 
@@ -192,16 +288,17 @@
       position: absolute;
       top: 0;
       left: 0;
-      height: 20px;
-      width: 20px;
-      background: var(--background-primary);
+      height: 24px;
+      width: 24px;
+      background: var(--background-tertiary);
       border: 2px solid var(--border-color);
-      border-radius: 4px;
+      border-radius: 6px;
       transition: all 0.3s ease;
     }
 
     .custom-checkbox:hover input ~ .checkmark {
       border-color: var(--focus-color);
+      background: rgba(255, 0, 80, 0.1);
     }
 
     .custom-checkbox input:checked ~ .checkmark {
@@ -213,12 +310,12 @@
       content: "";
       position: absolute;
       display: none;
-      left: 6px;
-      top: 2px;
+      left: 7px;
+      top: 3px;
       width: 6px;
-      height: 10px;
+      height: 12px;
       border: solid white;
-      border-width: 0 2px 2px 0;
+      border-width: 0 3px 3px 0;
       transform: rotate(45deg);
     }
 
@@ -229,34 +326,60 @@
     .checkbox-label {
       font-size: 14px;
       color: var(--text-secondary);
-      line-height: 1.4;
+      line-height: 1.5;
+      font-weight: 500;
     }
 
     .checkbox-label a {
       color: var(--focus-color);
       text-decoration: none;
+      font-weight: 600;
     }
 
     .checkbox-label a:hover {
       text-decoration: underline;
     }
 
+    .form-actions {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
     .auth-button {
       background: var(--primary-gradient);
       color: white;
       border: none;
-      padding: 16px 24px;
-      border-radius: 12px;
+      padding: 18px 32px;
+      border-radius: 16px;
       font-size: 16px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 8px 24px rgba(255, 0, 80, 0.4);
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .auth-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .auth-button:hover::before {
+      left: 100%;
     }
 
     .auth-button:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 36px rgba(255, 0, 80, 0.6);
     }
 
     .auth-button:disabled {
@@ -266,12 +389,26 @@
       box-shadow: none;
     }
 
+    .auth-button.secondary {
+      background: var(--background-tertiary);
+      color: var(--text-primary);
+      border: 2px solid var(--border-color);
+      box-shadow: none;
+    }
+
+    .auth-button.secondary:hover:not(:disabled) {
+      background: var(--hover-background);
+      border-color: var(--focus-color);
+      box-shadow: 0 8px 24px rgba(255, 0, 80, 0.2);
+    }
+
     .divider {
       display: flex;
       align-items: center;
       margin: 24px 0;
       color: var(--text-tertiary);
       font-size: 14px;
+      font-weight: 500;
     }
 
     .divider::before,
@@ -283,7 +420,7 @@
     }
 
     .divider span {
-      padding: 0 16px;
+      padding: 0 20px;
     }
 
     .social-buttons {
@@ -293,30 +430,30 @@
 
     .social-button {
       flex: 1;
-      padding: 12px;
+      padding: 16px;
       border: 2px solid var(--border-color);
-      border-radius: 12px;
-      background: var(--background-secondary);
+      border-radius: 16px;
+      background: var(--background-tertiary);
       color: var(--text-primary);
       text-decoration: none;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 600;
       transition: all 0.3s ease;
       cursor: pointer;
-      border: none;
     }
 
     .social-button:hover {
       border-color: var(--focus-color);
+      background: rgba(255, 0, 80, 0.1);
       transform: translateY(-2px);
     }
 
     .auth-footer {
       text-align: center;
-      margin-top: 24px;
+      margin-top: 32px;
       padding-top: 24px;
       border-top: 1px solid var(--border-color);
     }
@@ -325,12 +462,13 @@
       color: var(--text-secondary);
       font-size: 14px;
       margin-bottom: 12px;
+      font-weight: 500;
     }
 
     .auth-footer a {
       color: var(--focus-color);
       text-decoration: none;
-      font-weight: 500;
+      font-weight: 600;
     }
 
     .auth-footer a:hover {
@@ -339,17 +477,17 @@
 
     .back-to-home {
       position: absolute;
-      top: 20px;
-      left: 20px;
+      top: 24px;
+      left: 24px;
       display: flex;
       align-items: center;
       gap: 8px;
       color: white;
       text-decoration: none;
-      font-weight: 500;
+      font-weight: 600;
       padding: 12px 20px;
       background: rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
+      border-radius: 16px;
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.2);
       transition: all 0.3s ease;
@@ -360,32 +498,78 @@
       transform: translateY(-2px);
     }
 
-    .error-message {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid var(--danger-color);
-      color: var(--danger-color);
-      padding: 12px 16px;
-      border-radius: 8px;
+    .error-message, .success-message {
+      padding: 16px 20px;
+      border-radius: 12px;
       font-size: 14px;
-      margin-bottom: 16px;
+      font-weight: 500;
+      margin-bottom: 20px;
       display: none;
     }
 
+    .error-message {
+      background: rgba(244, 67, 54, 0.1);
+      border: 1px solid var(--danger-color);
+      color: var(--danger-color);
+    }
+
     .success-message {
-      background: rgba(34, 197, 94, 0.1);
+      background: rgba(76, 175, 80, 0.1);
       border: 1px solid var(--success-color);
       color: var(--success-color);
-      padding: 12px 16px;
-      border-radius: 8px;
+    }
+
+    .channel-preview {
+      background: var(--background-tertiary);
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 16px;
+      border: 1px solid var(--border-color);
+    }
+
+    .preview-title {
       font-size: 14px;
-      margin-bottom: 16px;
-      display: none;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+
+    .channel-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .channel-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--primary-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .channel-info h4 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .channel-info p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-weight: 500;
     }
 
     @media (max-width: 480px) {
       .auth-container {
-        padding: 30px 20px;
-        margin: 0 10px;
+        padding: 30px 24px;
+        margin: 0 12px;
       }
       
       .form-row {
@@ -399,143 +583,217 @@
         margin-bottom: 20px;
         display: inline-flex;
       }
+
+      .form-actions {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
 <body>
-  <a href="index.html" class="back-to-home">
+  <a href="landing.html" class="back-to-home">
     <span>←</span>
-    <span>Back to Home</span>
+    <span>Back</span>
   </a>
 
   <div class="auth-container">
     <div class="auth-header">
       <div class="auth-logo">JonahTube</div>
-      <h1 class="auth-title">Create Your Account</h1>
-      <p class="auth-subtitle">Join our creative community today</p>
+      <h1 class="auth-title">Join the Community</h1>
+      <p class="auth-subtitle">Create your account and start sharing your story</p>
+    </div>
+
+    <div class="step-indicator">
+      <div class="step active" id="step1"></div>
+      <div class="step" id="step2"></div>
+      <div class="step" id="step3"></div>
     </div>
 
     <div class="error-message" id="error-message"></div>
     <div class="success-message" id="success-message"></div>
 
     <form class="auth-form" id="signup-form">
-      <div class="form-row">
+      <!-- Step 1: Basic Information -->
+      <div class="form-step active" id="form-step-1">
+        <div class="form-row">
+          <div class="input-group">
+            <span class="input-icon">👤</span>
+            <input
+              type="text"
+              class="form-input with-icon"
+              placeholder="First name"
+              required
+              id="firstName"
+              autocomplete="given-name"
+            />
+            <div class="field-validation" id="firstName-validation"></div>
+          </div>
+
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-input"
+              placeholder="Last name"
+              required
+              id="lastName"
+              autocomplete="family-name"
+            />
+            <div class="field-validation" id="lastName-validation"></div>
+          </div>
+        </div>
+
         <div class="input-group">
-          <span class="input-icon">👤</span>
+          <span class="input-icon">@</span>
+          <input
+            type="email"
+            class="form-input with-icon"
+            placeholder="Email address"
+            required
+            id="email"
+            autocomplete="email"
+          />
+          <div class="field-validation" id="email-validation"></div>
+        </div>
+
+        <div class="input-group">
+          <span class="input-icon">🔒</span>
+          <input
+            type="password"
+            class="form-input with-icon"
+            placeholder="Create password"
+            required
+            id="password"
+            autocomplete="new-password"
+          />
+          <button type="button" class="password-toggle" id="password-toggle">👁️</button>
+          <div class="field-validation" id="password-validation"></div>
+          <div class="password-strength" id="password-strength" style="display: none;">
+            <div class="strength-bar">
+              <div class="strength-fill" id="strength-fill"></div>
+            </div>
+            <div class="strength-text" id="strength-text"></div>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <span class="input-icon">🔒</span>
+          <input
+            type="password"
+            class="form-input with-icon"
+            placeholder="Confirm password"
+            required
+            id="confirmPassword"
+            autocomplete="new-password"
+          />
+          <div class="field-validation" id="confirmPassword-validation"></div>
+        </div>
+      </div>
+
+      <!-- Step 2: Channel Setup -->
+      <div class="form-step" id="form-step-2">
+        <div class="input-group">
+          <span class="input-icon">📺</span>
           <input
             type="text"
             class="form-input with-icon"
-            placeholder="First name"
+            placeholder="Your channel name"
             required
-            id="firstName"
-            autocomplete="given-name"
+            id="channelName"
+            maxlength="30"
           />
-          <div class="field-validation" id="firstName-validation"></div>
+          <div class="field-validation" id="channelName-validation"></div>
         </div>
 
         <div class="input-group">
+          <span class="input-icon">@</span>
           <input
             type="text"
-            class="form-input"
-            placeholder="Last name"
+            class="form-input with-icon"
+            placeholder="Choose your handle"
             required
-            id="lastName"
-            autocomplete="family-name"
+            id="channelHandle"
+            maxlength="20"
           />
-          <div class="field-validation" id="lastName-validation"></div>
-        </div>
-      </div>
-
-      <div class="input-group">
-        <span class="input-icon">@</span>
-        <input
-          type="email"
-          class="form-input with-icon"
-          placeholder="Email address"
-          required
-          id="email"
-          autocomplete="email"
-        />
-        <div class="field-validation" id="email-validation"></div>
-      </div>
-
-      <div class="input-group">
-        <span class="input-icon">📺</span>
-        <input
-          type="text"
-          class="form-input with-icon"
-          placeholder="Channel name"
-          required
-          id="channelName"
-        />
-        <div class="field-validation" id="channelName-validation"></div>
-      </div>
-
-      <div class="input-group">
-        <span class="input-icon">🔒</span>
-        <input
-          type="password"
-          class="form-input with-icon"
-          placeholder="Password"
-          required
-          id="password"
-          autocomplete="new-password"
-        />
-        <button type="button" class="password-toggle" id="password-toggle">
-          ���️
-        </button>
-        <div class="field-validation" id="password-validation"></div>
-        <div class="password-strength" id="password-strength" style="display: none;">
-          <div class="strength-bar">
-            <div class="strength-fill" id="strength-fill"></div>
+          <div class="field-validation" id="handle-validation"></div>
+          <div class="handle-preview" id="handle-preview" style="display: none;">
+            Your channel URL: jonahtube.com/@<span id="handle-url"></span>
           </div>
-          <div class="strength-text" id="strength-text"></div>
+        </div>
+
+        <div class="input-group">
+          <textarea
+            class="form-input"
+            placeholder="Tell us about your channel (optional)"
+            id="channelDescription"
+            maxlength="150"
+            style="min-height: 80px; resize: vertical;"
+          ></textarea>
+          <div class="field-validation" id="description-validation">0 / 150</div>
+        </div>
+
+        <div class="channel-preview" id="channel-preview" style="display: none;">
+          <div class="preview-title">Channel Preview</div>
+          <div class="channel-card">
+            <div class="channel-avatar" id="preview-avatar">A</div>
+            <div class="channel-info">
+              <h4 id="preview-name">Your Channel</h4>
+              <p id="preview-handle">@yourhandle</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="input-group">
-        <span class="input-icon">🔒</span>
-        <input
-          type="password"
-          class="form-input with-icon"
-          placeholder="Confirm password"
-          required
-          id="confirmPassword"
-          autocomplete="new-password"
-        />
-        <div class="field-validation" id="confirmPassword-validation"></div>
+      <!-- Step 3: Terms and Privacy -->
+      <div class="form-step" id="form-step-3">
+        <div class="checkbox-group">
+          <label class="custom-checkbox">
+            <input type="checkbox" id="agreeTerms" required>
+            <span class="checkmark"></span>
+          </label>
+          <label class="checkbox-label" for="agreeTerms">
+            I agree to the <a href="guidelines.html">Terms of Service</a> and <a href="guidelines.html">Community Guidelines</a>
+          </label>
+        </div>
+
+        <div class="checkbox-group">
+          <label class="custom-checkbox">
+            <input type="checkbox" id="agreeMarketing">
+            <span class="checkmark"></span>
+          </label>
+          <label class="checkbox-label" for="agreeMarketing">
+            I'd like to receive updates about new features and tips for creators
+          </label>
+        </div>
+
+        <div class="checkbox-group">
+          <label class="custom-checkbox">
+            <input type="checkbox" id="ageConfirm" required>
+            <span class="checkmark"></span>
+          </label>
+          <label class="checkbox-label" for="ageConfirm">
+            I confirm that I am at least 13 years old
+          </label>
+        </div>
       </div>
 
-      <div class="checkbox-group">
-        <label class="custom-checkbox">
-          <input type="checkbox" id="agreeTerms" required>
-          <span class="checkmark"></span>
-        </label>
-        <label class="checkbox-label" for="agreeTerms">
-          I agree to the <a href="guidelines.html">Terms of Service</a> and <a href="guidelines.html">Community Guidelines</a>
-        </label>
+      <div class="form-actions">
+        <button type="button" class="auth-button secondary" id="prev-button" style="display: none;">
+          Previous
+        </button>
+        <button type="button" class="auth-button" id="next-button">
+          Next
+        </button>
+        <button type="submit" class="auth-button" id="create-account-button" style="display: none;" disabled>
+          Create Account
+        </button>
       </div>
-
-      <div class="checkbox-group">
-        <label class="custom-checkbox">
-          <input type="checkbox" id="agreeMarketing">
-          <span class="checkmark"></span>
-        </label>
-        <label class="checkbox-label" for="agreeMarketing">
-          I'd like to receive updates and promotional emails
-        </label>
-      </div>
-
-      <button type="submit" class="auth-button" id="signup-button" disabled>
-        Create Account
-      </button>
     </form>
 
-    <div class="divider">
+    <div class="divider" id="social-divider">
       <span>or sign up with</span>
     </div>
 
-    <div class="social-buttons">
+    <div class="social-buttons" id="social-buttons">
       <button class="social-button" id="google-signup">
         G Google
       </button>
@@ -551,13 +809,16 @@
   </div>
 
   <script>
-    class SignupManager {
+    class EnhancedSignupManager {
       constructor() {
+        this.currentStep = 1;
+        this.totalSteps = 3;
         this.validationRules = {
           firstName: { min: 2, pattern: /^[a-zA-Z\s]+$/ },
           lastName: { min: 2, pattern: /^[a-zA-Z\s]+$/ },
           email: { pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ },
           channelName: { min: 3, max: 30, pattern: /^[a-zA-Z0-9\s_-]+$/ },
+          channelHandle: { min: 3, max: 20, pattern: /^[a-zA-Z0-9_-]+$/ },
           password: { min: 8 }
         };
         
@@ -567,9 +828,14 @@
       init() {
         this.setupEventListeners();
         this.setupTheme();
+        this.updateStepDisplay();
       }
 
       setupEventListeners() {
+        // Navigation buttons
+        document.getElementById('next-button').addEventListener('click', () => this.nextStep());
+        document.getElementById('prev-button').addEventListener('click', () => this.prevStep());
+        
         // Form submission
         document.getElementById('signup-form').addEventListener('submit', (e) => {
           e.preventDefault();
@@ -577,15 +843,23 @@
         });
 
         // Real-time validation
-        ['firstName', 'lastName', 'email', 'channelName', 'password', 'confirmPassword'].forEach(fieldId => {
-          document.getElementById(fieldId).addEventListener('input', () => {
+        ['firstName', 'lastName', 'email', 'password', 'confirmPassword', 'channelName', 'channelHandle'].forEach(fieldId => {
+          const field = document.getElementById(fieldId);
+          field.addEventListener('input', () => {
             this.validateField(fieldId);
-            this.updateSubmitButton();
+            this.updateStepValidation();
+            this.updateChannelPreview();
           });
           
-          document.getElementById(fieldId).addEventListener('blur', () => {
+          field.addEventListener('blur', () => {
             this.validateField(fieldId);
           });
+        });
+
+        // Channel description counter
+        document.getElementById('channelDescription').addEventListener('input', () => {
+          this.updateDescriptionCounter();
+          this.updateChannelPreview();
         });
 
         // Password strength
@@ -598,9 +872,11 @@
           this.togglePassword();
         });
 
-        // Terms checkbox
-        document.getElementById('agreeTerms').addEventListener('change', () => {
-          this.updateSubmitButton();
+        // Terms checkboxes
+        ['agreeTerms', 'ageConfirm'].forEach(checkboxId => {
+          document.getElementById(checkboxId).addEventListener('change', () => {
+            this.updateStepValidation();
+          });
         });
 
         // Social signups
@@ -614,9 +890,96 @@
       }
 
       setupTheme() {
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        if (currentTheme === 'dark') {
-          document.documentElement.setAttribute('data-theme', 'dark');
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+      }
+
+      updateStepDisplay() {
+        // Update step indicators
+        for (let i = 1; i <= this.totalSteps; i++) {
+          const step = document.getElementById(`step${i}`);
+          const formStep = document.getElementById(`form-step-${i}`);
+          
+          if (i < this.currentStep) {
+            step.className = 'step completed';
+          } else if (i === this.currentStep) {
+            step.className = 'step active';
+          } else {
+            step.className = 'step';
+          }
+          
+          // Show/hide form steps
+          if (i === this.currentStep) {
+            formStep.classList.add('active');
+          } else {
+            formStep.classList.remove('active');
+          }
+        }
+
+        // Update navigation buttons
+        const prevBtn = document.getElementById('prev-button');
+        const nextBtn = document.getElementById('next-button');
+        const createBtn = document.getElementById('create-account-button');
+        const socialDivider = document.getElementById('social-divider');
+        const socialButtons = document.getElementById('social-buttons');
+
+        prevBtn.style.display = this.currentStep > 1 ? 'block' : 'none';
+        
+        if (this.currentStep === this.totalSteps) {
+          nextBtn.style.display = 'none';
+          createBtn.style.display = 'block';
+          socialDivider.style.display = 'none';
+          socialButtons.style.display = 'none';
+        } else {
+          nextBtn.style.display = 'block';
+          createBtn.style.display = 'none';
+          socialDivider.style.display = 'flex';
+          socialButtons.style.display = 'flex';
+        }
+
+        this.updateStepValidation();
+      }
+
+      nextStep() {
+        if (this.validateCurrentStep() && this.currentStep < this.totalSteps) {
+          this.currentStep++;
+          this.updateStepDisplay();
+        }
+      }
+
+      prevStep() {
+        if (this.currentStep > 1) {
+          this.currentStep--;
+          this.updateStepDisplay();
+        }
+      }
+
+      validateCurrentStep() {
+        switch (this.currentStep) {
+          case 1:
+            return ['firstName', 'lastName', 'email', 'password', 'confirmPassword']
+              .every(fieldId => this.validateField(fieldId));
+          case 2:
+            return ['channelName', 'channelHandle']
+              .every(fieldId => this.validateField(fieldId));
+          case 3:
+            return document.getElementById('agreeTerms').checked && 
+                   document.getElementById('ageConfirm').checked;
+          default:
+            return false;
+        }
+      }
+
+      updateStepValidation() {
+        const nextBtn = document.getElementById('next-button');
+        const createBtn = document.getElementById('create-account-button');
+        
+        const isValid = this.validateCurrentStep();
+        
+        if (this.currentStep === this.totalSteps) {
+          createBtn.disabled = !isValid;
+        } else {
+          nextBtn.disabled = !isValid;
         }
       }
 
@@ -681,6 +1044,27 @@
             }
             break;
 
+          case 'channelHandle':
+            if (!value) {
+              isValid = false;
+              message = 'Handle is required';
+            } else if (value.length < this.validationRules.channelHandle.min) {
+              isValid = false;
+              message = `Must be at least ${this.validationRules.channelHandle.min} characters`;
+            } else if (value.length > this.validationRules.channelHandle.max) {
+              isValid = false;
+              message = `Must be less than ${this.validationRules.channelHandle.max} characters`;
+            } else if (!this.validationRules.channelHandle.pattern.test(value)) {
+              isValid = false;
+              message = 'Only letters, numbers, hyphens and underscores allowed';
+            } else if (this.isHandleTaken(value)) {
+              isValid = false;
+              message = 'This handle is already taken';
+            } else {
+              message = '✓ Handle available';
+            }
+            break;
+
           case 'password':
             if (!value) {
               isValid = false;
@@ -717,10 +1101,59 @@
         field.classList.remove('error', 'success');
         field.classList.add(isValid ? 'success' : 'error');
         
-        validation.textContent = message;
-        validation.className = `field-validation ${isValid ? 'success' : 'error'}`;
+        if (validation) {
+          validation.textContent = message;
+          validation.className = `field-validation ${isValid ? 'success' : 'error'}`;
+        }
 
         return isValid;
+      }
+
+      updateChannelPreview() {
+        const channelName = document.getElementById('channelName').value.trim();
+        const channelHandle = document.getElementById('channelHandle').value.trim();
+        const firstName = document.getElementById('firstName').value.trim();
+        
+        const preview = document.getElementById('channel-preview');
+        const previewName = document.getElementById('preview-name');
+        const previewHandle = document.getElementById('preview-handle');
+        const previewAvatar = document.getElementById('preview-avatar');
+        const handlePreview = document.getElementById('handle-preview');
+        const handleUrl = document.getElementById('handle-url');
+
+        if (channelName && channelHandle) {
+          preview.style.display = 'block';
+          previewName.textContent = channelName;
+          previewHandle.textContent = `@${channelHandle}`;
+          previewAvatar.textContent = (channelName || firstName).charAt(0).toUpperCase();
+          
+          handlePreview.style.display = 'block';
+          handleUrl.textContent = channelHandle;
+          
+          // Update handle preview styling
+          if (this.isHandleTaken(channelHandle)) {
+            handlePreview.className = 'handle-preview taken';
+          } else {
+            handlePreview.className = 'handle-preview available';
+          }
+        } else {
+          preview.style.display = 'none';
+          handlePreview.style.display = 'none';
+        }
+      }
+
+      updateDescriptionCounter() {
+        const description = document.getElementById('channelDescription').value;
+        const validation = document.getElementById('description-validation');
+        validation.textContent = `${description.length} / 150`;
+        
+        if (description.length > 140) {
+          validation.className = 'field-validation error';
+        } else if (description.length > 120) {
+          validation.className = 'field-validation warning';
+        } else {
+          validation.className = 'field-validation';
+        }
       }
 
       updatePasswordStrength() {
@@ -788,19 +1221,6 @@
         }
       }
 
-      updateSubmitButton() {
-        const button = document.getElementById('signup-button');
-        const agreeTerms = document.getElementById('agreeTerms').checked;
-        
-        const fields = ['firstName', 'lastName', 'email', 'channelName', 'password', 'confirmPassword'];
-        const allValid = fields.every(fieldId => {
-          const field = document.getElementById(fieldId);
-          return field.classList.contains('success') && field.value.trim();
-        });
-
-        button.disabled = !(allValid && agreeTerms);
-      }
-
       isEmailTaken(email) {
         const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
         return users.some(user => user.email.toLowerCase() === email.toLowerCase());
@@ -808,18 +1228,20 @@
 
       isChannelNameTaken(channelName) {
         const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-        return users.some(user => user.channelName.toLowerCase() === channelName.toLowerCase());
+        return users.some(user => user.channelName?.toLowerCase() === channelName.toLowerCase());
+      }
+
+      isHandleTaken(handle) {
+        const users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+        return users.some(user => user.channelHandle?.toLowerCase() === handle.toLowerCase());
       }
 
       async handleSignup() {
-        const button = document.getElementById('signup-button');
+        const button = document.getElementById('create-account-button');
         
         // Final validation
-        const fields = ['firstName', 'lastName', 'email', 'channelName', 'password', 'confirmPassword'];
-        const allValid = fields.every(fieldId => this.validateField(fieldId));
-        
-        if (!allValid) {
-          this.showError('Please fix the errors in the form');
+        if (!this.validateCurrentStep()) {
+          this.showError('Please complete all required fields');
           return;
         }
 
@@ -837,8 +1259,10 @@
             firstName: document.getElementById('firstName').value.trim(),
             lastName: document.getElementById('lastName').value.trim(),
             email: document.getElementById('email').value.trim(),
-            channelName: document.getElementById('channelName').value.trim(),
             password: document.getElementById('password').value,
+            channelName: document.getElementById('channelName').value.trim(),
+            channelHandle: document.getElementById('channelHandle').value.trim(),
+            channelDescription: document.getElementById('channelDescription').value.trim(),
             agreeMarketing: document.getElementById('agreeMarketing').checked,
             createdAt: new Date().toISOString(),
             displayName: document.getElementById('firstName').value.trim() + ' ' + document.getElementById('lastName').value.trim()
@@ -855,6 +1279,7 @@
             email: userData.email,
             displayName: userData.displayName,
             channelName: userData.channelName,
+            channelHandle: userData.channelHandle,
             photoURL: null,
             loginTime: new Date().toISOString()
           };
@@ -865,18 +1290,18 @@
           // Save channel data
           const channelData = {
             name: userData.channelName,
-            handle: '@' + userData.channelName.toLowerCase().replace(/\s+/g, ''),
-            description: '',
+            handle: '@' + userData.channelHandle,
+            description: userData.channelDescription || '',
             category: '',
             avatar: userData.firstName.charAt(0).toUpperCase()
           };
           localStorage.setItem('channelData', JSON.stringify(channelData));
 
-          this.showSuccess('Account created successfully! Redirecting...');
+          this.showSuccess('Account created successfully! Welcome to JonahTube!');
 
-          // Redirect to home page
+          // Redirect to landing page to trigger psalm animation
           setTimeout(() => {
-            window.location.href = 'index.html';
+            window.location.href = 'landing.html';
           }, 1500);
 
         } catch (error) {
@@ -894,15 +1319,19 @@
           // Simulate social signup
           await new Promise(resolve => setTimeout(resolve, 1000));
 
+          // For social signup, we'll need to collect channel info separately
+          // For now, create with placeholder data
           const mockUser = {
             id: Date.now().toString(),
             email: `user@${provider}.com`,
             displayName: `${provider.charAt(0).toUpperCase() + provider.slice(1)} User`,
             channelName: `${provider}User${Date.now()}`,
+            channelHandle: `${provider}user${Date.now()}`,
             photoURL: null,
             provider: provider,
             createdAt: new Date().toISOString(),
-            loginTime: new Date().toISOString()
+            loginTime: new Date().toISOString(),
+            needsChannelSetup: true // Flag to require channel setup later
           };
 
           localStorage.setItem('currentUser', JSON.stringify(mockUser));
@@ -913,10 +1342,11 @@
           users.push(mockUser);
           localStorage.setItem('registeredUsers', JSON.stringify(users));
 
-          this.showSuccess(`Account created with ${provider}! Redirecting...`);
+          this.showSuccess(`Account created with ${provider}! Setting up your channel...`);
 
+          // Redirect to landing for psalm, then to channel setup
           setTimeout(() => {
-            window.location.href = 'index.html';
+            window.location.href = 'landing.html';
           }, 1000);
 
         } catch (error) {
@@ -955,7 +1385,7 @@
 
     // Initialize signup manager
     document.addEventListener('DOMContentLoaded', () => {
-      new SignupManager();
+      new EnhancedSignupManager();
     });
   </script>
 </body>
