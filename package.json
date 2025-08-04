@@ -1,0 +1,27 @@
+{
+  "name": "jonahtube",
+  "version": "1.0.0",
+  "description": "JonahTube - My YouTube Creator Website with Games, My Life Story, and More!",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 8000",
+    "start": "python -m http.server 8000"
+  },
+  "keywords": [
+    "youtube",
+    "video",
+    "creator",
+    "games",
+    "entertainment"
+  ],
+  "author": "Jonah",
+  "license": "MIT",
+  "dependencies": {
+    "firebase": "^10.12.2"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jonahtube/jonahtube.git"
+  }
+}
